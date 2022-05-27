@@ -13,6 +13,16 @@ public class DataNodeInfo {
 
     private String hostname;
 
+    private Long latestHeartbeatTime;
+
+    public Long getLatestHeartbeatTime() {
+        return latestHeartbeatTime;
+    }
+
+    public void setLatestHeartbeatTime(Long latestHeartbeatTime) {
+        this.latestHeartbeatTime = latestHeartbeatTime;
+    }
+
     public DataNodeInfo(String ip, String hostname) {
         this.ip = ip;
         this.hostname = hostname;

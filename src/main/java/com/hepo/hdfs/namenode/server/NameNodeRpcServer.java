@@ -43,6 +43,16 @@ public class NameNodeRpcServer {
     }
 
     /**
+     * 心跳检测
+     * @param ip
+     * @param hostname
+     * @return
+     */
+    public Boolean heartbeat(String ip, String hostname) {
+        return dataNodeManager.heartbeat(ip, hostname);
+    }
+
+    /**
      * 启动这个Server服务
      */
     public void start() {
