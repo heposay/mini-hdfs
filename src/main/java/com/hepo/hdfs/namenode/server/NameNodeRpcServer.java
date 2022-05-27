@@ -14,8 +14,14 @@ public class NameNodeRpcServer {
      */
     private FSNamesystem namesystem;
 
-    public NameNodeRpcServer(FSNamesystem namesystem) {
+    /**
+     * 负责管理datanode的组件
+     */
+    private DataNodeManager dataNodeManager;
+
+    public NameNodeRpcServer(FSNamesystem namesystem, DataNodeManager dataNodeManager) {
         this.namesystem = namesystem;
+        this.dataNodeManager = dataNodeManager;
     }
 
     /**
@@ -26,6 +32,14 @@ public class NameNodeRpcServer {
      */
     public Boolean mkdir(String path) throws Exception {
         return namesystem.mkdir(path);
+    }
+
+    /**
+     * 对dataNode进行注册
+     * @return
+     */
+    public Boolean register (String ip, String hostname) {
+        return dataNodeManager.register(ip, hostname);
     }
 
     /**

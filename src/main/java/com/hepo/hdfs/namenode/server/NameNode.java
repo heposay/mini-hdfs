@@ -19,7 +19,15 @@ public class NameNode {
      */
     private NameNodeRpcServer rpcServer;
 
-    private Boolean isRunning;
+    /**
+     * 判断nameNode是否运行的标志
+     */
+    private volatile Boolean isRunning;
+
+    /**
+     * 负责管理datanode的组件
+     */
+    private DataNodeManager dataNodeManager;
 
     public NameNode() {
         this.isRunning = true;
@@ -30,7 +38,8 @@ public class NameNode {
      */
     public void initialize() {
         this.namesystem = new FSNamesystem();
-        this.rpcServer = new NameNodeRpcServer(namesystem);
+        this.dataNodeManager = new DataNodeManager();
+        this.rpcServer = new NameNodeRpcServer(namesystem, dataNodeManager);
         this.rpcServer.start();
     }
 
@@ -48,5 +57,11 @@ public class NameNode {
             }
 
         }
+    }
+
+    public static void main(String[] args) {
+        NameNode nameNode = new NameNode();
+        nameNode.initialize();
+        nameNode.run();
     }
 }

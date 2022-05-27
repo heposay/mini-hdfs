@@ -32,6 +32,11 @@ public class NameNodeServiceActor {
             try {
                 // 发送rpc接口调用请求到NameNode去进行注册
                 System.out.println("发送请求到NameNode进行注册.......");
+                // 我们写代码的时候，主要是在本地来运行和测试，有一些ip和hostname，就直接在代码里写死了
+                // 大家后面自己可以留空做一些完善，你可以加一些配置文件读取的代码
+                String ip = "127.0.0.1";
+                String hostname = "dfs-data-01";
+                // 通过RPC接口发送到NameNode他的注册接口上去
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
