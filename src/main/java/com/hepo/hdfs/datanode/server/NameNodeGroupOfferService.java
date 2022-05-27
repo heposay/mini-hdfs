@@ -1,5 +1,6 @@
 package com.hepo.hdfs.datanode.server;
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -20,9 +21,15 @@ public class NameNodeGroupOfferService {
      */
     private NameNodeServiceActor standbyServiceActor;
 
+    private CopyOnWriteArrayList<NameNodeServiceActor> serviceActors;
+
     public NameNodeGroupOfferService() {
         this.activeServiceActor = new NameNodeServiceActor();
         this.standbyServiceActor = new NameNodeServiceActor();
+
+        serviceActors = new CopyOnWriteArrayList<>();
+        serviceActors.add(activeServiceActor);
+        serviceActors.add(standbyServiceActor);
     }
 
 
@@ -32,6 +39,24 @@ public class NameNodeGroupOfferService {
     public void start() {
         //直接使用两个ServiceActor组件分别向主备两个NameNode节点进行注册
         register();
+        // 开始发送心跳
+        startHeartbeat();
+    }
+
+    /**
+     * 开启心跳线程
+     */
+    private void startHeartbeat() {
+        this.activeServiceActor.startHeartbeat();
+        this.standbyServiceActor.startHeartbeat();
+    }
+
+    /**
+     * 关闭指定的一个ServiceActor
+     * @param serviceActor
+     */
+    public void shutdown(NameNodeServiceActor serviceActor) {
+        this.serviceActors.remove(serviceActor);
     }
 
     /**
