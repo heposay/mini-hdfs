@@ -1,9 +1,6 @@
 package com.hepo.dfs.namenode.server;
 
-import com.hepo.dfs.namenode.rpc.model.HeartbeatRequest;
-import com.hepo.dfs.namenode.rpc.model.HeartbeatResponse;
-import com.hepo.dfs.namenode.rpc.model.RegisterRequest;
-import com.hepo.dfs.namenode.rpc.model.RegisterResponse;
+import com.hepo.dfs.namenode.rpc.model.*;
 import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.stub.StreamObserver;
 
@@ -35,17 +32,6 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     }
 
     /**
-     * 创建目录
-     *
-     * @param path 目录路径
-     * @return 是否创建成功
-     * @throws Exception
-     */
-    public Boolean mkdir(String path) throws Exception {
-        return this.namesystem.mkdir(path);
-    }
-
-    /**
      * datanode进行注册
      *
      * @param request
@@ -74,5 +60,23 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
 
+    }
+
+    /**
+     * 创建目录
+     * @param request
+     * @param responseObserver
+     */
+    @Override
+    public void mkdir(MkdirRequest request, StreamObserver<MkdirResponse> responseObserver) {
+        try {
+            namesystem.mkdir(request.getPath());
+            System.out.println("创建目录：path" + request.getPath());
+            MkdirResponse response = MkdirResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -23,16 +23,18 @@ public final class NameNodeServer {
       descriptor;
   static {
     String[] descriptorData = {
-      "\n\027NameNodeRpcServer.proto\022\031com.zhss.dfs." +
-      "namenode.rpc\032\026NameNodeRpcModel.proto2\336\001\n" +
-      "\017NameNodeService\022c\n\010register\022*.com.zhss." +
+      "\n\027NameNodeRpcServer.proto\022\031com.hepo.dfs." +
+      "namenode.rpc\032\026NameNodeRpcModel.proto2\272\002\n" +
+      "\017NameNodeService\022c\n\010register\022*.com.hepo." +
       "dfs.namenode.rpc.RegisterRequest\032+.com.z" +
       "hss.dfs.namenode.rpc.RegisterResponse\022f\n" +
-      "\theartbeat\022+.com.zhss.dfs.namenode.rpc.H" +
-      "eartbeatRequest\032,.com.zhss.dfs.namenode." +
-      "rpc.HeartbeatResponseB5\n!com.zhss.dfs.na" +
-      "menode.rpc.serviceB\016NameNodeServerP\001b\006pr" +
-      "oto3"
+      "\theartbeat\022+.com.hepo.dfs.namenode.rpc.H" +
+      "eartbeatRequest\032,.com.hepo.dfs.namenode." +
+      "rpc.HeartbeatResponse\022Z\n\005mkdir\022\'.com.zhs" +
+      "s.dfs.namenode.rpc.MkdirRequest\032(.com.zh" +
+      "ss.dfs.namenode.rpc.MkdirResponseB5\n!com",
+      ".hepo.dfs.namenode.rpc.serviceB\016NameNode" +
+      "ServerP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

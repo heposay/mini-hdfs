@@ -34,6 +34,16 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_MkdirRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_MkdirRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -48,9 +58,10 @@ public final class NameNodeRpcModel {
       "(\t\022\020\n\010hostname\030\002 \001(\t\"\"\n\020RegisterResponse" +
       "\022\016\n\006status\030\001 \001(\005\"0\n\020HeartbeatRequest\022\n\n\002" +
       "ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\"#\n\021HeartbeatR" +
-      "esponse\022\016\n\006status\030\001 \001(\005B5\n\037com.hepo.dfs." +
-      "namenode.rpc.modelB\020NameNodeRpcModelP\001b\006" +
-      "proto3"
+      "esponse\022\016\n\006status\030\001 \001(\005\"\034\n\014MkdirRequest\022" +
+      "\014\n\004path\030\001 \001(\t\"\037\n\rMkdirResponse\022\016\n\006status" +
+      "\030\001 \001(\005B5\n\037com.hepo.dfs.namenode.rpc.mode" +
+      "lB\020NameNodeRpcModelP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -87,6 +98,18 @@ public final class NameNodeRpcModel {
     internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_descriptor,
+        new String[] { "Status", });
+    internal_static_com_hepo_dfs_namenode_rpc_MkdirRequest_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_com_hepo_dfs_namenode_rpc_MkdirRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_MkdirRequest_descriptor,
+        new String[] { "Path", });
+    internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor,
         new String[] { "Status", });
   }
 

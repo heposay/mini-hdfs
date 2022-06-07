@@ -39,6 +39,15 @@ public class NameNodeServiceGrpc {
               "com.hepo.dfs.namenode.rpc.NameNodeService", "heartbeat"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.hepo.dfs.namenode.rpc.model.HeartbeatRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.hepo.dfs.namenode.rpc.model.HeartbeatResponse.getDefaultInstance()));
+  @io.grpc.ExperimentalApi(value = "")
+  public static final io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.MkdirRequest,
+      com.hepo.dfs.namenode.rpc.model.MkdirResponse> METHOD_MKDIR =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "com.hepo.dfs.namenode.rpc.NameNodeService", "mkdir"),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.hepo.dfs.namenode.rpc.model.MkdirRequest.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.hepo.dfs.namenode.rpc.model.MkdirResponse.getDefaultInstance()));
 
   public static NameNodeServiceStub newStub(io.grpc.Channel channel) {
     return new NameNodeServiceStub(channel);
@@ -61,6 +70,9 @@ public class NameNodeServiceGrpc {
 
     public void heartbeat(com.hepo.dfs.namenode.rpc.model.HeartbeatRequest request,
                           io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.HeartbeatResponse> responseObserver);
+
+    public void mkdir(com.hepo.dfs.namenode.rpc.model.MkdirRequest request,
+                      io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.MkdirResponse> responseObserver);
   }
 
   public static interface NameNodeServiceBlockingClient {
@@ -68,6 +80,8 @@ public class NameNodeServiceGrpc {
     public com.hepo.dfs.namenode.rpc.model.RegisterResponse register(com.hepo.dfs.namenode.rpc.model.RegisterRequest request);
 
     public com.hepo.dfs.namenode.rpc.model.HeartbeatResponse heartbeat(com.hepo.dfs.namenode.rpc.model.HeartbeatRequest request);
+
+    public com.hepo.dfs.namenode.rpc.model.MkdirResponse mkdir(com.hepo.dfs.namenode.rpc.model.MkdirRequest request);
   }
 
   public static interface NameNodeServiceFutureClient {
@@ -77,6 +91,9 @@ public class NameNodeServiceGrpc {
 
     public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.HeartbeatResponse> heartbeat(
             com.hepo.dfs.namenode.rpc.model.HeartbeatRequest request);
+
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.MkdirResponse> mkdir(
+            com.hepo.dfs.namenode.rpc.model.MkdirRequest request);
   }
 
   public static class NameNodeServiceStub extends io.grpc.stub.AbstractStub<NameNodeServiceStub>
@@ -109,6 +126,13 @@ public class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_HEARTBEAT, getCallOptions()), request, responseObserver);
     }
+
+    @Override
+    public void mkdir(com.hepo.dfs.namenode.rpc.model.MkdirRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.MkdirResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_MKDIR, getCallOptions()), request, responseObserver);
+    }
   }
 
   public static class NameNodeServiceBlockingStub extends io.grpc.stub.AbstractStub<NameNodeServiceBlockingStub>
@@ -138,6 +162,12 @@ public class NameNodeServiceGrpc {
     public com.hepo.dfs.namenode.rpc.model.HeartbeatResponse heartbeat(com.hepo.dfs.namenode.rpc.model.HeartbeatRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_HEARTBEAT, getCallOptions(), request);
+    }
+
+    @Override
+    public com.hepo.dfs.namenode.rpc.model.MkdirResponse mkdir(com.hepo.dfs.namenode.rpc.model.MkdirRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_MKDIR, getCallOptions(), request);
     }
   }
 
@@ -171,10 +201,18 @@ public class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_HEARTBEAT, getCallOptions()), request);
     }
+
+    @Override
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.MkdirResponse> mkdir(
+        com.hepo.dfs.namenode.rpc.model.MkdirRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_MKDIR, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
   private static final int METHODID_HEARTBEAT = 1;
+  private static final int METHODID_MKDIR = 2;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -189,7 +227,6 @@ public class NameNodeServiceGrpc {
       this.methodId = methodId;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
@@ -201,12 +238,15 @@ public class NameNodeServiceGrpc {
           serviceImpl.heartbeat((com.hepo.dfs.namenode.rpc.model.HeartbeatRequest) request,
               (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.HeartbeatResponse>) responseObserver);
           break;
+        case METHODID_MKDIR:
+          serviceImpl.mkdir((com.hepo.dfs.namenode.rpc.model.MkdirRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.MkdirResponse>) responseObserver);
+          break;
         default:
           throw new AssertionError();
       }
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
@@ -234,6 +274,13 @@ public class NameNodeServiceGrpc {
               com.hepo.dfs.namenode.rpc.model.HeartbeatRequest,
               com.hepo.dfs.namenode.rpc.model.HeartbeatResponse>(
                 serviceImpl, METHODID_HEARTBEAT)))
+        .addMethod(
+          METHOD_MKDIR,
+          asyncUnaryCall(
+            new MethodHandlers<
+              com.hepo.dfs.namenode.rpc.model.MkdirRequest,
+              com.hepo.dfs.namenode.rpc.model.MkdirResponse>(
+                serviceImpl, METHODID_MKDIR)))
         .build();
   }
 }

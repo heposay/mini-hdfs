@@ -17,8 +17,14 @@ public class FSDirectory {
      */
     private INodeDirectory dirTree;
 
+
     /**
      * 初始化构造方法
+     *  他就是一个父子层级关系的数据结构，文件目录树
+     *  创建目录，删除目录，重命名目录，创建文件，删除文件，重命名文件
+     *  诸如此类的一些操作，都是在维护内存里的文件目录树，其实本质都是对这个内存的数据结构进行更新
+     *  先创建了一个目录层级结果：/usr/warehosue/hive
+     *  如果此时来创建另外一个目录：/usr/warehouse/spark
      */
     public FSDirectory() {
         this.dirTree = new INodeDirectory("/");
@@ -37,14 +43,15 @@ public class FSDirectory {
         // 最终再创建hive目录挂在/usr/warehouse目录下
         synchronized (dirTree) {
             String[] paths = path.split("/");
-            INodeDirectory parent = null;
+            INodeDirectory parent = dirTree;
+
             for (String splitPath : paths) {
+                // ["","usr","warehosue","spark"]
                 if ("".equals(splitPath.trim())) {
-                    parent = dirTree;
                     continue;
                 }
-                //如果找到对应的目录，把指针指向parent
-                INodeDirectory dir = findDirectory(parent == null ? dirTree : parent, splitPath);
+                //parent = /usr
+                INodeDirectory dir = findDirectory(parent, splitPath);
                 if (dir != null) {
                     parent = dir;
                     continue;
@@ -53,7 +60,24 @@ public class FSDirectory {
                 //如果没有找到，则创建目录，把改目录挂在parent下
                 INodeDirectory child = new INodeDirectory(splitPath);
                 parent.addChild(child);
+                parent = child;
             }
+        }
+        printDirTree(dirTree, "");
+    }
+
+    /**
+     * 打印目录树的路径
+     * @param dirTree
+     * @param blank
+     */
+    private void printDirTree(INodeDirectory dirTree, String blank) {
+        if(dirTree.getChild().size() == 0) {
+            return;
+        }
+        for(INode dir : dirTree.getChild()) {
+            System.out.println(blank + ((INodeDirectory) dir).getPath());
+            printDirTree((INodeDirectory) dir, blank + " ");
         }
     }
 
@@ -68,16 +92,11 @@ public class FSDirectory {
         if (dir.getChild().size() == 0) {
             return null;
         }
-        INodeDirectory resultDir = null;
         for (INode child : dir.getChild()) {
             if (child instanceof INodeDirectory) {
                 INodeDirectory childDir = (INodeDirectory) child;
                 if (childDir.getPath().equals(path)) {
                     return childDir;
-                }
-                resultDir = findDirectory(childDir, path);
-                if (resultDir != null) {
-                    return resultDir;
                 }
             }
         }

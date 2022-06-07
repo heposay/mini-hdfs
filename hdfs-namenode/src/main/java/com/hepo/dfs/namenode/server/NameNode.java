@@ -47,5 +47,6 @@ public class NameNode {
         NameNode nameNode = new NameNode();
         nameNode.initialize();
         nameNode.start();
+
     }
 }
