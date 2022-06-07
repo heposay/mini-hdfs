@@ -14,22 +14,17 @@ public class NameNodeGroupOfferService {
     /**
      * 负责跟NameNode主节点通信的ServiceActor组件
      */
-    private NameNodeServiceActor activeServiceActor;
+    private NameNodeServiceActor serviceActor;
 
     /**
-     * 负责跟NameNode备节点通信的ServiceActor组件
+     * 这个datanode上保存的ServiceActor列表
      */
-    private NameNodeServiceActor standbyServiceActor;
-
     private CopyOnWriteArrayList<NameNodeServiceActor> serviceActors;
 
     public NameNodeGroupOfferService() {
-        this.activeServiceActor = new NameNodeServiceActor();
-        this.standbyServiceActor = new NameNodeServiceActor();
+        this.serviceActor = new NameNodeServiceActor();
 
         serviceActors = new CopyOnWriteArrayList<>();
-        serviceActors.add(activeServiceActor);
-        serviceActors.add(standbyServiceActor);
     }
 
 
@@ -47,8 +42,7 @@ public class NameNodeGroupOfferService {
      * 开启心跳线程
      */
     private void startHeartbeat() {
-        this.activeServiceActor.startHeartbeat();
-        this.standbyServiceActor.startHeartbeat();
+        this.serviceActor.startHeartbeat();
     }
 
     /**
@@ -64,13 +58,8 @@ public class NameNodeGroupOfferService {
      */
     private void register() {
         try {
-            //同步器
-            CountDownLatch latch = new CountDownLatch(2);
-            this.activeServiceActor.register(latch);
-            this.standbyServiceActor.register(latch);
-            latch.await();
-            System.out.println("主备NameNode全部注册完毕......");
-        } catch (InterruptedException e) {
+            this.serviceActor.register();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

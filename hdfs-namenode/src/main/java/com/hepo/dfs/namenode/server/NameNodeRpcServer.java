@@ -1,5 +1,11 @@
 package com.hepo.dfs.namenode.server;
 
+import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
+
+import java.io.IOException;
+
 /**
  * Description: NameNode 的rpc服务接口
  * Project:  hdfs_study
@@ -19,43 +25,44 @@ public class NameNodeRpcServer {
      */
     private DataNodeManager dataNodeManager;
 
+    private Server server = null;
+
+    private static final int DEFAULT_PORT = 50070;
+
     public NameNodeRpcServer(FSNamesystem namesystem, DataNodeManager dataNodeManager) {
         this.namesystem = namesystem;
         this.dataNodeManager = dataNodeManager;
     }
 
-    /**
-     * 创建目录
-     * @param path
-     * @return
-     * @throws Exception
-     */
-    public Boolean mkdir(String path) throws Exception {
-        return namesystem.mkdir(path);
-    }
-
-    /**
-     * 对dataNode进行注册
-     * @return
-     */
-    public Boolean register (String ip, String hostname) {
-        return dataNodeManager.register(ip, hostname);
-    }
-
-    /**
-     * 心跳检测
-     * @param ip
-     * @param hostname
-     * @return
-     */
-    public Boolean heartbeat(String ip, String hostname) {
-        return dataNodeManager.heartbeat(ip, hostname);
-    }
 
     /**
      * 启动这个Server服务
      */
-    public void start() {
-        System.out.println("开始监听指定的rpc server端口，来接收请求");
+    public void start() throws IOException {
+        //启动rpc server 服务，并监听端口
+        server = ServerBuilder.forPort(DEFAULT_PORT)
+                .addService(NameNodeServiceGrpc.bindService(new NameNodeServiceImpl(namesystem, dataNodeManager)))
+                .build()
+                .start();
+
+        System.out.println("NameNodeRpcServer启动，监听端口号：" + DEFAULT_PORT);
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                NameNodeRpcServer.this.stop();
+            }
+        });
+    }
+
+    private void stop() {
+        if (server != null) {
+            server.shutdown();
+        }
+    }
+
+    public void blockUntilShutdown() throws InterruptedException {
+        if (server != null) {
+            server.awaitTermination();
+        }
     }
 }

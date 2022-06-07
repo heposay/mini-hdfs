@@ -1,6 +1,13 @@
 package com.hepo.dfs.datanode.server;
 
-import java.util.concurrent.CountDownLatch;
+import com.hepo.dfs.namenode.rpc.model.HeartbeatRequest;
+import com.hepo.dfs.namenode.rpc.model.HeartbeatResponse;
+import com.hepo.dfs.namenode.rpc.model.RegisterRequest;
+import com.hepo.dfs.namenode.rpc.model.RegisterResponse;
+import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.netty.NegotiationType;
+import io.grpc.netty.NettyChannelBuilder;
 
 /**
  * Description: 负责跟一组NameNode中的某一个进行通信的线程组件
@@ -11,12 +18,34 @@ import java.util.concurrent.CountDownLatch;
  */
 public class NameNodeServiceActor {
 
+    private static final String NAMENODE_HOSTNAME = "localhost";
+
+    private static final Integer NAMENODE_PORT = 50070;
+
+
+    /**
+     * namenode的客户端
+     */
+    private NameNodeServiceGrpc.NameNodeServiceBlockingStub namenode;
+
+    /**
+     * 构造方法
+     */
+    public NameNodeServiceActor() {
+        ManagedChannel channel = NettyChannelBuilder
+                .forAddress(NAMENODE_HOSTNAME, NAMENODE_PORT)
+                .negotiationType(NegotiationType.PLAINTEXT)
+                .build();
+        this.namenode = NameNodeServiceGrpc.newBlockingStub(channel);
+    }
+
     /**
      * 向自己负责通信的那个NameNode进行注册
      */
-    public void register(CountDownLatch latch) {
-        RegisterThread registerThread = new RegisterThread(latch);
+    public void register() throws Exception {
+        RegisterThread registerThread = new RegisterThread();
         registerThread.start();
+        registerThread.join();
     }
 
     /**
@@ -31,12 +60,6 @@ public class NameNodeServiceActor {
      */
     class RegisterThread extends Thread {
 
-        CountDownLatch latch;
-
-        RegisterThread(CountDownLatch latch) {
-            this.latch = latch;
-        }
-
         @Override
         public void run() {
             try {
@@ -47,11 +70,12 @@ public class NameNodeServiceActor {
                 String ip = "127.0.0.1";
                 String hostname = "dfs-data-01";
                 // 通过RPC接口发送到NameNode他的注册接口上去
+                RegisterRequest registerRequest = RegisterRequest.newBuilder().setIp(ip).setHostname(hostname).build();
+                RegisterResponse response = namenode.register(registerRequest);
+                System.out.println("接收到NameNode返回的注册响应：" + response.getStatus());
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } finally {
-                latch.countDown();
             }
         }
     }
@@ -63,11 +87,19 @@ public class NameNodeServiceActor {
         @Override
         public void run() {
             try {
-                while(true) {
+                while (true) {
                     System.out.println("发送RPC请求到NameNode进行心跳.......");
+
                     String ip = "127.0.0.1";
                     String hostname = "dfs-data-01";
                     // 通过RPC接口发送到NameNode他的注册接口上去
+
+                    HeartbeatRequest request = HeartbeatRequest.newBuilder()
+                            .setIp(ip)
+                            .setHostname(hostname)
+                            .build();
+                    HeartbeatResponse response = namenode.heartbeat(request);
+                    System.out.println("接收到NameNode返回的心跳响应：" + response.getStatus());
 
                     Thread.sleep(30 * 1000); // 每隔30秒发送一次心跳到NameNode上去
                 }

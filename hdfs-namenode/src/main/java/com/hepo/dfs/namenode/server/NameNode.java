@@ -1,5 +1,7 @@
 package com.hepo.dfs.namenode.server;
 
+import java.io.IOException;
+
 /**
  * Description: namenode 核心启动类
  * Project:  hdfs_study
@@ -20,18 +22,10 @@ public class NameNode {
     private NameNodeRpcServer rpcServer;
 
     /**
-     * 判断nameNode是否运行的标志
-     */
-    private volatile Boolean isRunning;
-
-    /**
      * 负责管理datanode的组件
      */
     private DataNodeManager dataNodeManager;
 
-    public NameNode() {
-        this.isRunning = true;
-    }
 
     /**
      * 初始化namenode各个组件
@@ -40,28 +34,18 @@ public class NameNode {
         this.namesystem = new FSNamesystem();
         this.dataNodeManager = new DataNodeManager();
         this.rpcServer = new NameNodeRpcServer(namesystem, dataNodeManager);
-        this.rpcServer.start();
     }
 
 
-    /**
-     * NameNode启动服务的run方法
-     */
-    private void run() {
-        while (isRunning) {
-            try {
-                System.out.println("NameNode组件已启动");
-                Thread.sleep(10000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
+    public void start() throws IOException, InterruptedException {
+        rpcServer.start();
+        rpcServer.blockUntilShutdown();
     }
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException, InterruptedException {
         NameNode nameNode = new NameNode();
         nameNode.initialize();
-        nameNode.run();
+        nameNode.start();
     }
 }
