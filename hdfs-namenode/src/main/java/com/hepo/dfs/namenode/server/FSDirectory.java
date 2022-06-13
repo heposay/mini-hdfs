@@ -50,7 +50,7 @@ public class FSDirectory {
                 if ("".equals(splitPath.trim())) {
                     continue;
                 }
-                //parent = /usr
+                //parent = /   splitPath = usr
                 INodeDirectory dir = findDirectory(parent, splitPath);
                 if (dir != null) {
                     parent = dir;

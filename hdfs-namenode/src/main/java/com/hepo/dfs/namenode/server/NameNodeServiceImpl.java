@@ -18,7 +18,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     public static final Integer STATUS_FAILURE = 2;
 
     /**
-     * 负责管理元数据的核心组件
+     * 负责管理元数据的核心组件（逻辑组件）
      */
     private FSNamesystem namesystem;
     /**

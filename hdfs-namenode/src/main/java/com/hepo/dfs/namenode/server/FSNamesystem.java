@@ -29,7 +29,7 @@ public class FSNamesystem {
 
     public Boolean mkdir (String path) throws Exception{
         this.directory.mkdir(path);
-        this.editLog.log( "创建了一个目录：" + path);
+        this.editLog.logEdit( "创建了一个目录：" + path);
         return true;
     }
 }

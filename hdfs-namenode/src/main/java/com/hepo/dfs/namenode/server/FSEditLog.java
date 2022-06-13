@@ -1,7 +1,5 @@
 package com.hepo.dfs.namenode.server;
 
-import java.util.LinkedList;
-
 /**
  * Description: 负责管理内存中的edit logs的核心组件
  * Project:  hdfs_study
@@ -27,10 +25,13 @@ public class FSEditLog {
      */
     private volatile Boolean isWaitSync = false;
 
+
+    private volatile Boolean isSchedulingSync = false;
+
     /**
      * 当前同步到磁盘数据中最大的txid
      */
-    private volatile Long syncMaxTxid = 0L;
+    private volatile Long syncTxid = 0L;
 
     /**
      * 每个线程本地的txid副本
@@ -38,28 +39,57 @@ public class FSEditLog {
     private ThreadLocal<Long> localTxid = new ThreadLocal<Long>();
 
 
-    private DoubleBuffer editBuffer = new DoubleBuffer();
+    private DoubleBuffer doubleBuffer = new DoubleBuffer();
 
     /**
      * 记录editLog
      *
      * @param content log内容
      */
-    public void log(String content) {
+    public void logEdit(String content) {
         //这里必须得直接加锁,要保证editlog能顺序写，这样有两个好处：1.能保证editlog的tx都是顺序执行了，后面通过editLog来恢复数据也有数据保证，2.提高日志的写效率
         synchronized (this) {
+            //刚进来就直接检查一下是否有人正在调度一次刷盘的操作
+            waitSchedulingSync();
+
             // 获取全局唯一递增的txid，代表了edits log的序号
             txidSeq++;
             long txid = txidSeq;
+
+            //放到本地线程副本变量里面
             localTxid.set(txid);
 
             //构建一个editLog对象
             EditLog editLog = new EditLog(txid, content);
 
             // 将edits log写入内存缓冲中，不是直接刷入磁盘文件
-            editBuffer.write(editLog);
+            doubleBuffer.write(editLog);
+
+            //每次写完一条editslog之后，就应该检查一下当前这个缓冲区是否满了
+            if (!doubleBuffer.shouldSyncToDisk()) {
+                return ;
+            }
+            // 如果代码进行到这里，就说明需要刷磁盘
+            isSchedulingSync = true;
         }
         logSync();
+    }
+
+    /**
+     * 等待正在调度的刷磁盘的操作
+     */
+    private void waitSchedulingSync() {
+        try {
+            // 此时就释放锁，等待一秒再次尝试获取锁，去判断
+            // isSchedulingSync是否为false，就可以脱离出while循环
+            while (isSchedulingSync) {
+                wait(1000);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**
@@ -70,43 +100,43 @@ public class FSEditLog {
     private void logSync() {
         //再次尝试加锁
         synchronized (this) {
+            //假如某个线程已经将txid= 1,2,3,4,5的edit log刷到磁盘中或者正在刷到磁盘中
+            //此时的syncMaxTxid = 5 代表正在刷到磁盘的最大txid
+            //假如这时候有一个线程过来，他的txid = 3，此时该线程可以直接返回了，因为已经有线程正在把对应的edit log刷到磁盘中了
+            Long txid = localTxid.get();
+
             //当前有线程在刷内存缓冲到磁盘的动作
             if (isSyncRunning) {
-                //假如某个线程已经将txid= 1,2,3,4,5的edit log刷到磁盘中或者正在刷到磁盘中
-                //此时的syncMaxTxid = 5 代表正在刷到磁盘的最大txid
-                //假如这时候有一个线程过来，他的txid = 3，此时该线程可以直接返回了，因为已经有线程正在把对应的edit log刷到磁盘中了
-                Long txid = localTxid.get();
-                if (txid <= syncMaxTxid) {
+                //如果当先txid小于要刷盘的txid，说明已经有人已经在数据刷到盘中，直接返回
+                if (txid <= syncTxid) {
                     return;
                 }
-                //假如此时有一个线程过来，他的txid=12,会判断isWaitSync是否为true，如果是，则表明说现在已经有人进来排队等待了，该线程可以直接返回做其他事情，而不是阻塞在这里等待。
-                if (isWaitSync) {
-                    return;
-                }
-                //如果上面isWaitSync为false，表明当前还没有线程进来，赶紧把这个isWaitSync标志位改成true，就是告诉别人说，我已经把这个坑位占了，其他人就不要来了
-                isWaitSync = true;
-                while (isSyncRunning) {
 
+                while (isSyncRunning) {
                     try {
-                        wait(2000);
+                        //如果别人刷盘任务还没完成，释放锁等待一秒钟
+                        wait(1000);
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                //任务处理完，把标志位改成false，把对应的坑位让出来
-                isWaitSync = false;
             }
 
-            //下面逻辑就是真正处理刷磁盘的事情
+            //note：下面逻辑就是真正处理刷磁盘的事情
             //1.首先把两个缓冲区交换一下
-            editBuffer.setReadyToSync();
+            doubleBuffer.setReadyToSync();
             //获取当前缓冲区中最大的txid
-            syncMaxTxid = editBuffer.getSyncMaxTxid();
+            syncTxid = txid;
+
+            //设置当前正在同步到磁盘的标志位
+            isSchedulingSync = false;
+            //唤醒那些还卡在while循环那儿的线程
+            notifyAll();
             //将isSyncRunning标志位改成true，表示说，我要开始处理刷磁盘了，别人不要来打扰我
             isSyncRunning = true;
         }
-        //开始将内存缓冲区的数据刷到磁盘中,这一步耗时会比较慢这，基本上肯定是毫秒级了，弄不好就要几十毫秒
-        editBuffer.flush();
+        //开始将内存缓冲区的数据刷到磁盘中,这一步耗时会比较慢这，基本上肯定是毫秒级了，多的话要几十毫秒
+        doubleBuffer.flush();
         synchronized (this) {
             //同步完文件数据，将isSyncRunning标志位复原
             isSyncRunning = false;
@@ -116,77 +146,5 @@ public class FSEditLog {
 
     }
 
-    /**
-     * editLog内部类，代表一条日志
-     */
-    class EditLog {
-        /**
-         * 当前日志的txid
-         */
-        Long txid;
-        /**
-         * 日志内容
-         */
-        String content;
 
-        public EditLog(Long txid, String content) {
-            this.txid = txid;
-            this.content = content;
-        }
-    }
-
-    /**
-     * 内存双缓冲
-     */
-    class DoubleBuffer {
-        /**
-         * 是专门用来承载线程写入edits log
-         */
-        LinkedList<EditLog> currentBuffer = new LinkedList<EditLog>();
-
-        /**
-         * 专门用来将数据同步到另外一块缓冲
-         */
-        LinkedList<EditLog> syncBuffer = new LinkedList<EditLog>();
-
-        /**
-         * 将日志写到缓冲中
-         *
-         * @param editLog 日志
-         */
-        public void write(EditLog editLog) {
-            currentBuffer.add(editLog);
-        }
-
-
-        /**
-         * 获取syncBuffer缓冲区中最大的txid
-         *
-         * @return
-         */
-        private Long getSyncMaxTxid() {
-            return this.syncBuffer.getLast().txid;
-        }
-
-        /**
-         * 交换两个缓冲区，为了同步内存数据到磁盘做准备
-         */
-        public void setReadyToSync() {
-            LinkedList<EditLog> temp = currentBuffer;
-            currentBuffer = syncBuffer;
-            syncBuffer = temp;
-        }
-
-        /**
-         * 将缓冲区的数据写到磁盘文件中去
-         */
-        public void flush() {
-            for (EditLog editLog : syncBuffer) {
-                System.out.println("将edit log写入磁盘文件中：" + editLog);
-                //一般来说，就是用文件输出流将数据写到磁盘文件中去
-            }
-            //写完之后，清空syncBuffer缓冲区
-            syncBuffer.clear();
-        }
-    }
 }
