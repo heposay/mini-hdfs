@@ -27,9 +27,22 @@ public class FSNamesystem {
         editLog = new FSEditLog();
     }
 
-    public Boolean mkdir (String path){
+    /**
+     * 创建目录
+     *
+     * @param path 文件路径
+     * @return 是否成功
+     */
+    public Boolean mkdir(String path) {
         this.directory.mkdir(path);
-        this.editLog.logEdit( "创建了一个目录：" + path);
+        this.editLog.logEdit("{'OP':'MKDIR', 'PATH':'" + path + "'}");
         return true;
+    }
+
+    /**
+     * 强制将缓冲区的数据刷到磁盘
+     */
+    public void flush() {
+        this.editLog.flush();
     }
 }

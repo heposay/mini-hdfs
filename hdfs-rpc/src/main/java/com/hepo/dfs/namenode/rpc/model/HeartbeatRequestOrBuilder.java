@@ -8,21 +8,25 @@ public interface HeartbeatRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional string ip = 1;</code>
+   * <code>string ip = 1;</code>
+   * @return The ip.
    */
   String getIp();
   /**
-   * <code>optional string ip = 1;</code>
+   * <code>string ip = 1;</code>
+   * @return The bytes for ip.
    */
   com.google.protobuf.ByteString
       getIpBytes();
 
   /**
-   * <code>optional string hostname = 2;</code>
+   * <code>string hostname = 2;</code>
+   * @return The hostname.
    */
   String getHostname();
   /**
-   * <code>optional string hostname = 2;</code>
+   * <code>string hostname = 2;</code>
+   * @return The bytes for hostname.
    */
   com.google.protobuf.ByteString
       getHostnameBytes();

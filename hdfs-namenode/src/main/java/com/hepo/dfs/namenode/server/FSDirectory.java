@@ -63,7 +63,7 @@ public class FSDirectory {
                 parent = child;
             }
         }
-        printDirTree(dirTree, "");
+        //printDirTree(dirTree, "");
     }
 
     /**

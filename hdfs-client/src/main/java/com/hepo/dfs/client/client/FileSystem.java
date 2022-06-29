@@ -1,4 +1,4 @@
-package com.hepo.dfs.client;
+package com.hepo.dfs.client.client;
 
 /**
  * 作为文件系统的接口
@@ -12,6 +12,12 @@ public interface FileSystem {
 	 * @param path 目录对应的路径
 	 * @throws Exception
 	 */
-	void mkdir(String path) throws Exception;
+	void mkdir(String path);
+
+	/**
+	 * 优雅关闭
+	 * @throws Exception
+	 */
+	void shutdown();
 	
 }

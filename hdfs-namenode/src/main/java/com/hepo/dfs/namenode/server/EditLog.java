@@ -1,5 +1,7 @@
 package com.hepo.dfs.namenode.server;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * editLog内部类，代表一条日志
  */
@@ -15,7 +17,9 @@ public class EditLog {
 
     public EditLog(Long txid, String content) {
         this.txid = txid;
-        this.content = content;
+        JSONObject jsonObject = JSONObject.parseObject(content);
+        jsonObject.put("txid", txid);
+        this.content = jsonObject.toJSONString();
     }
 
     public Long getTxid() {

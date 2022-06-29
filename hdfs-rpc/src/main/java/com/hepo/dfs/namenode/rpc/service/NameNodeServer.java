@@ -24,31 +24,25 @@ public final class NameNodeServer {
   static {
     String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022\031com.hepo.dfs." +
-      "namenode.rpc\032\026NameNodeRpcModel.proto2\272\002\n" +
+      "namenode.rpc\032\026NameNodeRpcModel.proto2\237\003\n" +
       "\017NameNodeService\022c\n\010register\022*.com.hepo." +
-      "dfs.namenode.rpc.RegisterRequest\032+.com.z" +
-      "hss.dfs.namenode.rpc.RegisterResponse\022f\n" +
+      "dfs.namenode.rpc.RegisterRequest\032+.com.h" +
+      "epo.dfs.namenode.rpc.RegisterResponse\022f\n" +
       "\theartbeat\022+.com.hepo.dfs.namenode.rpc.H" +
       "eartbeatRequest\032,.com.hepo.dfs.namenode." +
-      "rpc.HeartbeatResponse\022Z\n\005mkdir\022\'.com.zhs" +
-      "s.dfs.namenode.rpc.MkdirRequest\032(.com.zh" +
-      "ss.dfs.namenode.rpc.MkdirResponseB5\n!com",
-      ".hepo.dfs.namenode.rpc.serviceB\016NameNode" +
-      "ServerP\001b\006proto3"
+      "rpc.HeartbeatResponse\022Z\n\005mkdir\022\'.com.hep" +
+      "o.dfs.namenode.rpc.MkdirRequest\032(.com.he" +
+      "po.dfs.namenode.rpc.MkdirResponse\022c\n\010shu" +
+      "tdown\022*.com.hepo.dfs.namenode.rpc.Shutdo" +
+      "wnRequest\032+.com.hepo.dfs.namenode.rpc.Sh" +
+      "utdownResponseB5\n!com.hepo.dfs.namenode." +
+      "rpc.serviceB\016NameNodeServerP\001b\006proto3"
     };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.getDescriptor(),
-        }, assigner);
+        });
     com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.getDescriptor();
   }
 

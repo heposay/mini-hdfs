@@ -4,25 +4,25 @@
 package com.hepo.dfs.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.hepo.dfs.namenode.rpc.HeartbeatResponse}
+ * Protobuf type {@code com.hepo.dfs.namenode.rpc.ShutdownRequest}
  */
-public  final class HeartbeatResponse extends
+public  final class ShutdownRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.HeartbeatResponse)
-    HeartbeatResponseOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.ShutdownRequest)
+    ShutdownRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use HeartbeatResponse.newBuilder() to construct.
-  private HeartbeatResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ShutdownRequest.newBuilder() to construct.
+  private ShutdownRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private HeartbeatResponse() {
+  private ShutdownRequest() {
   }
 
   @Override
   @SuppressWarnings({"unused"})
   protected Object newInstance(
       UnusedPrivateParameter unused) {
-    return new HeartbeatResponse();
+    return new ShutdownRequest();
   }
 
   @Override
@@ -30,7 +30,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private HeartbeatResponse(
+  private ShutdownRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -50,7 +50,7 @@ private static final long serialVersionUID = 0L;
             break;
           case 8: {
 
-            status_ = input.readInt32();
+            code_ = input.readInt32();
             break;
           }
           default: {
@@ -74,25 +74,25 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_descriptor;
+    return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_fieldAccessorTable
+    return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            HeartbeatResponse.class, Builder.class);
+            ShutdownRequest.class, Builder.class);
   }
 
-  public static final int STATUS_FIELD_NUMBER = 1;
-  private int status_;
+  public static final int CODE_FIELD_NUMBER = 1;
+  private int code_;
   /**
-   * <code>int32 status = 1;</code>
-   * @return The status.
+   * <code>int32 code = 1;</code>
+   * @return The code.
    */
-  public int getStatus() {
-    return status_;
+  public int getCode() {
+    return code_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -109,8 +109,8 @@ private static final long serialVersionUID = 0L;
   @Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (status_ != 0) {
-      output.writeInt32(1, status_);
+    if (code_ != 0) {
+      output.writeInt32(1, code_);
     }
     unknownFields.writeTo(output);
   }
@@ -121,9 +121,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (status_ != 0) {
+    if (code_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, status_);
+        .computeInt32Size(1, code_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -135,13 +135,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof HeartbeatResponse)) {
+    if (!(obj instanceof ShutdownRequest)) {
       return super.equals(obj);
     }
-    HeartbeatResponse other = (HeartbeatResponse) obj;
+    ShutdownRequest other = (ShutdownRequest) obj;
 
-    if (getStatus()
-        != other.getStatus()) return false;
+    if (getCode()
+        != other.getCode()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -153,76 +153,76 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + STATUS_FIELD_NUMBER;
-    hash = (53 * hash) + getStatus();
+    hash = (37 * hash) + CODE_FIELD_NUMBER;
+    hash = (53 * hash) + getCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static HeartbeatResponse parseFrom(
+  public static ShutdownRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HeartbeatResponse parseFrom(
+  public static ShutdownRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HeartbeatResponse parseFrom(
+  public static ShutdownRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HeartbeatResponse parseFrom(
+  public static ShutdownRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HeartbeatResponse parseFrom(byte[] data)
+  public static ShutdownRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HeartbeatResponse parseFrom(
+  public static ShutdownRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HeartbeatResponse parseFrom(java.io.InputStream input)
+  public static ShutdownRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HeartbeatResponse parseFrom(
+  public static ShutdownRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HeartbeatResponse parseDelimitedFrom(java.io.InputStream input)
+  public static ShutdownRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static HeartbeatResponse parseDelimitedFrom(
+  public static ShutdownRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HeartbeatResponse parseFrom(
+  public static ShutdownRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HeartbeatResponse parseFrom(
+  public static ShutdownRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -235,7 +235,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(HeartbeatResponse prototype) {
+  public static Builder newBuilder(ShutdownRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @Override
@@ -251,26 +251,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.hepo.dfs.namenode.rpc.HeartbeatResponse}
+   * Protobuf type {@code com.hepo.dfs.namenode.rpc.ShutdownRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.HeartbeatResponse)
-      HeartbeatResponseOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.ShutdownRequest)
+      ShutdownRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_descriptor;
+      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_fieldAccessorTable
+      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              HeartbeatResponse.class, Builder.class);
+              ShutdownRequest.class, Builder.class);
     }
 
-    // Construct using com.hepo.dfs.namenode.rpc.model.HeartbeatResponse.newBuilder()
+    // Construct using com.hepo.dfs.namenode.rpc.model.ShutdownRequest.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -288,7 +288,7 @@ private static final long serialVersionUID = 0L;
     @Override
     public Builder clear() {
       super.clear();
-      status_ = 0;
+      code_ = 0;
 
       return this;
     }
@@ -296,17 +296,17 @@ private static final long serialVersionUID = 0L;
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_descriptor;
+      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
     }
 
     @Override
-    public HeartbeatResponse getDefaultInstanceForType() {
-      return HeartbeatResponse.getDefaultInstance();
+    public ShutdownRequest getDefaultInstanceForType() {
+      return ShutdownRequest.getDefaultInstance();
     }
 
     @Override
-    public HeartbeatResponse build() {
-      HeartbeatResponse result = buildPartial();
+    public ShutdownRequest build() {
+      ShutdownRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -314,9 +314,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @Override
-    public HeartbeatResponse buildPartial() {
-      HeartbeatResponse result = new HeartbeatResponse(this);
-      result.status_ = status_;
+    public ShutdownRequest buildPartial() {
+      ShutdownRequest result = new ShutdownRequest(this);
+      result.code_ = code_;
       onBuilt();
       return result;
     }
@@ -355,18 +355,18 @@ private static final long serialVersionUID = 0L;
     }
     @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof HeartbeatResponse) {
-        return mergeFrom((HeartbeatResponse)other);
+      if (other instanceof ShutdownRequest) {
+        return mergeFrom((ShutdownRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(HeartbeatResponse other) {
-      if (other == HeartbeatResponse.getDefaultInstance()) return this;
-      if (other.getStatus() != 0) {
-        setStatus(other.getStatus());
+    public Builder mergeFrom(ShutdownRequest other) {
+      if (other == ShutdownRequest.getDefaultInstance()) return this;
+      if (other.getCode() != 0) {
+        setCode(other.getCode());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -383,11 +383,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      HeartbeatResponse parsedMessage = null;
+      ShutdownRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (HeartbeatResponse) e.getUnfinishedMessage();
+        parsedMessage = (ShutdownRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -397,32 +397,32 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int status_ ;
+    private int code_ ;
     /**
-     * <code>int32 status = 1;</code>
-     * @return The status.
+     * <code>int32 code = 1;</code>
+     * @return The code.
      */
-    public int getStatus() {
-      return status_;
+    public int getCode() {
+      return code_;
     }
     /**
-     * <code>int32 status = 1;</code>
-     * @param value The status to set.
+     * <code>int32 code = 1;</code>
+     * @param value The code to set.
      * @return This builder for chaining.
      */
-    public Builder setStatus(int value) {
+    public Builder setCode(int value) {
 
-      status_ = value;
+      code_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 status = 1;</code>
+     * <code>int32 code = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearStatus() {
+    public Builder clearCode() {
 
-      status_ = 0;
+      code_ = 0;
       onChanged();
       return this;
     }
@@ -439,41 +439,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.HeartbeatResponse)
+    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.ShutdownRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.HeartbeatResponse)
-  private static final HeartbeatResponse DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.ShutdownRequest)
+  private static final ShutdownRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new HeartbeatResponse();
+    DEFAULT_INSTANCE = new ShutdownRequest();
   }
 
-  public static HeartbeatResponse getDefaultInstance() {
+  public static ShutdownRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<HeartbeatResponse>
-      PARSER = new com.google.protobuf.AbstractParser<HeartbeatResponse>() {
+  private static final com.google.protobuf.Parser<ShutdownRequest>
+      PARSER = new com.google.protobuf.AbstractParser<ShutdownRequest>() {
     @Override
-    public HeartbeatResponse parsePartialFrom(
+    public ShutdownRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new HeartbeatResponse(input, extensionRegistry);
+      return new ShutdownRequest(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<HeartbeatResponse> parser() {
+  public static com.google.protobuf.Parser<ShutdownRequest> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<HeartbeatResponse> getParserForType() {
+  public com.google.protobuf.Parser<ShutdownRequest> getParserForType() {
     return PARSER;
   }
 
   @Override
-  public HeartbeatResponse getDefaultInstanceForType() {
+  public ShutdownRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

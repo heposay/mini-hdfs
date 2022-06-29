@@ -1,6 +1,5 @@
 package com.hepo.dfs.namenode.server;
 
-import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
@@ -42,7 +41,7 @@ public class NameNodeRpcServer {
     public void start() throws IOException {
         //启动rpc server 服务，并监听端口
         server = ServerBuilder.forPort(DEFAULT_PORT)
-                .addService(NameNodeServiceGrpc.bindService(new NameNodeServiceImpl(namesystem, dataNodeManager)))
+                .addService(new NameNodeServiceImpl(namesystem, dataNodeManager))
                 .build()
                 .start();
 

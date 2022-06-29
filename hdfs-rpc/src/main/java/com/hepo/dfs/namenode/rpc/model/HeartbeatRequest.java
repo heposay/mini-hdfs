@@ -10,6 +10,7 @@ public  final class HeartbeatRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.HeartbeatRequest)
     HeartbeatRequestOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use HeartbeatRequest.newBuilder() to construct.
   private HeartbeatRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -20,16 +21,27 @@ public  final class HeartbeatRequest extends
   }
 
   @Override
+  @SuppressWarnings({"unused"})
+  protected Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new HeartbeatRequest();
+  }
+
+  @Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private HeartbeatRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
-    int mutable_bitField0_ = 0;
+    if (extensionRegistry == null) {
+      throw new NullPointerException();
+    }
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -38,12 +50,6 @@ public  final class HeartbeatRequest extends
           case 0:
             done = true;
             break;
-          default: {
-            if (!input.skipField(tag)) {
-              done = true;
-            }
-            break;
-          }
           case 10: {
             String s = input.readStringRequireUtf8();
 
@@ -56,6 +62,13 @@ public  final class HeartbeatRequest extends
             hostname_ = s;
             break;
           }
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -64,6 +77,7 @@ public  final class HeartbeatRequest extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -72,24 +86,26 @@ public  final class HeartbeatRequest extends
     return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_descriptor;
   }
 
+  @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
     return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.hepo.dfs.namenode.rpc.model.HeartbeatRequest.class, com.hepo.dfs.namenode.rpc.model.HeartbeatRequest.Builder.class);
+            HeartbeatRequest.class, Builder.class);
   }
 
   public static final int IP_FIELD_NUMBER = 1;
   private volatile Object ip_;
   /**
-   * <code>optional string ip = 1;</code>
+   * <code>string ip = 1;</code>
+   * @return The ip.
    */
   public String getIp() {
     Object ref = ip_;
     if (ref instanceof String) {
       return (String) ref;
     } else {
-      com.google.protobuf.ByteString bs = 
+      com.google.protobuf.ByteString bs =
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
       ip_ = s;
@@ -97,13 +113,14 @@ public  final class HeartbeatRequest extends
     }
   }
   /**
-   * <code>optional string ip = 1;</code>
+   * <code>string ip = 1;</code>
+   * @return The bytes for ip.
    */
   public com.google.protobuf.ByteString
       getIpBytes() {
     Object ref = ip_;
     if (ref instanceof String) {
-      com.google.protobuf.ByteString b = 
+      com.google.protobuf.ByteString b =
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
       ip_ = b;
@@ -116,14 +133,15 @@ public  final class HeartbeatRequest extends
   public static final int HOSTNAME_FIELD_NUMBER = 2;
   private volatile Object hostname_;
   /**
-   * <code>optional string hostname = 2;</code>
+   * <code>string hostname = 2;</code>
+   * @return The hostname.
    */
   public String getHostname() {
     Object ref = hostname_;
     if (ref instanceof String) {
       return (String) ref;
     } else {
-      com.google.protobuf.ByteString bs = 
+      com.google.protobuf.ByteString bs =
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
       hostname_ = s;
@@ -131,13 +149,14 @@ public  final class HeartbeatRequest extends
     }
   }
   /**
-   * <code>optional string hostname = 2;</code>
+   * <code>string hostname = 2;</code>
+   * @return The bytes for hostname.
    */
   public com.google.protobuf.ByteString
       getHostnameBytes() {
     Object ref = hostname_;
     if (ref instanceof String) {
-      com.google.protobuf.ByteString b = 
+      com.google.protobuf.ByteString b =
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
       hostname_ = b;
@@ -148,6 +167,7 @@ public  final class HeartbeatRequest extends
   }
 
   private byte memoizedIsInitialized = -1;
+  @Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -157,6 +177,7 @@ public  final class HeartbeatRequest extends
     return true;
   }
 
+  @Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (!getIpBytes().isEmpty()) {
@@ -165,8 +186,10 @@ public  final class HeartbeatRequest extends
     if (!getHostnameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hostname_);
     }
+    unknownFields.writeTo(output);
   }
 
+  @Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -178,27 +201,27 @@ public  final class HeartbeatRequest extends
     if (!getHostnameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hostname_);
     }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @Override
   public boolean equals(final Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.hepo.dfs.namenode.rpc.model.HeartbeatRequest)) {
+    if (!(obj instanceof HeartbeatRequest)) {
       return super.equals(obj);
     }
-    com.hepo.dfs.namenode.rpc.model.HeartbeatRequest other = (com.hepo.dfs.namenode.rpc.model.HeartbeatRequest) obj;
+    HeartbeatRequest other = (HeartbeatRequest) obj;
 
-    boolean result = true;
-    result = result && getIp()
-        .equals(other.getIp());
-    result = result && getHostname()
-        .equals(other.getHostname());
-    return result;
+    if (!getIp()
+        .equals(other.getIp())) return false;
+    if (!getHostname()
+        .equals(other.getHostname())) return false;
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
   }
 
   @Override
@@ -207,7 +230,7 @@ public  final class HeartbeatRequest extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + IP_FIELD_NUMBER;
     hash = (53 * hash) + getIp().hashCode();
     hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
@@ -217,58 +240,69 @@ public  final class HeartbeatRequest extends
     return hash;
   }
 
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseFrom(
+  public static HeartbeatRequest parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static HeartbeatRequest parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
+  public static HeartbeatRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseFrom(
+  public static HeartbeatRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseFrom(byte[] data)
+  public static HeartbeatRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseFrom(
+  public static HeartbeatRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseFrom(java.io.InputStream input)
+  public static HeartbeatRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseFrom(
+  public static HeartbeatRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseDelimitedFrom(java.io.InputStream input)
+  public static HeartbeatRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseDelimitedFrom(
+  public static HeartbeatRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseFrom(
+  public static HeartbeatRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parseFrom(
+  public static HeartbeatRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -276,13 +310,15 @@ public  final class HeartbeatRequest extends
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
+  @Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.hepo.dfs.namenode.rpc.model.HeartbeatRequest prototype) {
+  public static Builder newBuilder(HeartbeatRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+  @Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
@@ -306,11 +342,12 @@ public  final class HeartbeatRequest extends
       return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_descriptor;
     }
 
+    @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.hepo.dfs.namenode.rpc.model.HeartbeatRequest.class, com.hepo.dfs.namenode.rpc.model.HeartbeatRequest.Builder.class);
+              HeartbeatRequest.class, Builder.class);
     }
 
     // Construct using com.hepo.dfs.namenode.rpc.model.HeartbeatRequest.newBuilder()
@@ -328,6 +365,7 @@ public  final class HeartbeatRequest extends
               .alwaysUseFieldBuilders) {
       }
     }
+    @Override
     public Builder clear() {
       super.clear();
       ip_ = "";
@@ -337,68 +375,79 @@ public  final class HeartbeatRequest extends
       return this;
     }
 
+    @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
       return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_descriptor;
     }
 
-    public com.hepo.dfs.namenode.rpc.model.HeartbeatRequest getDefaultInstanceForType() {
-      return com.hepo.dfs.namenode.rpc.model.HeartbeatRequest.getDefaultInstance();
+    @Override
+    public HeartbeatRequest getDefaultInstanceForType() {
+      return HeartbeatRequest.getDefaultInstance();
     }
 
-    public com.hepo.dfs.namenode.rpc.model.HeartbeatRequest build() {
-      com.hepo.dfs.namenode.rpc.model.HeartbeatRequest result = buildPartial();
+    @Override
+    public HeartbeatRequest build() {
+      HeartbeatRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public com.hepo.dfs.namenode.rpc.model.HeartbeatRequest buildPartial() {
-      com.hepo.dfs.namenode.rpc.model.HeartbeatRequest result = new com.hepo.dfs.namenode.rpc.model.HeartbeatRequest(this);
+    @Override
+    public HeartbeatRequest buildPartial() {
+      HeartbeatRequest result = new HeartbeatRequest(this);
       result.ip_ = ip_;
       result.hostname_ = hostname_;
       onBuilt();
       return result;
     }
 
+    @Override
     public Builder clone() {
-      return (Builder) super.clone();
+      return super.clone();
     }
+    @Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         Object value) {
-      return (Builder) super.setField(field, value);
+      return super.setField(field, value);
     }
+    @Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
-      return (Builder) super.clearField(field);
+      return super.clearField(field);
     }
+    @Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-      return (Builder) super.clearOneof(oneof);
+      return super.clearOneof(oneof);
     }
+    @Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         int index, Object value) {
-      return (Builder) super.setRepeatedField(field, index, value);
+      return super.setRepeatedField(field, index, value);
     }
+    @Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         Object value) {
-      return (Builder) super.addRepeatedField(field, value);
+      return super.addRepeatedField(field, value);
     }
+    @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.hepo.dfs.namenode.rpc.model.HeartbeatRequest) {
-        return mergeFrom((com.hepo.dfs.namenode.rpc.model.HeartbeatRequest)other);
+      if (other instanceof HeartbeatRequest) {
+        return mergeFrom((HeartbeatRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.hepo.dfs.namenode.rpc.model.HeartbeatRequest other) {
-      if (other == com.hepo.dfs.namenode.rpc.model.HeartbeatRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(HeartbeatRequest other) {
+      if (other == HeartbeatRequest.getDefaultInstance()) return this;
       if (!other.getIp().isEmpty()) {
         ip_ = other.ip_;
         onChanged();
@@ -407,23 +456,26 @@ public  final class HeartbeatRequest extends
         hostname_ = other.hostname_;
         onChanged();
       }
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
 
+    @Override
     public final boolean isInitialized() {
       return true;
     }
 
+    @Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.hepo.dfs.namenode.rpc.model.HeartbeatRequest parsedMessage = null;
+      HeartbeatRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.hepo.dfs.namenode.rpc.model.HeartbeatRequest) e.getUnfinishedMessage();
+        parsedMessage = (HeartbeatRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -435,7 +487,8 @@ public  final class HeartbeatRequest extends
 
     private Object ip_ = "";
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>string ip = 1;</code>
+     * @return The ip.
      */
     public String getIp() {
       Object ref = ip_;
@@ -450,13 +503,14 @@ public  final class HeartbeatRequest extends
       }
     }
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>string ip = 1;</code>
+     * @return The bytes for ip.
      */
     public com.google.protobuf.ByteString
         getIpBytes() {
       Object ref = ip_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         ip_ = b;
@@ -466,29 +520,34 @@ public  final class HeartbeatRequest extends
       }
     }
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>string ip = 1;</code>
+     * @param value The ip to set.
+     * @return This builder for chaining.
      */
     public Builder setIp(
         String value) {
       if (value == null) {
     throw new NullPointerException();
   }
-  
+
       ip_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>string ip = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearIp() {
-      
+
       ip_ = getDefaultInstance().getIp();
       onChanged();
       return this;
     }
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>string ip = 1;</code>
+     * @param value The bytes for ip to set.
+     * @return This builder for chaining.
      */
     public Builder setIpBytes(
         com.google.protobuf.ByteString value) {
@@ -496,7 +555,7 @@ public  final class HeartbeatRequest extends
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-      
+
       ip_ = value;
       onChanged();
       return this;
@@ -504,7 +563,8 @@ public  final class HeartbeatRequest extends
 
     private Object hostname_ = "";
     /**
-     * <code>optional string hostname = 2;</code>
+     * <code>string hostname = 2;</code>
+     * @return The hostname.
      */
     public String getHostname() {
       Object ref = hostname_;
@@ -519,13 +579,14 @@ public  final class HeartbeatRequest extends
       }
     }
     /**
-     * <code>optional string hostname = 2;</code>
+     * <code>string hostname = 2;</code>
+     * @return The bytes for hostname.
      */
     public com.google.protobuf.ByteString
         getHostnameBytes() {
       Object ref = hostname_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         hostname_ = b;
@@ -535,29 +596,34 @@ public  final class HeartbeatRequest extends
       }
     }
     /**
-     * <code>optional string hostname = 2;</code>
+     * <code>string hostname = 2;</code>
+     * @param value The hostname to set.
+     * @return This builder for chaining.
      */
     public Builder setHostname(
         String value) {
       if (value == null) {
     throw new NullPointerException();
   }
-  
+
       hostname_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string hostname = 2;</code>
+     * <code>string hostname = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearHostname() {
-      
+
       hostname_ = getDefaultInstance().getHostname();
       onChanged();
       return this;
     }
     /**
-     * <code>optional string hostname = 2;</code>
+     * <code>string hostname = 2;</code>
+     * @param value The bytes for hostname to set.
+     * @return This builder for chaining.
      */
     public Builder setHostnameBytes(
         com.google.protobuf.ByteString value) {
@@ -565,19 +631,21 @@ public  final class HeartbeatRequest extends
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-      
+
       hostname_ = value;
       onChanged();
       return this;
     }
+    @Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFields(unknownFields);
     }
 
+    @Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -585,22 +653,23 @@ public  final class HeartbeatRequest extends
   }
 
   // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.HeartbeatRequest)
-  private static final com.hepo.dfs.namenode.rpc.model.HeartbeatRequest DEFAULT_INSTANCE;
+  private static final HeartbeatRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.hepo.dfs.namenode.rpc.model.HeartbeatRequest();
+    DEFAULT_INSTANCE = new HeartbeatRequest();
   }
 
-  public static com.hepo.dfs.namenode.rpc.model.HeartbeatRequest getDefaultInstance() {
+  public static HeartbeatRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
   private static final com.google.protobuf.Parser<HeartbeatRequest>
       PARSER = new com.google.protobuf.AbstractParser<HeartbeatRequest>() {
+    @Override
     public HeartbeatRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new HeartbeatRequest(input, extensionRegistry);
+      return new HeartbeatRequest(input, extensionRegistry);
     }
   };
 
@@ -613,7 +682,8 @@ public  final class HeartbeatRequest extends
     return PARSER;
   }
 
-  public com.hepo.dfs.namenode.rpc.model.HeartbeatRequest getDefaultInstanceForType() {
+  @Override
+  public HeartbeatRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

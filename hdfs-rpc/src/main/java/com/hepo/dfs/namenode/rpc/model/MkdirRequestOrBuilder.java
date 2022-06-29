@@ -8,11 +8,13 @@ public interface MkdirRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional string path = 1;</code>
+   * <code>string path = 1;</code>
+   * @return The path.
    */
   String getPath();
   /**
-   * <code>optional string path = 1;</code>
+   * <code>string path = 1;</code>
+   * @return The bytes for path.
    */
   com.google.protobuf.ByteString
       getPathBytes();

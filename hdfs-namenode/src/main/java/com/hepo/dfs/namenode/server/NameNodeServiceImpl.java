@@ -11,11 +11,13 @@ import io.grpc.stub.StreamObserver;
  *
  * @author linhaibo
  */
-public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService {
+public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImplBase {
 
 
     public static final Integer STATUS_SUCCESS = 1;
     public static final Integer STATUS_FAILURE = 2;
+    public static final Integer STATUS_SHUTDOWN = 3;
+
 
     /**
      * 负责管理元数据的核心组件（逻辑组件）
@@ -25,6 +27,8 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
      * 负责管理集群中所有的datanode的组件
      */
     private DataNodeManager datanodeManager;
+
+    private volatile Boolean isRunning = true;
 
     public NameNodeServiceImpl(FSNamesystem namesystem, DataNodeManager datanodeManager) {
         this.namesystem = namesystem;
@@ -70,13 +74,33 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     @Override
     public void mkdir(MkdirRequest request, StreamObserver<MkdirResponse> responseObserver) {
         try {
-            namesystem.mkdir(request.getPath());
-            System.out.println("创建目录：path" + request.getPath());
-            MkdirResponse response = MkdirResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+            MkdirResponse response = null;
+            if (!isRunning) {
+                response = MkdirResponse.newBuilder().setStatus(STATUS_SHUTDOWN).build();
+            }else {
+                this.namesystem.mkdir(request.getPath());
+                response = MkdirResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+                System.out.println("创建目录：path" + request.getPath());
+            }
+
             responseObserver.onNext(response);
             responseObserver.onCompleted();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 优雅关闭
+     */
+    @Override
+    public void shutdown(ShutdownRequest request, StreamObserver<ShutdownResponse> responseObserver) {
+        this.isRunning = false;
+        namesystem.flush();
+        ShutdownResponse response = ShutdownResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+        System.out.println("收到客户端发来的shutdown请求:" + request.getCode());
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 }

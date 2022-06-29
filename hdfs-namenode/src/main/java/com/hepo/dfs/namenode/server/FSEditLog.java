@@ -1,5 +1,7 @@
 package com.hepo.dfs.namenode.server;
 
+import java.io.IOException;
+
 /**
  * Description: 负责管理内存中的edit logs的核心组件
  * Project:  hdfs_study
@@ -21,11 +23,8 @@ public class FSEditLog {
     private volatile Boolean isSyncRunning = false;
 
     /**
-     * 当前是否有线程在等待下一批edit log刷到磁盘中
+     * 是否正在调度一次刷盘的操作
      */
-    private volatile Boolean isWaitSync = false;
-
-
     private volatile Boolean isSchedulingSync = false;
 
     /**
@@ -62,8 +61,13 @@ public class FSEditLog {
             //构建一个editLog对象
             EditLog editLog = new EditLog(txid, content);
 
+
             // 将edits log写入内存缓冲中，不是直接刷入磁盘文件
-            doubleBuffer.write(editLog);
+            try {
+                doubleBuffer.write(editLog);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             //每次写完一条editslog之后，就应该检查一下当前这个缓冲区是否满了
             if (!doubleBuffer.shouldSyncToDisk()) {
@@ -138,7 +142,11 @@ public class FSEditLog {
             isSyncRunning = true;
         }
         //开始将内存缓冲区的数据刷到磁盘中,这一步耗时会比较慢这，基本上肯定是毫秒级了，多的话要几十毫秒
-        doubleBuffer.flush();
+        try {
+            doubleBuffer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         synchronized (this) {
             //同步完文件数据，将isSyncRunning标志位复原
             isSyncRunning = false;
@@ -148,5 +156,15 @@ public class FSEditLog {
 
     }
 
-
+    /**
+     * 强制将缓冲区数据刷到磁盘
+     */
+    public void flush() {
+        try {
+            doubleBuffer.setReadyToSync();
+            doubleBuffer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

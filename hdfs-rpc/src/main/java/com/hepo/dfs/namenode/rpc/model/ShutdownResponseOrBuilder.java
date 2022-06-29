@@ -3,8 +3,8 @@
 
 package com.hepo.dfs.namenode.rpc.model;
 
-public interface RegisterResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:com.hepo.dfs.namenode.rpc.RegisterResponse)
+public interface ShutdownResponseOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:com.hepo.dfs.namenode.rpc.ShutdownResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
