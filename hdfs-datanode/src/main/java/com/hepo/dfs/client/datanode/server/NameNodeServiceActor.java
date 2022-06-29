@@ -1,4 +1,4 @@
-package com.hepo.dfs.datanode.server;
+package com.hepo.dfs.client.datanode.server;
 
 import com.hepo.dfs.namenode.rpc.model.HeartbeatRequest;
 import com.hepo.dfs.namenode.rpc.model.HeartbeatResponse;

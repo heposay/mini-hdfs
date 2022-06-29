@@ -1,7 +1,6 @@
-package com.hepo.dfs.datanode.server;
+package com.hepo.dfs.client.datanode.server;
 
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Description: 负责跟一组NameNode进行通信的OfferServie组件
