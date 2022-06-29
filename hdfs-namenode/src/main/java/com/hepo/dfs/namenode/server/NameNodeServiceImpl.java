@@ -5,7 +5,7 @@ import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.stub.StreamObserver;
 
 /**
- * Description: NameNode的服务接口
+ * Description: NameNode的服务接口实现类（所有的处理逻辑都在该类完成）
  * Project:  hdfs-study
  * CreateDate: Created in 2022-06-07 16:22
  *
@@ -63,7 +63,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     }
 
     /**
-     * 创建目录
+     * 创建目录（客户端）
      * @param request
      * @param responseObserver
      */

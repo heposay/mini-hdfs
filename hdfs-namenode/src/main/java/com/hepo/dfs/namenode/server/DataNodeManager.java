@@ -20,6 +20,16 @@ public class DataNodeManager {
      */
     private Map<String, DataNodeInfo> dataNodeInfoMap = new ConcurrentHashMap<>();
 
+    /**
+     * 心跳过期时间
+     */
+    private final static long HEARTBEAT_LAST_EXPIRATION_TIME = 90 * 1000;
+
+    /**
+     * 心跳检测时间间隙
+     */
+    private final static long HEARTBEAT_CHECK_INTERVAL_TIME = 30 * 1000;
+
 
     public DataNodeManager() {
         DataNodeAliveMonitor dataNodeAliveMonitor = new DataNodeAliveMonitor();
@@ -29,10 +39,6 @@ public class DataNodeManager {
     }
     /**
      * 对datanode进行注册
-     *
-     * @param ip
-     * @param hostname
-     * @return
      */
     public Boolean register(String ip, String hostname) {
         DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname);
@@ -42,17 +48,14 @@ public class DataNodeManager {
 
     /**
      * datanode进行心跳
-     *
-     * @param ip
-     * @param hostname
-     * @return
      */
     public Boolean heartbeat(String ip, String hostname) {
         DataNodeInfo dataNodeInfo = dataNodeInfoMap.get(ip + "-" + hostname);
         if (dataNodeInfo != null) {
             dataNodeInfo.setLatestHeartbeatTime(System.currentTimeMillis());
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -68,8 +71,9 @@ public class DataNodeManager {
                     Iterator<DataNodeInfo> iterator = dataNodeInfoMap.values().iterator();
                     DataNodeInfo dataNodeInfo = null;
                     while (iterator.hasNext()) {
+                        //遍历所有的datanode节点的心跳时间，如果心跳时间超过90秒没有更新，说明该节点已经离线，则把该服务摘除
                         dataNodeInfo = iterator.next();
-                        if (System.currentTimeMillis() - dataNodeInfo.getLatestHeartbeatTime() > 90 * 1000) {
+                        if (System.currentTimeMillis() - dataNodeInfo.getLatestHeartbeatTime() > HEARTBEAT_LAST_EXPIRATION_TIME) {
                             toRemoveDatanodes.add(dataNodeInfo.getIp() + "-" + dataNodeInfo.getHostname());
                         }
                     }
@@ -78,7 +82,7 @@ public class DataNodeManager {
                             dataNodeInfoMap.remove(toRemoveDatanode);
                         }
                     }
-                    Thread.sleep(30 * 1000);
+                    Thread.sleep(HEARTBEAT_CHECK_INTERVAL_TIME);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

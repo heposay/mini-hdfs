@@ -26,6 +26,7 @@ public class DataNodeInfo {
     public DataNodeInfo(String ip, String hostname) {
         this.ip = ip;
         this.hostname = hostname;
+        this.latestHeartbeatTime = System.currentTimeMillis();
     }
 
     public String getIp() {

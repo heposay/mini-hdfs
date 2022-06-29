@@ -67,11 +67,13 @@ public class FSEditLog {
 
             //每次写完一条editslog之后，就应该检查一下当前这个缓冲区是否满了
             if (!doubleBuffer.shouldSyncToDisk()) {
+                //如果缓冲区还没有满，直接return
                 return ;
             }
             // 如果代码进行到这里，就说明需要刷磁盘
             isSchedulingSync = true;
         }
+        //刷磁盘
         logSync();
     }
 
@@ -130,7 +132,7 @@ public class FSEditLog {
 
             //设置当前正在同步到磁盘的标志位
             isSchedulingSync = false;
-            //唤醒那些还卡在while循环那儿的线程
+            //唤醒那些还卡在waitSchedulingSync里面while循环那儿的线程，嘿哥们，我已经交换好缓冲区了，你们可以继续写日志了
             notifyAll();
             //将isSyncRunning标志位改成true，表示说，我要开始处理刷磁盘了，别人不要来打扰我
             isSyncRunning = true;
