@@ -12,6 +12,7 @@
         <module>hdfs-namenode</module>
         <module>hdfs-rpc</module>
         <module>hdfs-client</module>
+        <module>grpc-gen</module>
     </modules>
     <packaging>pom</packaging>
 
