@@ -1,10 +1,13 @@
 package com.hepo.dfs.namenode.server;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 内存双缓冲
@@ -35,7 +38,7 @@ public class DoubleBuffer {
     /**
      * 维护一份每次已经刷盘的txid索引
      */
-    private List<String> flushedTxids = new ArrayList<>();
+    private List<String> flushedTxids = new CopyOnWriteArrayList<>();
 
 
     /**
@@ -89,6 +92,9 @@ public class DoubleBuffer {
      * @return
      */
     public String[] getBufferedEditsLog() {
+        if (currentBuffer.size() == 0) {
+            return null;
+        }
         String editLogRowData = new String(currentBuffer.getBufferData());
         return editLogRowData.split("\n");
     }
@@ -148,7 +154,7 @@ public class DoubleBuffer {
         public void flush() throws IOException {
             byte[] data = buffer.toByteArray();
             ByteBuffer dataBuffer = ByteBuffer.wrap(data);
-            String editsLogFilePath = "/Users/linhaibo/Documents/tmp/edits-" + startTxid + StringPoolConstant.UNDERLINE + endTxid + ".log";
+            String editsLogFilePath = "/Users/linhaibo/Documents/tmp/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
             //将已刷盘的txid保存到flushedTxids索引里面
             flushedTxids.add(startTxid + "_" + endTxid);
 

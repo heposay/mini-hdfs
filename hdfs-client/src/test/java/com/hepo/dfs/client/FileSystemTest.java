@@ -16,11 +16,11 @@ public class FileSystemTest {
 
         FileSystem fileSystem = new FileSystemImpl();
 
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 10; i++) {
             new Thread() {
                 @Override
                 public void run() {
-                    for (int j = 0; j < 10; j++) {
+                    for (int j = 0; j < 20; j++) {
                         try {
                             fileSystem.mkdir("/usr/local/redis" + j + "_" + Thread.currentThread().getName());
                         } catch (Exception e) {
@@ -33,6 +33,6 @@ public class FileSystemTest {
         }
 
         //关闭系统
-        fileSystem.shutdown();
+        //fileSystem.shutdown();
     }
 }
