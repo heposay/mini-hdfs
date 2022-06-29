@@ -5,7 +5,6 @@ import com.hepo.dfs.namenode.rpc.model.HeartbeatResponse;
 import com.hepo.dfs.namenode.rpc.model.RegisterRequest;
 import com.hepo.dfs.namenode.rpc.model.RegisterResponse;
 import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
-import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.shaded.io.grpc.netty.NegotiationType;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
