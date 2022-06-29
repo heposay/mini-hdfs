@@ -143,6 +143,37 @@ public final class NameNodeServiceGrpc {
     return getShutdownMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest,
+      com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse> getFetchEditsLogMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "fetchEditsLog",
+      requestType = com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest,
+      com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse> getFetchEditsLogMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest, com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse> getFetchEditsLogMethod;
+    if ((getFetchEditsLogMethod = NameNodeServiceGrpc.getFetchEditsLogMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getFetchEditsLogMethod = NameNodeServiceGrpc.getFetchEditsLogMethod) == null) {
+          NameNodeServiceGrpc.getFetchEditsLogMethod = getFetchEditsLogMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest, com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "fetchEditsLog"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("fetchEditsLog"))
+              .build();
+        }
+      }
+    }
+    return getFetchEditsLogMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -219,6 +250,13 @@ public final class NameNodeServiceGrpc {
       asyncUnimplementedUnaryCall(getShutdownMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void fetchEditsLog(com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getFetchEditsLogMethod(), responseObserver);
+    }
+
     @Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -249,6 +287,13 @@ public final class NameNodeServiceGrpc {
                 com.hepo.dfs.namenode.rpc.model.ShutdownRequest,
                 com.hepo.dfs.namenode.rpc.model.ShutdownResponse>(
                   this, METHODID_SHUTDOWN)))
+          .addMethod(
+            getFetchEditsLogMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest,
+                com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse>(
+                  this, METHODID_FETCH_EDITS_LOG)))
           .build();
     }
   }
@@ -298,6 +343,14 @@ public final class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getShutdownMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void fetchEditsLog(com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getFetchEditsLogMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -340,6 +393,13 @@ public final class NameNodeServiceGrpc {
     public com.hepo.dfs.namenode.rpc.model.ShutdownResponse shutdown(com.hepo.dfs.namenode.rpc.model.ShutdownRequest request) {
       return blockingUnaryCall(
           getChannel(), getShutdownMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse fetchEditsLog(com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getFetchEditsLogMethod(), getCallOptions(), request);
     }
   }
 
@@ -388,12 +448,21 @@ public final class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getShutdownMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse> fetchEditsLog(
+        com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getFetchEditsLogMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
   private static final int METHODID_HEARTBEAT = 1;
   private static final int METHODID_MKDIR = 2;
   private static final int METHODID_SHUTDOWN = 3;
+  private static final int METHODID_FETCH_EDITS_LOG = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -427,6 +496,10 @@ public final class NameNodeServiceGrpc {
         case METHODID_SHUTDOWN:
           serviceImpl.shutdown((com.hepo.dfs.namenode.rpc.model.ShutdownRequest) request,
               (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ShutdownResponse>) responseObserver);
+          break;
+        case METHODID_FETCH_EDITS_LOG:
+          serviceImpl.fetchEditsLog((com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -493,6 +566,7 @@ public final class NameNodeServiceGrpc {
               .addMethod(getHeartbeatMethod())
               .addMethod(getMkdirMethod())
               .addMethod(getShutdownMethod())
+              .addMethod(getFetchEditsLogMethod())
               .build();
         }
       }

@@ -1,4 +1,4 @@
-package com.hepo.dfs.namenode.server;
+package com.hepo.dfs.backupnode.server;
 
 /**
  * Description: 负责管理组件的所有元数据
@@ -14,17 +14,12 @@ public class FSNamesystem {
      */
     private FSDirectory directory;
 
-    /**
-     * 负责管理内存中edit log的组件
-     */
-    private FSEditLog editLog;
 
     /**
      * 初始化组件
      */
     public FSNamesystem() {
         directory = new FSDirectory();
-        editLog = new FSEditLog();
     }
 
     /**
@@ -35,22 +30,7 @@ public class FSNamesystem {
      */
     public Boolean mkdir(String path) {
         this.directory.mkdir(path);
-        this.editLog.logEdit("{'OP':'MKDIR', 'PATH':'" + path + "'}");
         return true;
     }
 
-    /**
-     * 强制将缓冲区的数据刷到磁盘
-     */
-    public void flush() {
-        this.editLog.flush();
-    }
-
-    /**
-     * 获取FSEditLog组件
-     * @return
-     */
-    public FSEditLog getEditLog() {
-        return editLog;
-    }
 }

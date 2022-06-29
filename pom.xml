@@ -13,6 +13,7 @@
         <module>hdfs-rpc</module>
         <module>hdfs-client</module>
         <module>grpc-gen</module>
+        <module>dfs-backupnode</module>
     </modules>
     <packaging>pom</packaging>
 

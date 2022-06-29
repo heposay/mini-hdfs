@@ -1,6 +1,8 @@
 package com.hepo.dfs.namenode.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description: 负责管理内存中的edit logs的核心组件
@@ -165,6 +167,26 @@ public class FSEditLog {
             doubleBuffer.flush();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取已经刷入磁盘的txid范围
+     * @return
+     */
+    public List<String> getFlushedTxids () {
+        synchronized (this) {
+            return doubleBuffer.getFlushedTxids();
+        }
+    }
+
+    /**
+     * 获取缓冲区的数据
+     * @return
+     */
+    public String[] getBufferedEditsLog() {
+        synchronized (this) {
+            return doubleBuffer.getBufferedEditsLog();
         }
     }
 }

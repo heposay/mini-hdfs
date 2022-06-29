@@ -54,6 +54,16 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -71,9 +81,11 @@ public final class NameNodeRpcModel {
       "esponse\022\016\n\006status\030\001 \001(\005\"\034\n\014MkdirRequest\022" +
       "\014\n\004path\030\001 \001(\t\"\037\n\rMkdirResponse\022\016\n\006status" +
       "\030\001 \001(\005\"\037\n\017ShutdownRequest\022\014\n\004code\030\001 \001(\005\"" +
-      "\"\n\020ShutdownResponse\022\016\n\006status\030\001 \001(\005B5\n\037c" +
-      "om.hepo.dfs.namenode.rpc.modelB\020NameNode" +
-      "RpcModelP\001b\006proto3"
+      "\"\n\020ShutdownResponse\022\016\n\006status\030\001 \001(\005\"$\n\024F" +
+      "etchEditsLogRequest\022\014\n\004code\030\001 \001(\005\")\n\025Fet" +
+      "chEditsLogResponse\022\020\n\010editsLog\030\001 \001(\tB5\n\037" +
+      "com.hepo.dfs.namenode.rpc.modelB\020NameNod" +
+      "eRpcModelP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -127,6 +139,18 @@ public final class NameNodeRpcModel {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_descriptor,
         new String[] { "Status", });
+    internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogRequest_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogRequest_descriptor,
+        new String[] { "Code", });
+    internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogResponse_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogResponse_descriptor,
+        new String[] { "EditsLog", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
