@@ -54,7 +54,7 @@ public class NameNodeGroupOfferService {
     }
 
     /**
-     * 向主备两个NameNode节点进行注册
+     * 向NameNode节点进行注册
      */
     private void register() {
         try {
