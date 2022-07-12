@@ -28,9 +28,12 @@ public class FSNamesystem {
      * @param path 文件路径
      * @return 是否成功
      */
-    public Boolean mkdir(String path) {
-        this.directory.mkdir(path);
+    public Boolean mkdir(long txid, String path) {
+        this.directory.mkdir(txid, path);
         return true;
     }
 
+    public FSImage getFSImage() {
+        return directory.getFSImage();
+    }
 }
