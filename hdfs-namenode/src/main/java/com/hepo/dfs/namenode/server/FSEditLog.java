@@ -1,5 +1,6 @@
 package com.hepo.dfs.namenode.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,8 +39,23 @@ public class FSEditLog {
      */
     private ThreadLocal<Long> localTxid = new ThreadLocal<Long>();
 
-
+    /**
+     * 内存双缓冲
+     */
     private DoubleBuffer doubleBuffer = new DoubleBuffer();
+
+    /**
+     * 管理元数据组件
+     */
+    private FSNamesystem namesystem;
+
+    public FSEditLog(FSNamesystem namesystem) {
+        this.namesystem = namesystem;
+
+        EditLogCleaner cleaner = new EditLogCleaner();
+        cleaner.setDaemon(true);
+        cleaner.start();
+    }
 
     /**
      * 记录editLog
@@ -73,7 +89,7 @@ public class FSEditLog {
             //每次写完一条editslog之后，就应该检查一下当前这个缓冲区是否满了
             if (!doubleBuffer.shouldSyncToDisk()) {
                 //如果缓冲区还没有满，直接return
-                return ;
+                return;
             }
             // 如果代码进行到这里，就说明需要刷磁盘
             isSchedulingSync = true;
@@ -130,7 +146,7 @@ public class FSEditLog {
                     try {
                         //如果别人刷盘任务还没完成，释放锁等待一秒钟
                         wait(1000);
-                    }catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -179,7 +195,7 @@ public class FSEditLog {
     /**
      * 获取已经刷入磁盘的txid范围
      */
-    public List<String> getFlushedTxids () {
+    public List<String> getFlushedTxids() {
         synchronized (this) {
             return doubleBuffer.getFlushedTxids();
         }
@@ -191,6 +207,51 @@ public class FSEditLog {
     public String[] getBufferedEditsLog() {
         synchronized (this) {
             return doubleBuffer.getBufferedEditsLog();
+        }
+    }
+
+    /**
+     * 自动清理editLog时间间隔
+     */
+    private static final long EDIT_LOG_CLEAN_INTERVAL = 40 * 1000;
+
+    /**
+     * 后台自动清理editlog文件
+     */
+    class EditLogCleaner extends Thread {
+
+        @Override
+        public void run() {
+
+            System.out.println("editlog日志文件后台清理线程启动......");
+
+            while (true) {
+                try {
+
+                    Thread.sleep(EDIT_LOG_CLEAN_INTERVAL);
+
+                    List<String> flushedTxids = getFlushedTxids();
+                    if (flushedTxids != null && flushedTxids.size() > 0) {
+                        for (String flushedTxid : flushedTxids) {
+                            long checkpointTxid = namesystem.getCheckpointTxid();
+
+                            long startTxid = Long.valueOf(flushedTxid.split(StringPoolConstant.UNDERLINE)[0]);
+                            long endTxid = Long.valueOf(flushedTxid.split(StringPoolConstant.UNDERLINE)[1]);
+                            if (checkpointTxid > endTxid) {
+                                //发现刷入磁盘的endTxid比checkpointTxid还要小，说明该数据已经被写到checkpoint文件当中，可以删除该editLog文件
+                                String path = "/Users/linhaibo/Documents/tmp/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
+                                File file = new File(path);
+                                if (file.exists()) {
+                                    file.delete();
+                                    System.out.println("发现editlog日志文件不需要，进行删除：" + file.getPath());
+                                }
+                            }
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

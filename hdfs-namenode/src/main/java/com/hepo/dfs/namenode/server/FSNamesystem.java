@@ -29,7 +29,7 @@ public class FSNamesystem {
      */
     public FSNamesystem() {
         directory = new FSDirectory();
-        editLog = new FSEditLog();
+        editLog = new FSEditLog(this);
     }
 
     /**
