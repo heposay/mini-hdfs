@@ -34,16 +34,13 @@ public class FSImageCheckpointer extends Thread {
 
     @Override
     public void run() {
-
         System.out.println("fsimage checkpoint定时调度线程启动......");
         while (backupNode.isRunning()) {
             try {
                 Thread.sleep(CHECKPOINT_INTERVAL);
-                //删除上次文件
-                removeLastFsimageFile();
+
                 // 就可以触发这个checkpoint操作，去把内存里的数据写入磁盘就可以了
-                FSImage fsImage = namesystem.getFSImage();
-                doCheckpoint(fsImage);
+                doCheckpoint();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -53,10 +50,27 @@ public class FSImageCheckpointer extends Thread {
 
     /**
      * 将fsImage持久化到磁盘去
-     *
-     * @param fsImage
      */
-    private void doCheckpoint(FSImage fsImage) throws IOException {
+    private void doCheckpoint() throws IOException {
+        //获取fsImage文件
+        FSImage fsImage = namesystem.getFSImage();
+        //删除上次文件
+        removeLastFsimageFile();
+        //写fsImage文件到磁盘
+        writeFsImageFile(fsImage);
+        //上传fsImage文件到NameNode
+        uploadFsImageFile(fsImage);
+
+
+    }
+
+
+    /**
+     *  写fsImage文件到磁盘
+     * @param fsImage fsImage文件
+     * @throws IOException
+     */
+    private void writeFsImageFile(FSImage fsImage) throws IOException{
         ByteBuffer buffer = ByteBuffer.wrap(fsImage.getFSImageJson().getBytes());
         System.out.println("开始执行doCheckpoint操作，maxTxid：" + fsImage.getMaxTxid());
         //定义要写的目录路径
@@ -85,6 +99,16 @@ public class FSImageCheckpointer extends Thread {
                 file.close();
             }
         }
+
+    }
+
+    /**
+     * 上传fsImage文件到NameNode
+     * @param fsImage  fsImage文件
+     */
+    private void uploadFsImageFile(FSImage fsImage) {
+        FSImageUploader fsImageUploader = new FSImageUploader(fsImage);
+        fsImageUploader.start();
     }
 
 

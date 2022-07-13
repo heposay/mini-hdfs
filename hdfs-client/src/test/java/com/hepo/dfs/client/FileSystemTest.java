@@ -20,7 +20,7 @@ public class FileSystemTest {
             new Thread() {
                 @Override
                 public void run() {
-                    for (int j = 0; j < 20; j++) {
+                    for (int j = 0; j < 100; j++) {
                         try {
                             fileSystem.mkdir("/usr/local/redis" + j + "_" + Thread.currentThread().getName());
                         } catch (Exception e) {

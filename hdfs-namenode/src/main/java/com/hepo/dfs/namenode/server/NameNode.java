@@ -26,6 +26,8 @@ public class NameNode {
      */
     private DataNodeManager dataNodeManager;
 
+    private FSImageUploadServer fsImageUploadServer;
+
 
     /**
      * 初始化namenode各个组件
@@ -34,10 +36,12 @@ public class NameNode {
         this.namesystem = new FSNamesystem();
         this.dataNodeManager = new DataNodeManager();
         this.rpcServer = new NameNodeRpcServer(namesystem, dataNodeManager);
+        fsImageUploadServer = new FSImageUploadServer();
     }
 
 
     public void start() throws IOException, InterruptedException {
+        fsImageUploadServer.start();
         rpcServer.start();
         rpcServer.blockUntilShutdown();
     }
