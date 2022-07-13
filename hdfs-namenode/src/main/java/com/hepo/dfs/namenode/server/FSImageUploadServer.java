@@ -72,7 +72,7 @@ public class FSImageUploadServer extends Thread {
         if (selectionKey.isAcceptable()) {
             handleConnectRequest(selectionKey);
         } else if (selectionKey.isReadable()) {
-            handleReadRequest(selectionKey);
+            handleReadableRequest(selectionKey);
         } else if (selectionKey.isWritable()) {
             handleWriteRequest(selectionKey);
         }
@@ -107,35 +107,55 @@ public class FSImageUploadServer extends Thread {
      *
      * @param selectionKey A token representing the registration of a SelectableChannel with a Selector
      */
-    private void handleReadRequest(SelectionKey selectionKey) throws IOException {
+    private void handleReadableRequest(SelectionKey selectionKey) throws IOException {
         SocketChannel socketChannel = null;
 
         try {
-            //把上一次的文件删除了
             String fsimageFilePath = "/Users/linhaibo/Documents/tmp/namenode/fsimage.meta";
-            File fsimageFile = new File(fsimageFilePath);
-            if (fsimageFile.exists()) {
-                fsimageFile.delete();
-            }
+
             RandomAccessFile fsimageFileRAF = null;
             FileOutputStream fsimageOut = null;
             FileChannel fsimageFileChannel = null;
 
             try {
-                fsimageFileRAF = new RandomAccessFile(fsimageFilePath, "rw");
-                fsimageOut = new FileOutputStream(fsimageFileRAF.getFD());
-                fsimageFileChannel = fsimageOut.getChannel();
-
                 socketChannel = (SocketChannel) selectionKey.channel();
                 ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
+                int total = 0;
+                int count = -1;
 
-                while (socketChannel.read(buffer) > 0) {
-                    System.out.println("接收fsimage文件以及写入本地磁盘完毕......");
+                if ((count = socketChannel.read(buffer)) > 0) {
+                    File fsimageFile = new File(fsimageFilePath);
+                    if (fsimageFile.exists()) {
+                        fsimageFile.delete();
+                    }
+
+                    fsimageFileRAF = new RandomAccessFile(fsimageFilePath, "rw");
+                    fsimageOut = new FileOutputStream(fsimageFileRAF.getFD());
+                    fsimageFileChannel = fsimageOut.getChannel();
+
+                    total += count;
+
+                    buffer.flip();
+                    fsimageFileChannel.write(buffer);
+                    buffer.clear();
+                } else {
+                    socketChannel.close();
+                }
+                while ((count = socketChannel.read(buffer)) > 0) {
+                    total += count;
+
                     buffer.flip();
                     fsimageFileChannel.write(buffer);
                     buffer.clear();
                 }
-                fsimageFileChannel.force(false);
+
+                if (total > 0) {
+                    System.out.println("接收fsimage文件以及写入本地磁盘完毕......");
+                    fsimageFileChannel.force(false);
+                    socketChannel.register(selector, SelectionKey.OP_WRITE);
+                }
+
+
             } finally {
                 if (fsimageFileRAF != null) {
                     fsimageFileRAF.close();
