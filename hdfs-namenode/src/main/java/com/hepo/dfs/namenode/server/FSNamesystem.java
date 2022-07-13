@@ -1,5 +1,12 @@
 package com.hepo.dfs.namenode.server;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+
 /**
  * Description: 负责管理组件的所有元数据
  * Project:  hdfs_study
@@ -67,5 +74,54 @@ public class FSNamesystem {
     public void setCheckpointTxid(long checkpointTxid) {
         System.out.println("接收到checkpoint txid" + checkpointTxid);
         this.checkpointTxid = checkpointTxid;
+    }
+
+
+    /**
+     * 将checkpoint txid 保存到磁盘上去
+     */
+    public void saveCheckpointTxid() {
+        String path = "/Users/linhaibo/Documents/tmp/checkpoint-txid.meta";
+
+        RandomAccessFile raf = null;
+        FileOutputStream out = null;
+        FileChannel channel = null;
+
+        try {
+            File file = new File(path);
+            if (file.exists()) {
+                file.delete();
+            }
+
+            ByteBuffer dataBuffer = ByteBuffer.wrap(String.valueOf(getCheckpointTxid()).getBytes());
+
+
+            raf = new RandomAccessFile(path, "rw");
+            out = new FileOutputStream(raf.getFD());
+            channel = out.getChannel();
+
+            channel.write(dataBuffer);
+            //强制刷盘
+            channel.force(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (channel != null) {
+                    channel.close();
+                }
+                if (out != null) {
+                    out.close();
+                }
+                if (raf != null) {
+                    raf.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
     }
 }

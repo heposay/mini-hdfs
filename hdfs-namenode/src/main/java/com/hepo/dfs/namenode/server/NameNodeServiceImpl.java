@@ -132,6 +132,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
     public void shutdown(ShutdownRequest request, StreamObserver<ShutdownResponse> responseObserver) {
         this.isRunning = false;
         namesystem.flush();
+        namesystem.saveCheckpointTxid();
         ShutdownResponse response = ShutdownResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
         System.out.println("收到客户端发来的shutdown请求:" + request.getCode());
         responseObserver.onNext(response);
