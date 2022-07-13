@@ -155,8 +155,8 @@ public class DoubleBuffer {
             byte[] data = buffer.toByteArray();
             ByteBuffer dataBuffer = ByteBuffer.wrap(data);
             String editsLogFilePath = "/Users/linhaibo/Documents/tmp/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
-            //将已刷盘的txid保存到flushedTxids索引里面
-            flushedTxids.add(startTxid + "_" + endTxid);
+            //将已刷盘的txid保存到flushedTxids索引里面,格式为 1_100,101_200
+            flushedTxids.add(startTxid + StringPoolConstant.UNDERLINE + endTxid);
 
             RandomAccessFile file = null;
             FileOutputStream out = null;

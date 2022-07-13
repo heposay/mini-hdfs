@@ -1,7 +1,6 @@
 package com.hepo.dfs.namenode.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -111,7 +110,14 @@ public class FSEditLog {
             //假如某个线程已经将txid= 1,2,3,4,5的edit log刷到磁盘中或者正在刷到磁盘中
             //此时的syncMaxTxid = 5 代表正在刷到磁盘的最大txid
             //假如这时候有一个线程过来，他的txid = 3，此时该线程可以直接返回了，因为已经有线程正在把对应的edit log刷到磁盘中了
-            Long txid = localTxid.get();
+            Long txid = null;
+            try {
+                txid = localTxid.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                localTxid.remove();
+            }
 
             //当前有线程在刷内存缓冲到磁盘的动作
             if (isSyncRunning) {
@@ -172,7 +178,6 @@ public class FSEditLog {
 
     /**
      * 获取已经刷入磁盘的txid范围
-     * @return
      */
     public List<String> getFlushedTxids () {
         synchronized (this) {
@@ -182,7 +187,6 @@ public class FSEditLog {
 
     /**
      * 获取缓冲区的数据
-     * @return
      */
     public String[] getBufferedEditsLog() {
         synchronized (this) {
