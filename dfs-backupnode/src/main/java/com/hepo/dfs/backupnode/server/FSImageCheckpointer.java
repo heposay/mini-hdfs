@@ -19,17 +19,20 @@ public class FSImageCheckpointer extends Thread {
     /**
      * checkpoint的时间间隔
      */
-    private static final Integer CHECKPOINT_INTERVAL = 2  * 60 * 1000;
+    private static final Integer CHECKPOINT_INTERVAL = 30 * 1000;
 
     private BackupNode backupNode;
 
     private FSNamesystem namesystem;
 
+    private BackupNodeRpcClient namenode;
+
     private String lastFSImageFile = "";
 
-    public FSImageCheckpointer(BackupNode backupNode, FSNamesystem namesystem) {
+    public FSImageCheckpointer(BackupNode backupNode, FSNamesystem namesystem, BackupNodeRpcClient namenode) {
         this.backupNode = backupNode;
         this.namesystem = namesystem;
+        this.namenode = namenode;
     }
 
     @Override
@@ -60,8 +63,8 @@ public class FSImageCheckpointer extends Thread {
         writeFsImageFile(fsImage);
         //上传fsImage文件到NameNode
         uploadFsImageFile(fsImage);
-
-
+        //更新checkpoint txid
+        updateCheckpointTxid(fsImage);
     }
 
 
@@ -111,6 +114,14 @@ public class FSImageCheckpointer extends Thread {
         fsImageUploader.start();
     }
 
+
+    /**
+     * 更新checkpoint txid
+     * @param fsImage
+     */
+    private void updateCheckpointTxid (FSImage fsImage) {
+        namenode.updateCheckpointTxid(fsImage.getMaxTxid());
+    }
 
     /**
      * 删除上一个fsimage磁盘文件

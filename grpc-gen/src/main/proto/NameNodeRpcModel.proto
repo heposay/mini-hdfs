@@ -45,3 +45,13 @@ message FetchEditsLogRequest{
 message FetchEditsLogResponse{
     string editsLog = 1;
 }
+
+
+message UpdateCheckpointTxidRequest{
+    int64 txid = 1;
+
+}
+
+message UpdateCheckpointTxidResponse{
+    int32 status = 1;
+}

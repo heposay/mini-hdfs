@@ -174,6 +174,37 @@ public final class NameNodeServiceGrpc {
     return getFetchEditsLogMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest,
+      com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse> getUpdateCheckpointTxidMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "updateCheckpointTxid",
+      requestType = com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest,
+      com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse> getUpdateCheckpointTxidMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest, com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse> getUpdateCheckpointTxidMethod;
+    if ((getUpdateCheckpointTxidMethod = NameNodeServiceGrpc.getUpdateCheckpointTxidMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getUpdateCheckpointTxidMethod = NameNodeServiceGrpc.getUpdateCheckpointTxidMethod) == null) {
+          NameNodeServiceGrpc.getUpdateCheckpointTxidMethod = getUpdateCheckpointTxidMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest, com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "updateCheckpointTxid"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("updateCheckpointTxid"))
+              .build();
+        }
+      }
+    }
+    return getUpdateCheckpointTxidMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -257,6 +288,13 @@ public final class NameNodeServiceGrpc {
       asyncUnimplementedUnaryCall(getFetchEditsLogMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void updateCheckpointTxid(com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getUpdateCheckpointTxidMethod(), responseObserver);
+    }
+
     @Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -294,6 +332,13 @@ public final class NameNodeServiceGrpc {
                 com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest,
                 com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse>(
                   this, METHODID_FETCH_EDITS_LOG)))
+          .addMethod(
+            getUpdateCheckpointTxidMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest,
+                com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse>(
+                  this, METHODID_UPDATE_CHECKPOINT_TXID)))
           .build();
     }
   }
@@ -351,6 +396,14 @@ public final class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getFetchEditsLogMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void updateCheckpointTxid(com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getUpdateCheckpointTxidMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -400,6 +453,13 @@ public final class NameNodeServiceGrpc {
     public com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse fetchEditsLog(com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest request) {
       return blockingUnaryCall(
           getChannel(), getFetchEditsLogMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse updateCheckpointTxid(com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getUpdateCheckpointTxidMethod(), getCallOptions(), request);
     }
   }
 
@@ -456,6 +516,14 @@ public final class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getFetchEditsLogMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse> updateCheckpointTxid(
+        com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getUpdateCheckpointTxidMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -463,6 +531,7 @@ public final class NameNodeServiceGrpc {
   private static final int METHODID_MKDIR = 2;
   private static final int METHODID_SHUTDOWN = 3;
   private static final int METHODID_FETCH_EDITS_LOG = 4;
+  private static final int METHODID_UPDATE_CHECKPOINT_TXID = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -500,6 +569,10 @@ public final class NameNodeServiceGrpc {
         case METHODID_FETCH_EDITS_LOG:
           serviceImpl.fetchEditsLog((com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest) request,
               (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse>) responseObserver);
+          break;
+        case METHODID_UPDATE_CHECKPOINT_TXID:
+          serviceImpl.updateCheckpointTxid((com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -567,6 +640,7 @@ public final class NameNodeServiceGrpc {
               .addMethod(getMkdirMethod())
               .addMethod(getShutdownMethod())
               .addMethod(getFetchEditsLogMethod())
+              .addMethod(getUpdateCheckpointTxidMethod())
               .build();
         }
       }

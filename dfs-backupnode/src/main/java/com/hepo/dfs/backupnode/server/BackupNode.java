@@ -12,6 +12,8 @@ public class BackupNode {
     private volatile Boolean isRunning = true;
     private FSNamesystem namesystem;
 
+    private BackupNodeRpcClient namenode;
+
     public static void main(String[] args) throws InterruptedException {
         BackupNode backupNode = new BackupNode();
         backupNode.init();
@@ -23,12 +25,13 @@ public class BackupNode {
         EditsLogFetcher fetcher = new EditsLogFetcher(this, namesystem);
         fetcher.start();
 
-        FSImageCheckpointer checkpointer = new FSImageCheckpointer(this, namesystem);
+        FSImageCheckpointer checkpointer = new FSImageCheckpointer(this, namesystem, namenode);
         checkpointer.start();
     }
 
     public void init() {
         this.namesystem = new FSNamesystem();
+        this.namenode  = new BackupNodeRpcClient();
     }
 
 

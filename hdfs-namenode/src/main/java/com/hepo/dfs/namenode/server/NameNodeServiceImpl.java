@@ -340,4 +340,22 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         }
 
     }
+
+    /**
+     * 更新checkpoint txid
+     * @param request
+     * @param responseObserver
+     */
+    @Override
+    public void updateCheckpointTxid(UpdateCheckpointTxidRequest request, StreamObserver<UpdateCheckpointTxidResponse> responseObserver) {
+        long txid = request.getTxid();
+        namesystem.setCheckpointTxid(txid);
+
+        UpdateCheckpointTxidResponse response = UpdateCheckpointTxidResponse.newBuilder()
+                .setStatus(STATUS_SUCCESS)
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 }

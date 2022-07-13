@@ -3,6 +3,7 @@ package com.hepo.dfs.backupnode.server;
 import com.alibaba.fastjson.JSONArray;
 import com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest;
 import com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse;
+import com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest;
 import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
@@ -43,5 +44,14 @@ public class BackupNodeRpcClient {
         return JSONArray.parseArray(editsLogJson);
     }
 
+    /**
+     * 更新checkpoint txid
+     * @param txid
+     */
+    public void updateCheckpointTxid(long txid) {
+        UpdateCheckpointTxidRequest request = UpdateCheckpointTxidRequest.newBuilder()
+                .setTxid(txid).build();
+        namenode.updateCheckpointTxid(request);
+    }
 
 }

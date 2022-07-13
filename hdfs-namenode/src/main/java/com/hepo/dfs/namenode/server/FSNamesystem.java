@@ -20,6 +20,11 @@ public class FSNamesystem {
     private FSEditLog editLog;
 
     /**
+     * 最近一次checkpoint更新的txid
+     */
+    private long checkpointTxid;
+
+    /**
      * 初始化组件
      */
     public FSNamesystem() {
@@ -52,5 +57,15 @@ public class FSNamesystem {
      */
     public FSEditLog getEditLog() {
         return editLog;
+    }
+
+
+    public long getCheckpointTxid() {
+        return checkpointTxid;
+    }
+
+    public void setCheckpointTxid(long checkpointTxid) {
+        System.out.println("接收到checkpoint txid" + checkpointTxid);
+        this.checkpointTxid = checkpointTxid;
     }
 }
