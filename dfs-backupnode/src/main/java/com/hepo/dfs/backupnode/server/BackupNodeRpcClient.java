@@ -36,8 +36,11 @@ public class BackupNodeRpcClient {
      * 抓取日志
      * @return
      */
-    public JSONArray fetchEditsLog() {
-        FetchEditsLogRequest request = FetchEditsLogRequest.newBuilder().setCode(1).build();
+    public JSONArray fetchEditsLog(long syncedTxid) {
+        FetchEditsLogRequest request = FetchEditsLogRequest.newBuilder()
+                .setCode(1)
+                .setSyncedTxid(syncedTxid)
+                .build();
         FetchEditsLogResponse response = namenode.fetchEditsLog(request);
         String editsLogJson = response.getEditsLog();
         System.out.println("backupNode向NameNode拉取editsLog结果：" + editsLogJson);

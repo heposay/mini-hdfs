@@ -32,7 +32,7 @@ public class EditsLogFetcher extends Thread {
     public void run() {
         while (backupNode.isRunning()) {
             try {
-                JSONArray editsLogs = backupNodeRpcClient.fetchEditsLog();
+                JSONArray editsLogs = backupNodeRpcClient.fetchEditsLog(namesystem.getSyncedTxid());
                 if (editsLogs.size() == 0) {
                     //System.out.println("没有拉取到任何一条editslog，等待1秒后继续尝试拉取");
                     Thread.sleep(1000);

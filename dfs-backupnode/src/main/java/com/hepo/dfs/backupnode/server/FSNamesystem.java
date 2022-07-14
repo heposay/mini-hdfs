@@ -36,4 +36,8 @@ public class FSNamesystem {
     public FSImage getFSImage() {
         return directory.getFSImage();
     }
+
+    public long getSyncedTxid() {
+        return directory.getFSImage().getMaxTxid();
+    }
 }

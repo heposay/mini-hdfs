@@ -12,4 +12,10 @@ public interface FetchEditsLogRequestOrBuilder extends
    * @return The code.
    */
   int getCode();
+
+  /**
+   * <code>int64 syncedTxid = 2;</code>
+   * @return The syncedTxid.
+   */
+  long getSyncedTxid();
 }

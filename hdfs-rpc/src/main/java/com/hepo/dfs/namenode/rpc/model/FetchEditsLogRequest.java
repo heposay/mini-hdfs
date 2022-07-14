@@ -53,6 +53,11 @@ private static final long serialVersionUID = 0L;
             code_ = input.readInt32();
             break;
           }
+          case 16: {
+
+            syncedTxid_ = input.readInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -95,6 +100,16 @@ private static final long serialVersionUID = 0L;
     return code_;
   }
 
+  public static final int SYNCEDTXID_FIELD_NUMBER = 2;
+  private long syncedTxid_;
+  /**
+   * <code>int64 syncedTxid = 2;</code>
+   * @return The syncedTxid.
+   */
+  public long getSyncedTxid() {
+    return syncedTxid_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @Override
   public final boolean isInitialized() {
@@ -112,6 +127,9 @@ private static final long serialVersionUID = 0L;
     if (code_ != 0) {
       output.writeInt32(1, code_);
     }
+    if (syncedTxid_ != 0L) {
+      output.writeInt64(2, syncedTxid_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -124,6 +142,10 @@ private static final long serialVersionUID = 0L;
     if (code_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(1, code_);
+    }
+    if (syncedTxid_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(2, syncedTxid_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -142,6 +164,8 @@ private static final long serialVersionUID = 0L;
 
     if (getCode()
         != other.getCode()) return false;
+    if (getSyncedTxid()
+        != other.getSyncedTxid()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -155,6 +179,9 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + CODE_FIELD_NUMBER;
     hash = (53 * hash) + getCode();
+    hash = (37 * hash) + SYNCEDTXID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getSyncedTxid());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -256,7 +283,7 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.FetchEditsLogRequest)
-      com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequestOrBuilder {
+      FetchEditsLogRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogRequest_descriptor;
@@ -290,6 +317,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       code_ = 0;
 
+      syncedTxid_ = 0L;
+
       return this;
     }
 
@@ -317,6 +346,7 @@ private static final long serialVersionUID = 0L;
     public FetchEditsLogRequest buildPartial() {
       FetchEditsLogRequest result = new FetchEditsLogRequest(this);
       result.code_ = code_;
+      result.syncedTxid_ = syncedTxid_;
       onBuilt();
       return result;
     }
@@ -367,6 +397,9 @@ private static final long serialVersionUID = 0L;
       if (other == FetchEditsLogRequest.getDefaultInstance()) return this;
       if (other.getCode() != 0) {
         setCode(other.getCode());
+      }
+      if (other.getSyncedTxid() != 0L) {
+        setSyncedTxid(other.getSyncedTxid());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -423,6 +456,36 @@ private static final long serialVersionUID = 0L;
     public Builder clearCode() {
 
       code_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private long syncedTxid_ ;
+    /**
+     * <code>int64 syncedTxid = 2;</code>
+     * @return The syncedTxid.
+     */
+    public long getSyncedTxid() {
+      return syncedTxid_;
+    }
+    /**
+     * <code>int64 syncedTxid = 2;</code>
+     * @param value The syncedTxid to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSyncedTxid(long value) {
+
+      syncedTxid_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 syncedTxid = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSyncedTxid() {
+
+      syncedTxid_ = 0L;
       onChanged();
       return this;
     }
