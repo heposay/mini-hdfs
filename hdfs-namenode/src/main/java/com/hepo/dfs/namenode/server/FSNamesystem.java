@@ -47,7 +47,22 @@ public class FSNamesystem {
      */
     public Boolean mkdir(String path) {
         this.directory.mkdir(path);
-        this.editLog.logEdit("{'OP':'MKDIR', 'PATH':'" + path + "'}");
+        this.editLog.logEdit(EditLogFactory.mkdir(path));
+        return true;
+    }
+
+    /**
+     * 创建文件
+     *
+     * @param filename 文件名，包含所在的绝对路径： /products/img001.jpg
+     * @return
+     */
+    public Boolean create(String filename) {
+        if (!directory.create(filename)) {
+            return false;
+        }
+        //这里写一条editlog
+        editLog.logEdit(EditLogFactory.create(filename));
         return true;
     }
 
@@ -60,6 +75,7 @@ public class FSNamesystem {
 
     /**
      * 获取FSEditLog组件
+     *
      * @return
      */
     public FSEditLog getEditLog() {
@@ -75,7 +91,6 @@ public class FSNamesystem {
         System.out.println("接收到checkpoint txid" + checkpointTxid);
         this.checkpointTxid = checkpointTxid;
     }
-
 
     /**
      * 将checkpoint txid 保存到磁盘上去
@@ -105,7 +120,7 @@ public class FSNamesystem {
             channel.force(false);
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 if (channel != null) {
                     channel.close();
@@ -120,7 +135,6 @@ public class FSNamesystem {
                 e.printStackTrace();
             }
         }
-
 
 
     }

@@ -40,7 +40,7 @@ public class EditsLogFetcher extends Thread {
                 }
 
                 if (editsLogs.size() < BACKUP_NODE_FETCH_SIZE) {
-                    System.out.println("内存缓冲区数据少于10条，等待1秒后继续尝试拉取");
+                    System.out.println("内存缓冲区数据少于" + BACKUP_NODE_FETCH_SIZE + "条，等待1秒后继续尝试拉取");
                     Thread.sleep(1000);
                     continue;
                 }
@@ -51,6 +51,9 @@ public class EditsLogFetcher extends Thread {
                     if (op.equals("MKDIR")) {
                         String path = editsLog.getString("PATH");
                         namesystem.mkdir(editsLog.getLong("txid"), path);
+                    } else if (op.equals("CREATE")) {
+                        String path = editsLog.getString("PATH");
+                        namesystem.create(path);
                     }
                 }
             } catch (InterruptedException e) {

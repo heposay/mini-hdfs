@@ -33,6 +33,13 @@ public class FSNamesystem {
         return true;
     }
 
+
+    public Boolean create(String path) {
+        this.directory.create(path);
+        return true;
+    }
+
+
     public FSImage getFSImage() {
         return directory.getFSImage();
     }

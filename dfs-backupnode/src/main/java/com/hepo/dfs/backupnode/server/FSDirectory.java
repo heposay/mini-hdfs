@@ -18,7 +18,7 @@ public class FSDirectory {
     /**
      * 内存中的文件目录树
      */
-    private INodeDirectory dirTree;
+    private INode dirTree;
 
     /**
      * 当前文件目录树的更新到了哪个txid对应的editslog
@@ -40,7 +40,7 @@ public class FSDirectory {
      * 如果此时来创建另外一个目录：/usr/warehouse/spark
      */
     public FSDirectory() {
-        this.dirTree = new INodeDirectory("/");
+        this.dirTree = new INode("/");
     }
 
     /**
@@ -97,7 +97,7 @@ public class FSDirectory {
             maxTxid = txid;
 
             String[] paths = path.split("/");
-            INodeDirectory parent = dirTree;
+            INode parent = dirTree;
 
             for (String splitPath : paths) {
                 // ["","usr","warehosue","spark"]
@@ -105,38 +105,22 @@ public class FSDirectory {
                     continue;
                 }
                 //parent = /   splitPath = usr
-                INodeDirectory dir = findDirectory(parent, splitPath);
+                INode dir = findDirectory(parent, splitPath);
                 if (dir != null) {
                     parent = dir;
                     continue;
                 }
 
                 //如果没有找到，则创建目录，把改目录挂在parent下
-                INodeDirectory child = new INodeDirectory(splitPath);
+                INode child = new INode(splitPath);
                 parent.addChild(child);
                 parent = child;
             }
         } finally {
             unWriteLock();
         }
-        //printDirTree(dirTree, "");
     }
 
-    /**
-     * 打印目录树的路径
-     *
-     * @param dirTree
-     * @param blank
-     */
-    private void printDirTree(INodeDirectory dirTree, String blank) {
-        if (dirTree.getChild().size() == 0) {
-            return;
-        }
-        for (INode dir : dirTree.getChild()) {
-            System.out.println(blank + ((INodeDirectory) dir).getPath());
-            printDirTree((INodeDirectory) dir, blank + " ");
-        }
-    }
 
     /**
      * 对文件目录树递归查找目录树
@@ -145,13 +129,13 @@ public class FSDirectory {
      * @param path 路径
      * @return
      */
-    private INodeDirectory findDirectory(INodeDirectory dir, String path) {
-        if (dir.getChild().size() == 0) {
+    private INode findDirectory(INode dir, String path) {
+        if (dir.getChildren().size() == 0) {
             return null;
         }
-        for (INode child : dir.getChild()) {
-            if (child instanceof INodeDirectory) {
-                INodeDirectory childDir = (INodeDirectory) child;
+        for (INode child : dir.getChildren()) {
+            if (child instanceof INode) {
+                INode childDir = (INode) child;
                 if (childDir.getPath().equals(path)) {
                     return childDir;
                 }
@@ -161,28 +145,79 @@ public class FSDirectory {
     }
 
     /**
-     * 代表文件目录树中的一个节点
+     * 创建文件
+     *
+     * @param filename 文件名
+     * @return
      */
-    private interface INode {
+    public boolean create(String filename) {
+        //  /image/product/img001.jpg
+        // 先把路径部分截取出来，去找对应的目录
+        synchronized (dirTree) {
+            String[] splitFilename = filename.split("/");
+            String realFilename = splitFilename[splitFilename.length - 1];
+            //遍历循环找出对应的目录
+            INode parent = dirTree;
+            for (int i = 1; i < splitFilename.length - 1; i++) {
+                INode dir = findDirectory(dirTree, splitFilename[i]);
+                if (dir != null) {
+                    parent = dir;
+                    continue;
+                }
+                INode child = new INode(splitFilename[i]);
+                parent.addChild(child);
+                parent = child;
+            }
+            //此时就获取到文件的上一级目录，查看当前目录下有没有该文件。
+            if (existFile(parent, realFilename)) {
+                return false;
+            }
+
+            //不存在，则创建文件
+            INode file = new INode(realFilename);
+            parent.addChild(file);
+            return true;
+        }
 
     }
 
     /**
-     * 代表文件目录树中的一个目录
+     * 当前目录下是否存在该文件
+     *
+     * @param dir      目录
+     * @param filename 文件名
+     * @return
      */
-    private class INodeDirectory implements INode {
+    public boolean existFile(INode dir, String filename) {
+        if (dir.getChildren() != null && dir.getChildren().size() > 0) {
+            for (INode child : dir.getChildren()) {
+                if (child.getPath().equals(filename)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 代表文件目录树中的一个节点
+     */
+    private static class INode {
         private String path;
+        private List<INode> children;
 
-        private List<INode> child;
+        public INode() {
+        }
 
-        public INodeDirectory(String path) {
+        public INode(String path) {
             this.path = path;
-            this.child = new LinkedList<INode>();
+            this.children = new LinkedList<>();
         }
 
-        public void addChild(INode node) {
-            this.child.add(node);
+        public void addChild(INode child) {
+            this.children.add(child);
         }
+
 
         public String getPath() {
             return path;
@@ -192,40 +227,17 @@ public class FSDirectory {
             this.path = path;
         }
 
-        public List<INode> getChild() {
-            return child;
+        public List<INode> getChildren() {
+            return children;
         }
 
-        public void setChild(List<INode> child) {
-            this.child = child;
+        public void setChildren(List<INode> children) {
+            this.children = children;
         }
 
         @Override
         public String toString() {
-            return "INodeDirectory{" +
-                    "path='" + path + '\'' +
-                    ", child=" + child +
-                    '}';
-        }
-    }
-
-    /**
-     * 代表文件目录树中的一个文件
-     */
-    private class INodeFile implements INode {
-
-        private String name;
-
-        public INodeFile(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
+            return "INode{" + "path='" + path + '\'' + ", children=" + children + '}';
         }
     }
 }
