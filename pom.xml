@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.hepo.dfs.namenode.server</groupId>
-    <artifactId>hdfs_study</artifactId>
+    <artifactId>mini-hdfs</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>hdfs-datanode</module>
@@ -14,6 +14,7 @@
         <module>hdfs-client</module>
         <module>grpc-gen</module>
         <module>dfs-backupnode</module>
+        <module>java-nio</module>
     </modules>
     <packaging>pom</packaging>
 
