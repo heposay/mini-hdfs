@@ -2,7 +2,7 @@ package com.hepo.dfs.backupnode.server;
 
 /**
  * Description:
- * Project:  hdfs-study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-06-29 14:53
  *
  * @author linhaibo
@@ -14,15 +14,14 @@ public class BackupNode {
 
     private BackupNodeRpcClient namenode;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         BackupNode backupNode = new BackupNode();
         backupNode.init();
         backupNode.start();
-        //backupNode.run();
     }
 
     public void start() {
-        EditsLogFetcher fetcher = new EditsLogFetcher(this, namesystem);
+        EditsLogFetcher fetcher = new EditsLogFetcher(this, namesystem, namenode);
         fetcher.start();
 
         FSImageCheckpointer checkpointer = new FSImageCheckpointer(this, namesystem, namenode);
@@ -31,14 +30,7 @@ public class BackupNode {
 
     public void init() {
         this.namesystem = new FSNamesystem();
-        this.namenode  = new BackupNodeRpcClient();
-    }
-
-
-    public void run() throws InterruptedException {
-        while (isRunning) {
-            Thread.sleep(1000);
-        }
+        this.namenode = new BackupNodeRpcClient();
     }
 
     public Boolean isRunning() {

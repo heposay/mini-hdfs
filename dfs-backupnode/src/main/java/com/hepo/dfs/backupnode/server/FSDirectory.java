@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Description:负责管理内存中文件目录树的核心组件
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-04-22 09:41
  *
  * @author linhaibo
@@ -150,10 +150,14 @@ public class FSDirectory {
      * @param filename 文件名
      * @return
      */
-    public boolean create(String filename) {
+    public boolean create(long txid, String filename) {
         //  /image/product/img001.jpg
         // 先把路径部分截取出来，去找对应的目录
-        synchronized (dirTree) {
+        try {
+            writeLock();
+
+            maxTxid = txid;
+
             String[] splitFilename = filename.split("/");
             String realFilename = splitFilename[splitFilename.length - 1];
             //遍历循环找出对应的目录
@@ -177,6 +181,8 @@ public class FSDirectory {
             INode file = new INode(realFilename);
             parent.addChild(file);
             return true;
+        }finally {
+            unWriteLock();
         }
 
     }
@@ -239,5 +245,9 @@ public class FSDirectory {
         public String toString() {
             return "INode{" + "path='" + path + '\'' + ", children=" + children + '}';
         }
+    }
+
+    public static class INodeFile extends INode{
+
     }
 }

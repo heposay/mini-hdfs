@@ -2,7 +2,7 @@ package com.hepo.dfs.backupnode.server;
 
 /**
  * Description: 负责管理组件的所有元数据
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-04-22 09:46
  *
  * @author linhaibo
@@ -34,8 +34,8 @@ public class FSNamesystem {
     }
 
 
-    public Boolean create(String path) {
-        this.directory.create(path);
+    public Boolean create(long txid, String path) {
+        this.directory.create(txid, path);
         return true;
     }
 

@@ -9,7 +9,7 @@ import java.nio.channels.FileChannel;
 
 /**
  * Description: fsimage文件的checkpoint组件
- * Project:  hdfs-study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-06-29 21:53
  *
  * @author linhaibo
@@ -21,11 +21,11 @@ public class FSImageCheckpointer extends Thread {
      */
     private static final Integer CHECKPOINT_INTERVAL = 30 * 1000;
 
-    private BackupNode backupNode;
+    private final BackupNode backupNode;
 
-    private FSNamesystem namesystem;
+    private final FSNamesystem namesystem;
 
-    private BackupNodeRpcClient namenode;
+    private final BackupNodeRpcClient namenode;
 
     private String lastFSImageFile = "";
 
@@ -41,9 +41,12 @@ public class FSImageCheckpointer extends Thread {
         while (backupNode.isRunning()) {
             try {
                 Thread.sleep(CHECKPOINT_INTERVAL);
+                if (namesystem.getSyncedTxid() != 0) {
+                    // 就可以触发这个checkpoint操作，去把内存里的数据写入磁盘就可以了
+                    System.out.println("BackupNode准备执行checkpoint操作，写入fsimage文件......");
+                    doCheckpoint();
+                }
 
-                // 就可以触发这个checkpoint操作，去把内存里的数据写入磁盘就可以了
-                doCheckpoint();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -67,6 +70,16 @@ public class FSImageCheckpointer extends Thread {
         updateCheckpointTxid(fsImage);
     }
 
+    /**
+     * 删除上一个fsimage磁盘文件
+     */
+    private void removeLastFsimageFile() {
+        File file = new File(lastFSImageFile);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
 
     /**
      *  写fsImage文件到磁盘
@@ -77,7 +90,7 @@ public class FSImageCheckpointer extends Thread {
         ByteBuffer buffer = ByteBuffer.wrap(fsImage.getFSImageJson().getBytes());
         System.out.println("开始执行doCheckpoint操作，maxTxid：" + fsImage.getMaxTxid());
         //定义要写的目录路径
-        String fsimageFilePath = "/Users/linhaibo/Documents/tmp/fsimage-" + fsImage.getMaxTxid() + ".meta";
+        String fsimageFilePath = "/Users/linhaibo/Documents/tmp/backupnode/fsimage-" + fsImage.getMaxTxid() + ".meta";
 
         lastFSImageFile = fsimageFilePath;
 
@@ -117,19 +130,11 @@ public class FSImageCheckpointer extends Thread {
 
     /**
      * 更新checkpoint txid
-     * @param fsImage
+     * @param fsImage fsImage文件
      */
     private void updateCheckpointTxid (FSImage fsImage) {
         namenode.updateCheckpointTxid(fsImage.getMaxTxid());
     }
 
-    /**
-     * 删除上一个fsimage磁盘文件
-     */
-    private void removeLastFsimageFile() {
-        File file = new File(lastFSImageFile);
-        if (file.exists()) {
-            file.delete();
-        }
-    }
+
 }

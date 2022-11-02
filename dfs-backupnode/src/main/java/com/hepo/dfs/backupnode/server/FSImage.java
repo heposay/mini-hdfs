@@ -2,7 +2,7 @@ package com.hepo.dfs.backupnode.server;
 
 /**
  * Description: fsImage对象
- * Project:  hdfs-study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-06-29 22:14
  *
  * @author linhaibo
