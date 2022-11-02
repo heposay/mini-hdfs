@@ -205,6 +205,37 @@ public final class NameNodeServiceGrpc {
     return getUpdateCheckpointTxidMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.CreateFileRequest,
+      com.hepo.dfs.namenode.rpc.model.CreateFileResponse> getCreateMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "create",
+      requestType = com.hepo.dfs.namenode.rpc.model.CreateFileRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.CreateFileResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.CreateFileRequest,
+      com.hepo.dfs.namenode.rpc.model.CreateFileResponse> getCreateMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.CreateFileRequest, com.hepo.dfs.namenode.rpc.model.CreateFileResponse> getCreateMethod;
+    if ((getCreateMethod = NameNodeServiceGrpc.getCreateMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getCreateMethod = NameNodeServiceGrpc.getCreateMethod) == null) {
+          NameNodeServiceGrpc.getCreateMethod = getCreateMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.CreateFileRequest, com.hepo.dfs.namenode.rpc.model.CreateFileResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "create"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.CreateFileRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.CreateFileResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("create"))
+              .build();
+        }
+      }
+    }
+    return getCreateMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -295,6 +326,13 @@ public final class NameNodeServiceGrpc {
       asyncUnimplementedUnaryCall(getUpdateCheckpointTxidMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void create(com.hepo.dfs.namenode.rpc.model.CreateFileRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.CreateFileResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getCreateMethod(), responseObserver);
+    }
+
     @Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -339,6 +377,13 @@ public final class NameNodeServiceGrpc {
                 com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest,
                 com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse>(
                   this, METHODID_UPDATE_CHECKPOINT_TXID)))
+          .addMethod(
+            getCreateMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.CreateFileRequest,
+                com.hepo.dfs.namenode.rpc.model.CreateFileResponse>(
+                  this, METHODID_CREATE)))
           .build();
     }
   }
@@ -404,6 +449,14 @@ public final class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getUpdateCheckpointTxidMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void create(com.hepo.dfs.namenode.rpc.model.CreateFileRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.CreateFileResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getCreateMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -460,6 +513,13 @@ public final class NameNodeServiceGrpc {
     public com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse updateCheckpointTxid(com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest request) {
       return blockingUnaryCall(
           getChannel(), getUpdateCheckpointTxidMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.CreateFileResponse create(com.hepo.dfs.namenode.rpc.model.CreateFileRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getCreateMethod(), getCallOptions(), request);
     }
   }
 
@@ -524,6 +584,14 @@ public final class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getUpdateCheckpointTxidMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.CreateFileResponse> create(
+        com.hepo.dfs.namenode.rpc.model.CreateFileRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getCreateMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -532,6 +600,7 @@ public final class NameNodeServiceGrpc {
   private static final int METHODID_SHUTDOWN = 3;
   private static final int METHODID_FETCH_EDITS_LOG = 4;
   private static final int METHODID_UPDATE_CHECKPOINT_TXID = 5;
+  private static final int METHODID_CREATE = 6;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -573,6 +642,10 @@ public final class NameNodeServiceGrpc {
         case METHODID_UPDATE_CHECKPOINT_TXID:
           serviceImpl.updateCheckpointTxid((com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest) request,
               (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse>) responseObserver);
+          break;
+        case METHODID_CREATE:
+          serviceImpl.create((com.hepo.dfs.namenode.rpc.model.CreateFileRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.CreateFileResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -641,6 +714,7 @@ public final class NameNodeServiceGrpc {
               .addMethod(getShutdownMethod())
               .addMethod(getFetchEditsLogMethod())
               .addMethod(getUpdateCheckpointTxidMethod())
+              .addMethod(getCreateMethod())
               .build();
         }
       }

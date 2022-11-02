@@ -24,7 +24,7 @@ public final class NameNodeServer {
   static {
     String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022\031com.hepo.dfs." +
-      "namenode.rpc\032\026NameNodeRpcModel.proto2\235\005\n" +
+      "namenode.rpc\032\026NameNodeRpcModel.proto2\204\006\n" +
       "\017NameNodeService\022c\n\010register\022*.com.hepo." +
       "dfs.namenode.rpc.RegisterRequest\032+.com.h" +
       "epo.dfs.namenode.rpc.RegisterResponse\022f\n" +
@@ -41,9 +41,11 @@ public final class NameNodeServer {
       "ogResponse\022\207\001\n\024updateCheckpointTxid\0226.co" +
       "m.hepo.dfs.namenode.rpc.UpdateCheckpoint" +
       "TxidRequest\0327.com.hepo.dfs.namenode.rpc." +
-      "UpdateCheckpointTxidResponseB5\n!com.hepo" +
-      ".dfs.namenode.rpc.serviceB\016NameNodeServe" +
-      "rP\001b\006proto3"
+      "UpdateCheckpointTxidResponse\022e\n\006create\022," +
+      ".com.hepo.dfs.namenode.rpc.CreateFileReq" +
+      "uest\032-.com.hepo.dfs.namenode.rpc.CreateF" +
+      "ileResponseB5\n!com.hepo.dfs.namenode.rpc" +
+      ".serviceB\016NameNodeServerP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
