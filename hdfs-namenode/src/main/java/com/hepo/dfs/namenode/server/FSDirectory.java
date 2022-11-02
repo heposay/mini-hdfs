@@ -15,8 +15,15 @@ public class FSDirectory {
     /**
      * 内存中的文件目录树
      */
-    private final INode dirTree;
+    private INode dirTree;
 
+    public INode getDirTree() {
+        return dirTree;
+    }
+
+    public void setDirTree(INode dirTree) {
+        this.dirTree = dirTree;
+    }
 
     /**
      * 初始化构造方法
@@ -156,7 +163,7 @@ public class FSDirectory {
     /**
      * 代表文件目录树中的一个节点
      */
-    private static class INode {
+    public static class INode {
         private String path;
         private List<INode> children;
 

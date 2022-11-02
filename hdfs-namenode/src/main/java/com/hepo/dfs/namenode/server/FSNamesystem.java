@@ -1,9 +1,8 @@
 package com.hepo.dfs.namenode.server;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import com.alibaba.fastjson.JSONObject;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -37,6 +36,7 @@ public class FSNamesystem {
     public FSNamesystem() {
         directory = new FSDirectory();
         editLog = new FSEditLog(this);
+        recoverNamespace();
     }
 
     /**
@@ -96,7 +96,7 @@ public class FSNamesystem {
      * 将checkpoint txid 保存到磁盘上去
      */
     public void saveCheckpointTxid() {
-        String path = "/Users/linhaibo/Documents/tmp/checkpoint-txid.meta";
+        String path = "/Users/linhaibo/Documents/tmp/editslog/checkpoint-txid.meta";
 
         RandomAccessFile raf = null;
         FileOutputStream out = null;
@@ -135,7 +135,51 @@ public class FSNamesystem {
                 e.printStackTrace();
             }
         }
+    }
 
+    /**
+     * 恢复元数据
+     */
+    public void recoverNamespace() {
+        loadFSImage();
+
+    }
+
+    private  void loadFSImage() {
+        FileInputStream in = null;
+        FileChannel channel = null;
+        try {
+            in = new FileInputStream("/Users/linhaibo/Documents/tmp/editslog/fsimage.meta");
+            channel = in.getChannel();
+            //读取数据
+            ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
+            int count = channel.read(buffer);
+            buffer.flip();
+            //解析数据
+            String fsimageJson = new String(buffer.array(), 0, count);
+            System.out.println("恢复fsimage文件中的数据：" + fsimageJson);
+
+            FSDirectory.INode dirTree = JSONObject.parseObject(fsimageJson, FSDirectory.INode.class);
+            directory.setDirTree(dirTree);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (channel != null) {
+                try {
+                    channel.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
 
     }
 }
