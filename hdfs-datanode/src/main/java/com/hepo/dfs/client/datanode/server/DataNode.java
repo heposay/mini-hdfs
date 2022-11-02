@@ -2,7 +2,7 @@ package com.hepo.dfs.client.datanode.server;
 
 /**
  * Description: DataNode启动类
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-05-06 14:24
  *
  * @author linhaibo

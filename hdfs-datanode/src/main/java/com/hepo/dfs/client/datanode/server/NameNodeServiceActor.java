@@ -11,7 +11,7 @@ import io.grpc.netty.NettyChannelBuilder;
 
 /**
  * Description: 负责跟一组NameNode中的某一个进行通信的线程组件
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-05-06 14:25
  *
  * @author linhaibo

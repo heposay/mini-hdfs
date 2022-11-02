@@ -4,7 +4,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Description: 负责跟一组NameNode进行通信的OfferServie组件
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-05-06 14:25
  *
  * @author linhaibo
