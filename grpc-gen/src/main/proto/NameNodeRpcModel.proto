@@ -56,3 +56,11 @@ message UpdateCheckpointTxidRequest{
 message UpdateCheckpointTxidResponse{
     int32 status = 1;
 }
+
+message CreateFileRequest{
+    string filename = 1;
+}
+
+message CreateFileResponse{
+    int32 status = 1;
+}
