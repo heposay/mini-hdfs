@@ -14,7 +14,6 @@
         <module>hdfs-client</module>
         <module>grpc-gen</module>
         <module>dfs-backupnode</module>
-        <module>java-nio</module>
     </modules>
     <packaging>pom</packaging>
 
