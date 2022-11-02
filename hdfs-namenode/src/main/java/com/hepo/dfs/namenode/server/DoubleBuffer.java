@@ -38,7 +38,7 @@ public class DoubleBuffer {
     /**
      * 维护一份每次已经刷盘的txid索引
      */
-    private List<String> flushedTxids = new CopyOnWriteArrayList<>();
+    private final List<String> flushedTxids = new CopyOnWriteArrayList<>();
 
 
     /**
@@ -154,7 +154,7 @@ public class DoubleBuffer {
         public void flush() throws IOException {
             byte[] data = buffer.toByteArray();
             ByteBuffer dataBuffer = ByteBuffer.wrap(data);
-            String editsLogFilePath = "/Users/linhaibo/Documents/tmp/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
+            String editsLogFilePath = "/Users/linhaibo/Documents/tmp/editslog/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
             //将已刷盘的txid保存到flushedTxids索引里面,格式为 1_100,101_200
             flushedTxids.add(startTxid + StringPoolConstant.UNDERLINE + endTxid);
 

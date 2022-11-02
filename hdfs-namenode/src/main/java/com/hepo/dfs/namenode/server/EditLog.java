@@ -9,11 +9,11 @@ public class EditLog {
     /**
      * 当前日志的txid
      */
-    Long txid;
+    private Long txid;
     /**
      * 日志内容
      */
-    String content;
+    private String content;
 
     public EditLog(Long txid, String content) {
         this.txid = txid;

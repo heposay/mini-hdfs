@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Description: 这个组件，就是负责管理集群里的所有的datanode的
- * Project:  hdfs-study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-05-27 10:33
  *
  * @author linhaibo
@@ -18,7 +18,7 @@ public class DataNodeManager {
     /**
      * 内存中维护的datanode列表
      */
-    private Map<String, DataNodeInfo> dataNodeInfoMap = new ConcurrentHashMap<>();
+    private final Map<String, DataNodeInfo> dataNodeInfoMap = new ConcurrentHashMap<>();
 
     /**
      * 心跳过期时间
@@ -38,7 +38,7 @@ public class DataNodeManager {
         dataNodeAliveMonitor.start();
     }
     /**
-     * 对datanode进行注册
+     * 对datanode进行注册(需要加锁吗？)
      */
     public Boolean register(String ip, String hostname) {
         DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname);

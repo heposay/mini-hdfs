@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Description: NameNode的服务接口实现类（所有的处理逻辑都在该类完成）
- * Project:  hdfs-study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-06-07 16:22
  *
  * @author linhaibo
@@ -24,16 +24,17 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
     private static final Integer STATUS_SUCCESS = 1;
     private static final Integer STATUS_FAILURE = 2;
     private static final Integer STATUS_SHUTDOWN = 3;
+    private static final Integer STATUS_DUPLICATE = 4;
 
 
     /**
      * 负责管理元数据的核心组件（逻辑组件）
      */
-    private FSNamesystem namesystem;
+    private final FSNamesystem namesystem;
     /**
      * 负责管理集群中所有的datanode的组件
      */
-    private DataNodeManager datanodeManager;
+    private final DataNodeManager datanodeManager;
 
     private volatile Boolean isRunning = true;
 
@@ -41,7 +42,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
     /**
      * 当前缓冲的一小部分editslog
      */
-    private JSONArray currentBufferedEditsLog = new JSONArray();
+    private final JSONArray currentBufferedEditsLog = new JSONArray();
 
     /**
      * 当前内存里缓冲了哪个磁盘文件的数据
@@ -104,7 +105,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
             } else {
                 this.namesystem.mkdir(request.getPath());
                 response = MkdirResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
-                System.out.println("创建目录：path" + request.getPath());
             }
 
             responseObserver.onNext(response);
@@ -151,12 +151,10 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
         //当前backupNode节点同步到了哪一条txid了
         long syncedTxid = request.getSyncedTxid();
-        System.out.println("接收到的syncTxid为：" + syncedTxid);
 
         //如果此时还没有刷出来任何磁盘文件的话，那么此时数据仅仅存在于内存缓冲里
         if (flushedTxids.size() == 0) {
             //从内存缓冲拉数据
-            System.out.println("暂时没有任何磁盘文件，直接从内存缓冲中拉取editslog......");
             fetchFromBufferedEditLog(syncedTxid, fetchedEditsLog);
         }
         //如果此时已经有磁盘文件了，这个时候就要扫描所有磁盘文件的索引范围
@@ -164,8 +162,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
             if (bufferedFlushedTxid != null) {
                 //如果要拉取的数据存在当前缓存的磁盘文件里
                 if (existInFlushedFile(syncedTxid, bufferedFlushedTxid)) {
-                    System.out.println("获取到的bufferedFlushedTxid为：" + bufferedFlushedTxid);
-                    System.out.println("上一次已经缓存过磁盘文件的数据，直接从磁盘文件缓存中拉取editslog......");
                     fetchFromCurrentBuffer(syncedTxid, fetchedEditsLog);
                 }
                 //如果要拉取的数据不在当前缓存的磁盘文件中，需要从下一个磁盘文件去拉取
@@ -174,10 +170,8 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                     String nextFlushedTxid = getNextFlushedTxid(flushedTxids, bufferedFlushedTxid);
                     // 如果可以找到下一个磁盘文件，那么就从下一个磁盘文件里开始读取数据
                     if (nextFlushedTxid != null) {
-                        System.out.println("上一次缓存的磁盘文件找不到要拉取的数据，从下一个磁盘文件中拉取editslog......");
                         FetchFromFlushedFile(syncedTxid, nextFlushedTxid, fetchedEditsLog);
                     } else {
-                        System.out.println("上一次缓存的磁盘文件找不到要拉取的数据，而且没有下一个磁盘文件，尝试从内存缓冲中拉取editslog......");
                         // 如果没有找到下一个文件，此时就需要从内存里去继续读取
                         fetchFromBufferedEditLog(syncedTxid, fetchedEditsLog);
                     }
@@ -188,7 +182,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                 boolean fechedFromFlushedFile = false;
                 for (String flushedTxid : flushedTxids) {
                     if (existInFlushedFile(syncedTxid, flushedTxid)) {
-                        System.out.println("尝试从磁盘文件中拉取editslog，flushedTxid=" + flushedTxid);
                         //此时可以把这个磁盘文件里以及下一个磁盘文件的的数据都读取出来，放到内存里来缓存
                         FetchFromFlushedFile(syncedTxid, flushedTxid, fetchedEditsLog);
                         fechedFromFlushedFile = true;
@@ -198,7 +191,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                 // 第二种情况，你要拉取的txid已经比磁盘文件里的全部都新了，还在内存缓冲里
                 // 如果没有找到下一个文件，此时就需要从内存里去继续读取
                 if (!fechedFromFlushedFile) {
-                    System.out.println("所有磁盘文件都没找到要拉取的editslog，尝试直接从内存缓冲中拉取editslog......");
                     fetchFromBufferedEditLog(syncedTxid, fetchedEditsLog);
                 }
             }
@@ -235,7 +227,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
             long endTxid = Long.valueOf(flushedTxidSplited[1]);
 
             //开始读取数据，把数据放在缓冲区
-            String currentEditsLogPath = "/Users/linhaibo/Documents/tmp/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
+            String currentEditsLogPath = "/Users/linhaibo/Documents/tmp/editslog/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
             //读取数据
             List<String> editLogs = Files.readAllLines(Paths.get(currentEditsLogPath));
             //清空上一次的缓存
@@ -279,7 +271,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         //如果要拉取的txid还在上一次内存缓存中，此时继续从内存缓存中拉取即可
         long fetchTxid = syncedTxid + 1;
         if (fetchTxid <= currentBufferedMaxTxid) {
-            System.out.println("尝试从内存缓冲拉取的时候，发现上一次内存缓存有数据可供拉取......");
             fetchFromCurrentBuffer(syncedTxid, fetchedEditsLog);
             return;
         } else {
@@ -339,5 +330,36 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+    }
+
+    /**
+     * 创建文件
+     * @param request
+     * @param responseObserver
+     */
+    @Override
+    public void create(CreateFileRequest request,StreamObserver<CreateFileResponse> responseObserver) {
+        // 把文件名的查重和创建文件放在一起来执行
+        // 如果说很多个客户端万一同时要发起文件创建，都有一个文件名过来
+        // 多线程并发的情况下，文件名的查重和创建都是正确执行的
+        // 就必须得在同步的代码块来执行这个功能逻辑
+        try {
+            CreateFileResponse response = null;
+            if (!isRunning) {
+                response = CreateFileResponse.newBuilder().setStatus(STATUS_SHUTDOWN).build();
+            } else {
+                String filename = request.getFilename();
+                Boolean success = namesystem.create(filename);
+                if (success) {
+                    response = CreateFileResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+                }else {
+                    response = CreateFileResponse.newBuilder().setStatus(STATUS_DUPLICATE).build();
+                }
+            }
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

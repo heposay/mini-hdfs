@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Description: NameNode 的rpc服务接口
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-04-22 09:50
  *
  * @author linhaibo
@@ -18,15 +18,18 @@ public class NameNodeRpcServer {
     /**
      * 负责管理元数据的组件
      */
-    private FSNamesystem namesystem;
+    private final FSNamesystem namesystem;
 
     /**
      * 负责管理datanode的组件
      */
-    private DataNodeManager dataNodeManager;
+    private final DataNodeManager dataNodeManager;
 
-    private Server server = null;
+    private Server server;
 
+    /**
+     * NameNode默认端口
+     */
     private static final int DEFAULT_PORT = 50070;
 
     public NameNodeRpcServer(FSNamesystem namesystem, DataNodeManager dataNodeManager) {

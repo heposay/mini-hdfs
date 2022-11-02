@@ -4,7 +4,7 @@ import java.io.IOException;
 
 /**
  * Description: namenode 核心启动类
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-04-22 09:54
  *
  * @author linhaibo

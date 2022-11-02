@@ -1,13 +1,11 @@
 package com.hepo.dfs.namenode.server;
 
-import jdk.internal.org.objectweb.asm.tree.IincInsnNode;
-
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Description:负责管理内存中文件目录树的核心组件
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-04-22 09:41
  *
  * @author linhaibo
@@ -17,7 +15,7 @@ public class FSDirectory {
     /**
      * 内存中的文件目录树
      */
-    private INode dirTree;
+    private final INode dirTree;
 
 
     /**
@@ -36,10 +34,9 @@ public class FSDirectory {
      * 创建目录
      *
      * @param path 目录路径
-     * @return
      */
     public void mkdir(String path) {
-        //  path = /usr/warehouse/hive
+        // path = /usr/warehouse/hive
         // 先判断该路径下有没有 /usr这个目录，如果没有，则创建这个目录
         // 再判断 /usr路径下有没有 warehouse有没有这个目录，没有 则创建这个目录挂在/usr目录下
         // 最终再创建hive目录挂在/usr/warehouse目录下
@@ -69,10 +66,7 @@ public class FSDirectory {
     }
 
     /**
-     * 打印目录树的路径
-     *
-     * @param dirTree
-     * @param blank
+     * 打印目录树的路径（调试使用）
      */
     @SuppressWarnings("unused")
     private void printDirTree(INode dirTree, String blank) {
@@ -90,18 +84,15 @@ public class FSDirectory {
      *
      * @param dir  目录
      * @param path 路径
-     * @return
+     * @return 目录
      */
     private INode findDirectory(INode dir, String path) {
         if (dir.getChildren().size() == 0) {
             return null;
         }
         for (INode child : dir.getChildren()) {
-            if (child instanceof INode) {
-                INode childDir = (INode) child;
-                if (childDir.getPath().equals(path)) {
-                    return childDir;
-                }
+            if (child.getPath().equals(path)) {
+                return child;
             }
         }
         return null;
@@ -109,8 +100,9 @@ public class FSDirectory {
 
     /**
      * 创建文件
+     *
      * @param filename 文件名
-     * @return
+     * @return 是否成功
      */
     public boolean create(String filename) {
         //  /image/product/img001.jpg
@@ -148,7 +140,7 @@ public class FSDirectory {
      *
      * @param dir      目录
      * @param filename 文件名
-     * @return
+     * @return 是否存在文件
      */
     public boolean existFile(INode dir, String filename) {
         if (dir.getChildren() != null && dir.getChildren().size() > 0) {

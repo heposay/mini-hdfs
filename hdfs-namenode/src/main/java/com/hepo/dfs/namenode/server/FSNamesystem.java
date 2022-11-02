@@ -9,7 +9,7 @@ import java.nio.channels.FileChannel;
 
 /**
  * Description: 负责管理组件的所有元数据
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-04-22 09:46
  *
  * @author linhaibo

@@ -2,7 +2,7 @@ package com.hepo.dfs.namenode.server;
 
 /**
  * Description: datanode的信息
- * Project:  hdfs-study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-05-27 10:32
  *
  * @author linhaibo

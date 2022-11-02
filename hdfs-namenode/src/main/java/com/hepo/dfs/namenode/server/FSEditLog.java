@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Description: 负责管理内存中的edit logs的核心组件
- * Project:  hdfs_study
+ * Project:  mini-hdfs
  * CreateDate: Created in 2022-04-22 09:44
  *
  * @author linhaibo
@@ -37,17 +37,17 @@ public class FSEditLog {
     /**
      * 每个线程本地的txid副本
      */
-    private ThreadLocal<Long> localTxid = new ThreadLocal<Long>();
+    private final ThreadLocal<Long> localTxid = new ThreadLocal<>();
 
     /**
      * 内存双缓冲
      */
-    private DoubleBuffer doubleBuffer = new DoubleBuffer();
+    private final DoubleBuffer doubleBuffer = new DoubleBuffer();
 
     /**
      * 管理元数据组件
      */
-    private FSNamesystem namesystem;
+    private final FSNamesystem namesystem;
 
     public FSEditLog(FSNamesystem namesystem) {
         this.namesystem = namesystem;
@@ -63,7 +63,9 @@ public class FSEditLog {
      * @param content log内容
      */
     public void logEdit(String content) {
-        //这里必须得直接加锁,要保证editlog能顺序写，这样有两个好处：1.能保证editlog的tx都是顺序执行了，后面通过editLog来恢复数据也有数据保证，2.提高日志的写效率
+        //这里必须得直接加锁,要保证editlog能顺序写，这样有两个好处：
+        // 1.能保证editlog的tx都是顺序执行了，后面通过editLog来恢复数据也能保证顺序性，
+        // 2.提高日志的写效率
         synchronized (this) {
             //刚进来就直接检查一下是否有人正在调度一次刷盘的操作
             waitSchedulingSync();
@@ -215,6 +217,7 @@ public class FSEditLog {
      */
     private static final long EDIT_LOG_CLEAN_INTERVAL = 40 * 1000;
 
+
     /**
      * 后台自动清理editlog文件
      */
@@ -235,11 +238,11 @@ public class FSEditLog {
                         for (String flushedTxid : flushedTxids) {
                             long checkpointTxid = namesystem.getCheckpointTxid();
 
-                            long startTxid = Long.valueOf(flushedTxid.split(StringPoolConstant.UNDERLINE)[0]);
-                            long endTxid = Long.valueOf(flushedTxid.split(StringPoolConstant.UNDERLINE)[1]);
+                            long startTxid = Long.parseLong(flushedTxid.split(StringPoolConstant.UNDERLINE)[0]);
+                            long endTxid = Long.parseLong(flushedTxid.split(StringPoolConstant.UNDERLINE)[1]);
                             if (checkpointTxid > endTxid) {
                                 //发现刷入磁盘的endTxid比checkpointTxid还要小，说明该数据已经被写到checkpoint文件当中，可以删除该editLog文件
-                                String path = "/Users/linhaibo/Documents/tmp/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
+                                String path = "/Users/linhaibo/Documents/tmp/editslog/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
                                 File file = new File(path);
                                 if (file.exists()) {
                                     file.delete();
