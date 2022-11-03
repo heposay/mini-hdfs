@@ -122,3 +122,24 @@ FSEditLog不停的往一块缓冲区里去写数据，一旦写满了之后，�
 
 ## 重要接口的流程图
 
+
+
+![image-20221103120434575](/Users/linhaibo/Documents/code/personal/mini-hdfs/README.assets/image-20221103120434575.png)
+
+
+
+
+
+## 重要阶段测试流程
+
+阶段一：准备整体测试namenode和backupnode的故障重启之后拉取editlog进行回放功能
+
+1.客户端发送1000条数据给namenode，backupnode同样也拉取到1000条数据。此时有2个磁盘文件+内存缓冲里的部分数据。
+
+2.等待backupnode执行一次checkpoint操作，fsimages -> 1000条数据
+
+3.再发送1000条数据给namenode，此时会多出几个磁盘文件，内存里也有部分数据，fsimage文件中只有1000条数据
+
+4.客户端优雅关闭namenode，调用shutdown接口，namenode会将内存缓冲的数据刷到磁盘上，checkpoint txid 刷入磁盘
+
+5.重启namenode，恢复元数据，backupnode会继续拉取数据。观察日志打印。
