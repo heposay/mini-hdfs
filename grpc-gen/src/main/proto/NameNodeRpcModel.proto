@@ -29,6 +29,22 @@ message MkdirResponse{
     int32 status = 1;
 }
 
+message DeleteRequest{
+    string path = 1;
+}
+
+message DeleteResponse{
+    int32 status = 1;
+}
+
+message RenameRequest{
+    string path = 1;
+}
+
+message RenameResponse{
+    int32 status = 1;
+}
+
 message ShutdownRequest{
     int32 code = 1;
 }

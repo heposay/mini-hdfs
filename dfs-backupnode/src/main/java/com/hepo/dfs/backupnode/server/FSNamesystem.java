@@ -57,7 +57,9 @@ public class FSNamesystem {
      * @return 是否成功
      */
     public Boolean create(long txid, String path) {
-        this.directory.create(txid, path);
+        if (!directory.create(txid, path)){
+            return false;
+        }
         return true;
     }
 

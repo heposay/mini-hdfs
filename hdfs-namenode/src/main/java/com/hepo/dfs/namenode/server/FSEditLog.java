@@ -57,6 +57,10 @@ public class FSEditLog {
         cleaner.start();
     }
 
+    public void setTxidSeq(Long txidSeq) {
+        this.txidSeq = txidSeq;
+    }
+
     /**
      * 记录editLog
      *

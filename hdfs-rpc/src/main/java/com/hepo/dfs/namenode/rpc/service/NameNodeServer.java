@@ -24,7 +24,7 @@ public final class NameNodeServer {
   static {
     String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022\031com.hepo.dfs." +
-      "namenode.rpc\032\026NameNodeRpcModel.proto2\204\006\n" +
+      "namenode.rpc\032\026NameNodeRpcModel.proto2\302\007\n" +
       "\017NameNodeService\022c\n\010register\022*.com.hepo." +
       "dfs.namenode.rpc.RegisterRequest\032+.com.h" +
       "epo.dfs.namenode.rpc.RegisterResponse\022f\n" +
@@ -32,20 +32,25 @@ public final class NameNodeServer {
       "eartbeatRequest\032,.com.hepo.dfs.namenode." +
       "rpc.HeartbeatResponse\022Z\n\005mkdir\022\'.com.hep" +
       "o.dfs.namenode.rpc.MkdirRequest\032(.com.he" +
-      "po.dfs.namenode.rpc.MkdirResponse\022c\n\010shu" +
-      "tdown\022*.com.hepo.dfs.namenode.rpc.Shutdo" +
-      "wnRequest\032+.com.hepo.dfs.namenode.rpc.Sh" +
-      "utdownResponse\022r\n\rfetchEditsLog\022/.com.he" +
-      "po.dfs.namenode.rpc.FetchEditsLogRequest" +
-      "\0320.com.hepo.dfs.namenode.rpc.FetchEditsL" +
-      "ogResponse\022\207\001\n\024updateCheckpointTxid\0226.co" +
-      "m.hepo.dfs.namenode.rpc.UpdateCheckpoint" +
-      "TxidRequest\0327.com.hepo.dfs.namenode.rpc." +
-      "UpdateCheckpointTxidResponse\022e\n\006create\022," +
-      ".com.hepo.dfs.namenode.rpc.CreateFileReq" +
-      "uest\032-.com.hepo.dfs.namenode.rpc.CreateF" +
-      "ileResponseB5\n!com.hepo.dfs.namenode.rpc" +
-      ".serviceB\016NameNodeServerP\001b\006proto3"
+      "po.dfs.namenode.rpc.MkdirResponse\022]\n\006ren" +
+      "ame\022(.com.hepo.dfs.namenode.rpc.RenameRe" +
+      "quest\032).com.hepo.dfs.namenode.rpc.Rename" +
+      "Response\022]\n\006delete\022(.com.hepo.dfs.nameno" +
+      "de.rpc.DeleteRequest\032).com.hepo.dfs.name" +
+      "node.rpc.DeleteResponse\022c\n\010shutdown\022*.co" +
+      "m.hepo.dfs.namenode.rpc.ShutdownRequest\032" +
+      "+.com.hepo.dfs.namenode.rpc.ShutdownResp" +
+      "onse\022r\n\rfetchEditsLog\022/.com.hepo.dfs.nam" +
+      "enode.rpc.FetchEditsLogRequest\0320.com.hep" +
+      "o.dfs.namenode.rpc.FetchEditsLogResponse" +
+      "\022\207\001\n\024updateCheckpointTxid\0226.com.hepo.dfs" +
+      ".namenode.rpc.UpdateCheckpointTxidReques" +
+      "t\0327.com.hepo.dfs.namenode.rpc.UpdateChec" +
+      "kpointTxidResponse\022e\n\006create\022,.com.hepo." +
+      "dfs.namenode.rpc.CreateFileRequest\032-.com" +
+      ".hepo.dfs.namenode.rpc.CreateFileRespons" +
+      "eB5\n!com.hepo.dfs.namenode.rpc.serviceB\016" +
+      "NameNodeServerP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

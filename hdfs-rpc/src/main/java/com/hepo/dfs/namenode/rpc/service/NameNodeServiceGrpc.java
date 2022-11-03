@@ -112,6 +112,68 @@ public final class NameNodeServiceGrpc {
     return getMkdirMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.RenameRequest,
+      com.hepo.dfs.namenode.rpc.model.RenameResponse> getRenameMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "rename",
+      requestType = com.hepo.dfs.namenode.rpc.model.RenameRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.RenameResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.RenameRequest,
+      com.hepo.dfs.namenode.rpc.model.RenameResponse> getRenameMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.RenameRequest, com.hepo.dfs.namenode.rpc.model.RenameResponse> getRenameMethod;
+    if ((getRenameMethod = NameNodeServiceGrpc.getRenameMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getRenameMethod = NameNodeServiceGrpc.getRenameMethod) == null) {
+          NameNodeServiceGrpc.getRenameMethod = getRenameMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.RenameRequest, com.hepo.dfs.namenode.rpc.model.RenameResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "rename"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.RenameRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.RenameResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("rename"))
+              .build();
+        }
+      }
+    }
+    return getRenameMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.DeleteRequest,
+      com.hepo.dfs.namenode.rpc.model.DeleteResponse> getDeleteMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "delete",
+      requestType = com.hepo.dfs.namenode.rpc.model.DeleteRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.DeleteResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.DeleteRequest,
+      com.hepo.dfs.namenode.rpc.model.DeleteResponse> getDeleteMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.DeleteRequest, com.hepo.dfs.namenode.rpc.model.DeleteResponse> getDeleteMethod;
+    if ((getDeleteMethod = NameNodeServiceGrpc.getDeleteMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getDeleteMethod = NameNodeServiceGrpc.getDeleteMethod) == null) {
+          NameNodeServiceGrpc.getDeleteMethod = getDeleteMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.DeleteRequest, com.hepo.dfs.namenode.rpc.model.DeleteResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "delete"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.DeleteRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.DeleteResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("delete"))
+              .build();
+        }
+      }
+    }
+    return getDeleteMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ShutdownRequest,
       com.hepo.dfs.namenode.rpc.model.ShutdownResponse> getShutdownMethod;
 
@@ -307,6 +369,20 @@ public final class NameNodeServiceGrpc {
 
     /**
      */
+    public void rename(com.hepo.dfs.namenode.rpc.model.RenameRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.RenameResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getRenameMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void delete(com.hepo.dfs.namenode.rpc.model.DeleteRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.DeleteResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getDeleteMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void shutdown(com.hepo.dfs.namenode.rpc.model.ShutdownRequest request,
         io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ShutdownResponse> responseObserver) {
       asyncUnimplementedUnaryCall(getShutdownMethod(), responseObserver);
@@ -356,6 +432,20 @@ public final class NameNodeServiceGrpc {
                 com.hepo.dfs.namenode.rpc.model.MkdirRequest,
                 com.hepo.dfs.namenode.rpc.model.MkdirResponse>(
                   this, METHODID_MKDIR)))
+          .addMethod(
+            getRenameMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.RenameRequest,
+                com.hepo.dfs.namenode.rpc.model.RenameResponse>(
+                  this, METHODID_RENAME)))
+          .addMethod(
+            getDeleteMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.DeleteRequest,
+                com.hepo.dfs.namenode.rpc.model.DeleteResponse>(
+                  this, METHODID_DELETE)))
           .addMethod(
             getShutdownMethod(),
             asyncUnaryCall(
@@ -428,6 +518,22 @@ public final class NameNodeServiceGrpc {
 
     /**
      */
+    public void rename(com.hepo.dfs.namenode.rpc.model.RenameRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.RenameResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getRenameMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void delete(com.hepo.dfs.namenode.rpc.model.DeleteRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.DeleteResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getDeleteMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void shutdown(com.hepo.dfs.namenode.rpc.model.ShutdownRequest request,
         io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ShutdownResponse> responseObserver) {
       asyncUnaryCall(
@@ -492,6 +598,20 @@ public final class NameNodeServiceGrpc {
     public com.hepo.dfs.namenode.rpc.model.MkdirResponse mkdir(com.hepo.dfs.namenode.rpc.model.MkdirRequest request) {
       return blockingUnaryCall(
           getChannel(), getMkdirMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.RenameResponse rename(com.hepo.dfs.namenode.rpc.model.RenameRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getRenameMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.DeleteResponse delete(com.hepo.dfs.namenode.rpc.model.DeleteRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getDeleteMethod(), getCallOptions(), request);
     }
 
     /**
@@ -563,6 +683,22 @@ public final class NameNodeServiceGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.RenameResponse> rename(
+        com.hepo.dfs.namenode.rpc.model.RenameRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getRenameMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.DeleteResponse> delete(
+        com.hepo.dfs.namenode.rpc.model.DeleteRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getDeleteMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.ShutdownResponse> shutdown(
         com.hepo.dfs.namenode.rpc.model.ShutdownRequest request) {
       return futureUnaryCall(
@@ -597,10 +733,12 @@ public final class NameNodeServiceGrpc {
   private static final int METHODID_REGISTER = 0;
   private static final int METHODID_HEARTBEAT = 1;
   private static final int METHODID_MKDIR = 2;
-  private static final int METHODID_SHUTDOWN = 3;
-  private static final int METHODID_FETCH_EDITS_LOG = 4;
-  private static final int METHODID_UPDATE_CHECKPOINT_TXID = 5;
-  private static final int METHODID_CREATE = 6;
+  private static final int METHODID_RENAME = 3;
+  private static final int METHODID_DELETE = 4;
+  private static final int METHODID_SHUTDOWN = 5;
+  private static final int METHODID_FETCH_EDITS_LOG = 6;
+  private static final int METHODID_UPDATE_CHECKPOINT_TXID = 7;
+  private static final int METHODID_CREATE = 8;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -630,6 +768,14 @@ public final class NameNodeServiceGrpc {
         case METHODID_MKDIR:
           serviceImpl.mkdir((com.hepo.dfs.namenode.rpc.model.MkdirRequest) request,
               (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.MkdirResponse>) responseObserver);
+          break;
+        case METHODID_RENAME:
+          serviceImpl.rename((com.hepo.dfs.namenode.rpc.model.RenameRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.RenameResponse>) responseObserver);
+          break;
+        case METHODID_DELETE:
+          serviceImpl.delete((com.hepo.dfs.namenode.rpc.model.DeleteRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.DeleteResponse>) responseObserver);
           break;
         case METHODID_SHUTDOWN:
           serviceImpl.shutdown((com.hepo.dfs.namenode.rpc.model.ShutdownRequest) request,
@@ -711,6 +857,8 @@ public final class NameNodeServiceGrpc {
               .addMethod(getRegisterMethod())
               .addMethod(getHeartbeatMethod())
               .addMethod(getMkdirMethod())
+              .addMethod(getRenameMethod())
+              .addMethod(getDeleteMethod())
               .addMethod(getShutdownMethod())
               .addMethod(getFetchEditsLogMethod())
               .addMethod(getUpdateCheckpointTxidMethod())

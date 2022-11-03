@@ -323,9 +323,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
     /**
      * 更新checkpoint txid
-     *
-     * @param request
-     * @param responseObserver
      */
     @Override
     public void updateCheckpointTxid(UpdateCheckpointTxidRequest request, StreamObserver<UpdateCheckpointTxidResponse> responseObserver) {
@@ -342,8 +339,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
 
     /**
      * 创建文件
-     * @param request
-     * @param responseObserver
      */
     @Override
     public void create(CreateFileRequest request,StreamObserver<CreateFileResponse> responseObserver) {
@@ -362,6 +357,56 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                     response = CreateFileResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
                 }else {
                     response = CreateFileResponse.newBuilder().setStatus(STATUS_DUPLICATE).build();
+                }
+            }
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 修改目录名
+     */
+    @Override
+    public void rename(RenameRequest request, StreamObserver<RenameResponse> responseObserver) {
+        try {
+            RenameResponse response = null;
+            if (!isRunning) {
+                response = RenameResponse.newBuilder().setStatus(STATUS_SHUTDOWN).build();
+            } else {
+                String path = request.getPath();
+                Boolean success = namesystem.rename(path);
+                if (success) {
+                    response = RenameResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+                }else {
+                    response = RenameResponse.newBuilder().setStatus(STATUS_DUPLICATE).build();
+                }
+            }
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除目录
+     */
+    @Override
+    public void delete(DeleteRequest request, StreamObserver<DeleteResponse> responseObserver) {
+        try {
+            DeleteResponse response = null;
+            if (!isRunning) {
+                response = DeleteResponse.newBuilder().setStatus(STATUS_SHUTDOWN).build();
+            } else {
+                String path = request.getPath();
+                Boolean success = namesystem.delete(path);
+                if (success) {
+                    response = DeleteResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+                }else {
+                    response = DeleteResponse.newBuilder().setStatus(STATUS_DUPLICATE).build();
                 }
             }
             responseObserver.onNext(response);

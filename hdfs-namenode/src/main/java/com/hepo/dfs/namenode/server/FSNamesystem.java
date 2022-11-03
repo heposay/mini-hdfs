@@ -350,4 +350,24 @@ public class FSNamesystem {
 
     }
 
+    /**
+     * todo 修改目录名
+     *
+     * @param path 目录路径
+     * @return 是否成功
+     */
+    public Boolean rename(String path) {
+        return true;
+    }
+
+    /**
+     * todo 删除目录
+     *
+     * @param path 目录路径
+     * @return 是否成功
+     */
+    public Boolean delete(String path) {
+        return true;
+    }
+
 }

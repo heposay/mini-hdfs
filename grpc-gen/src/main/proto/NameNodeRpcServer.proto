@@ -12,6 +12,8 @@ service NameNodeService {
 	rpc register(RegisterRequest) returns (RegisterResponse);
 	rpc heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
 	rpc mkdir(MkdirRequest) returns (MkdirResponse);
+	rpc rename(RenameRequest) returns (RenameResponse);
+	rpc delete(DeleteRequest) returns (DeleteResponse);
 	rpc shutdown(ShutdownRequest) returns (ShutdownResponse);
 	rpc fetchEditsLog(FetchEditsLogRequest) returns (FetchEditsLogResponse);
 	rpc updateCheckpointTxid (UpdateCheckpointTxidRequest) returns (UpdateCheckpointTxidResponse);

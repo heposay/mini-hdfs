@@ -45,6 +45,26 @@ public final class NameNodeRpcModel {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_DeleteRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_DeleteRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_DeleteResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_DeleteResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_RenameRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_RenameRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_RenameResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_RenameResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -100,17 +120,20 @@ public final class NameNodeRpcModel {
       "ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\"#\n\021HeartbeatR" +
       "esponse\022\016\n\006status\030\001 \001(\005\"\034\n\014MkdirRequest\022" +
       "\014\n\004path\030\001 \001(\t\"\037\n\rMkdirResponse\022\016\n\006status" +
-      "\030\001 \001(\005\"\037\n\017ShutdownRequest\022\014\n\004code\030\001 \001(\005\"" +
-      "\"\n\020ShutdownResponse\022\016\n\006status\030\001 \001(\005\"8\n\024F" +
-      "etchEditsLogRequest\022\014\n\004code\030\001 \001(\005\022\022\n\nsyn" +
-      "cedTxid\030\002 \001(\003\")\n\025FetchEditsLogResponse\022\020" +
-      "\n\010editsLog\030\001 \001(\t\"+\n\033UpdateCheckpointTxid" +
-      "Request\022\014\n\004txid\030\001 \001(\003\".\n\034UpdateCheckpoin" +
-      "tTxidResponse\022\016\n\006status\030\001 \001(\005\"%\n\021CreateF" +
-      "ileRequest\022\020\n\010filename\030\001 \001(\t\"$\n\022CreateFi" +
-      "leResponse\022\016\n\006status\030\001 \001(\005B5\n\037com.hepo.d" +
-      "fs.namenode.rpc.modelB\020NameNodeRpcModelP" +
-      "\001b\006proto3"
+      "\030\001 \001(\005\"\035\n\rDeleteRequest\022\014\n\004path\030\001 \001(\t\" \n" +
+      "\016DeleteResponse\022\016\n\006status\030\001 \001(\005\"\035\n\rRenam" +
+      "eRequest\022\014\n\004path\030\001 \001(\t\" \n\016RenameResponse" +
+      "\022\016\n\006status\030\001 \001(\005\"\037\n\017ShutdownRequest\022\014\n\004c" +
+      "ode\030\001 \001(\005\"\"\n\020ShutdownResponse\022\016\n\006status\030" +
+      "\001 \001(\005\"8\n\024FetchEditsLogRequest\022\014\n\004code\030\001 " +
+      "\001(\005\022\022\n\nsyncedTxid\030\002 \001(\003\")\n\025FetchEditsLog" +
+      "Response\022\020\n\010editsLog\030\001 \001(\t\"+\n\033UpdateChec" +
+      "kpointTxidRequest\022\014\n\004txid\030\001 \001(\003\".\n\034Updat" +
+      "eCheckpointTxidResponse\022\016\n\006status\030\001 \001(\005\"" +
+      "%\n\021CreateFileRequest\022\020\n\010filename\030\001 \001(\t\"$" +
+      "\n\022CreateFileResponse\022\016\n\006status\030\001 \001(\005B5\n\037" +
+      "com.hepo.dfs.namenode.rpc.modelB\020NameNod" +
+      "eRpcModelP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -152,50 +175,74 @@ public final class NameNodeRpcModel {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor,
         new String[] { "Status", });
-    internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor =
+    internal_static_com_hepo_dfs_namenode_rpc_DeleteRequest_descriptor =
       getDescriptor().getMessageTypes().get(6);
+    internal_static_com_hepo_dfs_namenode_rpc_DeleteRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_DeleteRequest_descriptor,
+        new String[] { "Path", });
+    internal_static_com_hepo_dfs_namenode_rpc_DeleteResponse_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_com_hepo_dfs_namenode_rpc_DeleteResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_DeleteResponse_descriptor,
+        new String[] { "Status", });
+    internal_static_com_hepo_dfs_namenode_rpc_RenameRequest_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_com_hepo_dfs_namenode_rpc_RenameRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_RenameRequest_descriptor,
+        new String[] { "Path", });
+    internal_static_com_hepo_dfs_namenode_rpc_RenameResponse_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_com_hepo_dfs_namenode_rpc_RenameResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_RenameResponse_descriptor,
+        new String[] { "Status", });
+    internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor =
+      getDescriptor().getMessageTypes().get(10);
     internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor,
         new String[] { "Code", });
     internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_descriptor,
         new String[] { "Status", });
     internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogRequest_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogRequest_descriptor,
         new String[] { "Code", "SyncedTxid", });
     internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogResponse_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_FetchEditsLogResponse_descriptor,
         new String[] { "EditsLog", });
     internal_static_com_hepo_dfs_namenode_rpc_UpdateCheckpointTxidRequest_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_com_hepo_dfs_namenode_rpc_UpdateCheckpointTxidRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_UpdateCheckpointTxidRequest_descriptor,
         new String[] { "Txid", });
     internal_static_com_hepo_dfs_namenode_rpc_UpdateCheckpointTxidResponse_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_com_hepo_dfs_namenode_rpc_UpdateCheckpointTxidResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_UpdateCheckpointTxidResponse_descriptor,
         new String[] { "Status", });
     internal_static_com_hepo_dfs_namenode_rpc_CreateFileRequest_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_com_hepo_dfs_namenode_rpc_CreateFileRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_CreateFileRequest_descriptor,
         new String[] { "Filename", });
     internal_static_com_hepo_dfs_namenode_rpc_CreateFileResponse_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_com_hepo_dfs_namenode_rpc_CreateFileResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_CreateFileResponse_descriptor,
