@@ -225,19 +225,18 @@ public class FSEditLog {
 
         @Override
         public void run() {
-
             System.out.println("editlog日志文件后台清理线程启动......");
-
             while (true) {
                 try {
-
                     Thread.sleep(EDIT_LOG_CLEAN_INTERVAL);
-
+                    //获取已经刷到磁盘的txid集合
                     List<String> flushedTxids = getFlushedTxids();
                     if (flushedTxids != null && flushedTxids.size() > 0) {
                         for (String flushedTxid : flushedTxids) {
+                            //获取已经checkpoint的txid
                             long checkpointTxid = namesystem.getCheckpointTxid();
 
+                            //数据切割，进行判断
                             long startTxid = Long.parseLong(flushedTxid.split(StringPoolConstant.UNDERLINE)[0]);
                             long endTxid = Long.parseLong(flushedTxid.split(StringPoolConstant.UNDERLINE)[1]);
                             if (checkpointTxid > endTxid) {

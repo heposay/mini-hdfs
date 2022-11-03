@@ -1,5 +1,11 @@
 package com.hepo.dfs.namenode.server;
 
+import com.alibaba.fastjson.JSONObject;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +24,7 @@ public class DataNodeManager {
     /**
      * 内存中维护的datanode列表
      */
-    private final Map<String, DataNodeInfo> dataNodeInfoMap = new ConcurrentHashMap<>();
+    private Map<String, DataNodeInfo> dataNodeInfoMap = new ConcurrentHashMap<>();
 
     /**
      * 心跳过期时间
@@ -37,8 +43,18 @@ public class DataNodeManager {
         dataNodeAliveMonitor.setName("DataNodeAliveMonitor-");
         dataNodeAliveMonitor.start();
     }
+
+    public Map<String, DataNodeInfo> getDataNodeInfoMap() {
+        return dataNodeInfoMap;
+    }
+
+    public void setDataNodeInfoMap(Map<String, DataNodeInfo> dataNodeInfoMap) {
+        this.dataNodeInfoMap = dataNodeInfoMap;
+    }
+
+
     /**
-     * 对datanode进行注册(需要加锁吗？)
+     * 对datanode进行注册
      */
     public Boolean register(String ip, String hostname) {
         DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname);
@@ -56,6 +72,42 @@ public class DataNodeManager {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 将datanodeInfoMap元数据刷到磁盘中
+     */
+    public void flush() {
+        FileOutputStream fos = null;
+        FileChannel channel = null;
+        try {
+            String path = "/Users/linhaibo/Documents/tmp/datanode/datanode-info.meta";
+            fos = new FileOutputStream(path);
+            channel = fos.getChannel();
+
+            ByteBuffer buffer = ByteBuffer.wrap(JSONObject.toJSONString(dataNodeInfoMap).getBytes());
+            channel.write(buffer);
+            channel.force(false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (channel != null) {
+                try {
+                    channel.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+
     }
 
     /**

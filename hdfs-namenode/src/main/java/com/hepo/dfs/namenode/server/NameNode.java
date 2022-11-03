@@ -33,8 +33,8 @@ public class NameNode {
      * 初始化namenode各个组件
      */
     public void initialize() {
-        this.namesystem = new FSNamesystem();
         this.dataNodeManager = new DataNodeManager();
+        this.namesystem = new FSNamesystem(dataNodeManager);
         this.rpcServer = new NameNodeRpcServer(namesystem, dataNodeManager);
         fsImageUploadServer = new FSImageUploadServer();
     }
@@ -51,6 +51,5 @@ public class NameNode {
         NameNode nameNode = new NameNode();
         nameNode.initialize();
         nameNode.start();
-
     }
 }

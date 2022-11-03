@@ -85,9 +85,19 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
      */
     @Override
     public void heartbeat(HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {
-        datanodeManager.heartbeat(request.getIp(), request.getHostname());
         System.out.println("收到客户端[" + request.getIp() + StringPoolConstant.COLON + request.getHostname() + "]的心跳信息");
-        HeartbeatResponse response = HeartbeatResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+        HeartbeatResponse response = null;
+        if (isRunning) {
+            Boolean isLive = datanodeManager.heartbeat(request.getIp(), request.getHostname());
+            if (isLive) {
+                response = HeartbeatResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+            }else {
+                response = HeartbeatResponse.newBuilder().setStatus(STATUS_FAILURE).build();
+            }
+        } else {
+            response = HeartbeatResponse.newBuilder().setStatus(STATUS_SHUTDOWN).build();
+        }
+
         responseObserver.onNext(response);
         responseObserver.onCompleted();
 
@@ -123,6 +133,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         this.isRunning = false;
         namesystem.flush();
         namesystem.saveCheckpointTxid();
+        datanodeManager.flush();
         ShutdownResponse response = ShutdownResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
         System.out.println("收到客户端发来的shutdown请求:" + request.getCode());
         responseObserver.onNext(response);
@@ -145,6 +156,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
             return;
         }
 
+        //获取已经刷到磁盘的文件txid
         List<String> flushedTxids = namesystem.getEditLog().getFlushedTxids();
 
         JSONArray fetchedEditsLog = new JSONArray();
@@ -156,9 +168,8 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         if (flushedTxids.size() == 0) {
             //从内存缓冲拉数据
             fetchFromBufferedEditLog(syncedTxid, fetchedEditsLog);
-        }
-        //如果此时已经有磁盘文件了，这个时候就要扫描所有磁盘文件的索引范围
-        else {
+        } else {
+            //如果此时已经有磁盘文件了，这个时候就要扫描所有磁盘文件的索引范围
             if (bufferedFlushedTxid != null) {
                 //如果要拉取的数据存在当前缓存的磁盘文件里
                 if (existInFlushedFile(syncedTxid, bufferedFlushedTxid)) {
@@ -166,7 +177,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                 }
                 //如果要拉取的数据不在当前缓存的磁盘文件中，需要从下一个磁盘文件去拉取
                 else {
-
                     String nextFlushedTxid = getNextFlushedTxid(flushedTxids, bufferedFlushedTxid);
                     // 如果可以找到下一个磁盘文件，那么就从下一个磁盘文件里开始读取数据
                     if (nextFlushedTxid != null) {
@@ -176,7 +186,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                         fetchFromBufferedEditLog(syncedTxid, fetchedEditsLog);
                     }
                 }
-
             } else {
                 //从磁盘里面读取数据
                 boolean fechedFromFlushedFile = false;
@@ -188,7 +197,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                         break;
                     }
                 }
-                // 第二种情况，你要拉取的txid已经比磁盘文件里的全部都新了，还在内存缓冲里
+                // 第二种情况，你要拉取的txid已经比磁盘所有文件里的都要更大，说明数据此时都在缓冲区里面
                 // 如果没有找到下一个文件，此时就需要从内存里去继续读取
                 if (!fechedFromFlushedFile) {
                     fetchFromBufferedEditLog(syncedTxid, fetchedEditsLog);
@@ -223,8 +232,8 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
     private void FetchFromFlushedFile(long syncedTxid, String flushedTxid, JSONArray fetchedEditsLog) {
         try {
             String[] flushedTxidSplited = flushedTxid.split(StringPoolConstant.UNDERLINE);
-            long startTxid = Long.valueOf(flushedTxidSplited[0]);
-            long endTxid = Long.valueOf(flushedTxidSplited[1]);
+            long startTxid = Long.parseLong(flushedTxidSplited[0]);
+            long endTxid = Long.parseLong(flushedTxidSplited[1]);
 
             //开始读取数据，把数据放在缓冲区
             String currentEditsLogPath = "/Users/linhaibo/Documents/tmp/editslog/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
@@ -237,7 +246,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                 //记录一下当前内存缓存中的最大一个txid是多少，下次过来拉取数据的时候，可以判断一下，不用每次都去内存缓冲区加载
                 currentBufferedMaxTxid = JSONObject.parseObject(editLog).getLong("txid");
             }
-            // 缓存了某个刷入磁盘文件的数据
+            // 记录当前缓冲区已经加载的txid区间
             bufferedFlushedTxid = flushedTxid;
 
             //从当前缓冲区读取数据
@@ -254,8 +263,8 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
      */
     private Boolean existInFlushedFile(long syncedTxid, String flushedTxid) {
         String[] flushedTxidSplited = flushedTxid.split(StringPoolConstant.UNDERLINE);
-        long startTxid = Long.valueOf(flushedTxidSplited[0]);
-        long endTxid = Long.valueOf(flushedTxidSplited[1]);
+        long startTxid = Long.parseLong(flushedTxidSplited[0]);
+        long endTxid = Long.parseLong(flushedTxidSplited[1]);
         long fetchTxid = syncedTxid + 1;
         if (fetchTxid >= startTxid && fetchTxid <= endTxid) {
             return true;
@@ -272,7 +281,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         long fetchTxid = syncedTxid + 1;
         if (fetchTxid <= currentBufferedMaxTxid) {
             fetchFromCurrentBuffer(syncedTxid, fetchedEditsLog);
-            return;
         } else {
             //必须重新把内存缓冲中的数据加载到内存缓存来
             currentBufferedEditsLog.clear();
