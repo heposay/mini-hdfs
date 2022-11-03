@@ -25,6 +25,22 @@ public class FSDirectory {
      */
     private long maxTxid = 0;
 
+    public long getMaxTxid() {
+        return maxTxid;
+    }
+
+    public void setMaxTxid(long maxTxid) {
+        this.maxTxid = maxTxid;
+    }
+
+    public INode getDirTree() {
+        return dirTree;
+    }
+
+    public void setDirTree(INode dirTree) {
+        this.dirTree = dirTree;
+    }
+
     /**
      * 文件目录树的读写锁
      */
@@ -208,7 +224,7 @@ public class FSDirectory {
     /**
      * 代表文件目录树中的一个节点
      */
-    private static class INode {
+    public static class INode {
         private String path;
         private List<INode> children;
 

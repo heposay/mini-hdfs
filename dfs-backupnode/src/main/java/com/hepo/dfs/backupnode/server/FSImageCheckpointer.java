@@ -19,7 +19,7 @@ public class FSImageCheckpointer extends Thread {
     /**
      * checkpoint的时间间隔
      */
-    private static final Integer CHECKPOINT_INTERVAL = 30 * 1000;
+    private static final Integer CHECKPOINT_INTERVAL = 60 * 1000;
 
     private final BackupNode backupNode;
 
@@ -28,6 +28,8 @@ public class FSImageCheckpointer extends Thread {
     private final BackupNodeRpcClient namenode;
 
     private String lastFSImageFile = "";
+
+    private long checkpointTime = System.currentTimeMillis();
 
     public FSImageCheckpointer(BackupNode backupNode, FSNamesystem namesystem, BackupNodeRpcClient namenode) {
         this.backupNode = backupNode;
@@ -40,13 +42,26 @@ public class FSImageCheckpointer extends Thread {
         System.out.println("fsimage checkpoint定时调度线程启动......");
         while (backupNode.isRunning()) {
             try {
-                Thread.sleep(CHECKPOINT_INTERVAL);
-                if (namesystem.getSyncedTxid() != 0) {
+                if (!namesystem.isFinishedRecover()) {
+                    System.out.println("当前还没完成元数据恢复，不进行checkpoint......");
+                    Thread.sleep(1000);
+                    continue;
+                }
+                if (lastFSImageFile.equals("")) {
+                    this.lastFSImageFile = namesystem.getCheckpointFile();
+                }
+                long now = System.currentTimeMillis();
+                if (now - checkpointTime > CHECKPOINT_INTERVAL) {
+                    if (!namenode.isNamenodeRunning()) {
+                        System.out.println("namenode当前无法访问，不执行checkpoint......");
+                        Thread.sleep(3000);
+                        continue;
+                    }
                     // 就可以触发这个checkpoint操作，去把内存里的数据写入磁盘就可以了
                     System.out.println("BackupNode准备执行checkpoint操作，写入fsimage文件......");
                     doCheckpoint();
+                    System.out.println("完成checkpoint操作......");
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -68,7 +83,10 @@ public class FSImageCheckpointer extends Thread {
         uploadFsImageFile(fsImage);
         //更新checkpoint txid
         updateCheckpointTxid(fsImage);
+        //持久化checkpoint信息
+        saveCheckpointInfo(fsImage);
     }
+
 
     /**
      * 删除上一个fsimage磁盘文件
@@ -136,5 +154,67 @@ public class FSImageCheckpointer extends Thread {
         namenode.updateCheckpointTxid(fsImage.getMaxTxid());
     }
 
+    /**
+     * 持久化checkpoint信息
+     * @param fsImage  fsImage文件
+     */
+    private void saveCheckpointInfo(FSImage fsImage) {
+        String path = "/Users/linhaibo/Documents/tmp/backupnode/checkpoint-info.meta";
+        RandomAccessFile raf = null;
+        FileOutputStream fos = null;
+        FileChannel channel = null;
 
+        try{
+            //删除已存在文件
+            File file = new File(path);
+            if (file.exists()) {
+                file.delete();
+            }
+
+            long now = System.currentTimeMillis();
+            this.checkpointTime = now;
+            Long checkpointTxid = fsImage.getMaxTxid();
+            //构建buffer
+            ByteBuffer buffer = ByteBuffer.wrap((now +
+                    StringPoolConstant.UNDERLINE +
+                    checkpointTxid +
+                    StringPoolConstant.UNDERLINE +
+                    lastFSImageFile
+            ).getBytes());
+
+            raf = new RandomAccessFile(path, "rw");
+            fos = new FileOutputStream(raf.getFD());
+            channel = fos.getChannel();
+
+            channel.write(buffer);
+            channel.force(false);
+
+            System.out.println("checkpoint信息持久化到磁盘文件......");
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (raf != null) {
+                try {
+                    raf.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (channel != null) {
+                try {
+                    channel.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
 }

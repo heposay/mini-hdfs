@@ -1,10 +1,7 @@
 package com.hepo.dfs.backupnode.server;
 
 import com.alibaba.fastjson.JSONArray;
-import com.hepo.dfs.namenode.rpc.model.FetchEditsLogRequest;
-import com.hepo.dfs.namenode.rpc.model.FetchEditsLogResponse;
-import com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequest;
-import com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidResponse;
+import com.hepo.dfs.namenode.rpc.model.*;
 import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
@@ -23,7 +20,17 @@ public class BackupNodeRpcClient {
 
     private static final int NAMENODE_PORT = 50070;
 
+
+    private static final String BACKUPNODE_HONENAME = "dfs-backup-node-01";
+
+    private static final String BACKUPNODE_IP = "localhost";
+
+    private static final long NAMENODE_HEARTBEAT_INTERVAL_TIME = 3 * 1000;
+
     private NameNodeServiceGrpc.NameNodeServiceBlockingStub namenode;
+
+
+    private Boolean isNamenodeRunning = true;
 
 
     public BackupNodeRpcClient() {
@@ -31,6 +38,16 @@ public class BackupNodeRpcClient {
                 .negotiationType(NegotiationType.PLAINTEXT).build();
         this.namenode = NameNodeServiceGrpc.newBlockingStub(channel);
         System.out.println("BackupNodeRpcClient已启动，Namenode的IP地址：" + NAMENODE_HOSTNAME + ", 端口号：" + NAMENODE_PORT);
+    }
+
+    public void start() {
+        try {
+            register();
+            startHeartbeat();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -49,6 +66,8 @@ public class BackupNodeRpcClient {
         return JSONArray.parseArray(editsLogJson);
     }
 
+
+
     /**
      * 更新checkpoint txid
      *
@@ -59,6 +78,85 @@ public class BackupNodeRpcClient {
                 .setTxid(txid).build();
         UpdateCheckpointTxidResponse response = namenode.updateCheckpointTxid(request);
         System.out.println("更新checkpoint txid相应结果:" + ResponseUtil.getMsg(response.getStatus()));
+    }
+
+
+    public Boolean isNamenodeRunning() {
+        return isNamenodeRunning;
+    }
+
+    public void setNamenodeRunning(Boolean namenodeRunning) {
+        isNamenodeRunning = namenodeRunning;
+    }
+
+
+    /**
+     * 向自己负责通信的那个NameNode进行注册
+     */
+    private void register() throws Exception {
+        BackupNodeRpcClient.RegisterThread registerThread = new BackupNodeRpcClient.RegisterThread();
+        registerThread.start();
+        registerThread.join();
+    }
+
+    /**
+     * 开启心跳线程
+     */
+    private void startHeartbeat() {
+        new BackupNodeRpcClient.HeartbeatThread().start();
+    }
+
+    /**
+     * 负责注册的后天线程
+     */
+    class RegisterThread extends Thread {
+        @Override
+        public void run() {
+            try {
+                // 发送rpc接口调用请求到NameNode去进行注册
+                System.out.println("发送请求到NameNode进行注册.......");
+                RegisterRequest registerRequest = RegisterRequest.newBuilder().setIp(BACKUPNODE_IP).setHostname(BACKUPNODE_HONENAME).build();
+                RegisterResponse response = namenode.register(registerRequest);
+                System.out.println("接收到NameNode返回的注册响应：" + ResponseUtil.getMsg(response.getStatus()));
+                Thread.sleep(500);
+            } catch (Exception e) {
+                isNamenodeRunning = false;
+            }
+        }
+    }
+
+    /**
+     * 负责心跳的后台线程
+     */
+    class HeartbeatThread extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    if (!isNamenodeRunning) {
+                        System.out.println("现在NameNode服务端处于故障，不进行心跳检测");
+                        Thread.sleep(3000);
+                    }
+                    // 通过RPC接口发送到NameNode他的注册接口上去
+                    HeartbeatRequest request = HeartbeatRequest.newBuilder()
+                            .setIp(BACKUPNODE_IP)
+                            .setHostname(BACKUPNODE_HONENAME)
+                            .build();
+                    HeartbeatResponse response = namenode.heartbeat(request);
+                    System.out.println("接收到NameNode返回心跳响应：" + ResponseUtil.getMsg(response.getStatus()));
+                    if (ResponseStatus.SUCCESS.equals(response.getStatus())) {
+                        isNamenodeRunning = true;
+                    }else {
+                        isNamenodeRunning = false;
+                    }
+
+                    Thread.sleep(NAMENODE_HEARTBEAT_INTERVAL_TIME); // 每隔30秒发送一次心跳到NameNode上去
+                }catch (Exception e) {
+                    isNamenodeRunning = false;
+                }
+
+            }
+        }
     }
 
 }

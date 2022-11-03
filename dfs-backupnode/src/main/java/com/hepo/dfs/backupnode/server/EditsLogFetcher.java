@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 public class EditsLogFetcher extends Thread {
 
     private final BackupNode backupNode;
-    private final BackupNodeRpcClient backupNodeRpcClient;
+    private final BackupNodeRpcClient namenode;
     private final FSNamesystem namesystem;
 
     /**
@@ -22,10 +22,10 @@ public class EditsLogFetcher extends Thread {
     private static final int BACKUP_NODE_FETCH_SIZE = 10;
 
 
-    public EditsLogFetcher(BackupNode backupNode, FSNamesystem namesystem, BackupNodeRpcClient backupNodeRpcClient) {
+    public EditsLogFetcher(BackupNode backupNode, FSNamesystem namesystem, BackupNodeRpcClient namenode) {
         this.backupNode = backupNode;
         this.namesystem = namesystem;
-        this.backupNodeRpcClient = backupNodeRpcClient;
+        this.namenode = namenode;
     }
 
     @Override
@@ -33,12 +33,28 @@ public class EditsLogFetcher extends Thread {
         System.out.println("editsLogFetcher 定时拉取EditLog线程启动....");
         while (backupNode.isRunning()) {
             try {
+                if (!namesystem.isFinishedRecover()) {
+                    System.out.println("当前还没完成元数据恢复，不进行editlog同步......");
+                    Thread.sleep(1000);
+                    continue;
+                }
+                if (!namenode.isNamenodeRunning()) {
+                    System.out.println("NameNode当前处于故障阶段，不进行editlog同步.....");
+                    Thread.sleep(1000);
+                    continue;
+                }
+                //获取上次同步的syncedTxid
+                long syncedTxid = namesystem.getSyncedTxid();
                 //从NameNode同步EditLog日志
-                JSONArray editsLogs = backupNodeRpcClient.fetchEditsLog(namesystem.getSyncedTxid());
+                JSONArray editsLogs = namenode.fetchEditsLog(syncedTxid);
                 //如果没拉取到的数据，睡眠1秒钟
                 if (editsLogs.size() == 0) {
                     Thread.sleep(1000);
                     continue;
+                }
+                if (editsLogs.size() < BACKUP_NODE_FETCH_SIZE) {
+                    Thread.sleep(1000);
+                    System.out.println("拉取到的edits log不足10条数据，等待1秒后再次继续去拉取");
                 }
                 for (int i = 0; i < editsLogs.size(); i++) {
                     JSONObject editsLog = editsLogs.getJSONObject(i);
@@ -52,7 +68,7 @@ public class EditsLogFetcher extends Thread {
                         namesystem.create(editsLog.getLong("txid"), path);
                     }
                 }
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

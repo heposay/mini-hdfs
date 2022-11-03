@@ -14,6 +14,10 @@ public class BackupNode {
 
     private BackupNodeRpcClient namenode;
 
+    public BackupNode() {
+
+    }
+
     public static void main(String[] args) {
         BackupNode backupNode = new BackupNode();
         backupNode.init();
@@ -21,6 +25,7 @@ public class BackupNode {
     }
 
     public void start() {
+
         EditsLogFetcher fetcher = new EditsLogFetcher(this, namesystem, namenode);
         fetcher.start();
 
@@ -29,11 +34,18 @@ public class BackupNode {
     }
 
     public void init() {
-        this.namesystem = new FSNamesystem();
         this.namenode = new BackupNodeRpcClient();
+        //先开启BackupNode的实例注册和心跳检测
+        namenode.start();
+        //服务启动，自动恢复元数据
+        this.namesystem = new FSNamesystem();
     }
 
     public Boolean isRunning() {
         return isRunning;
+    }
+
+    public void setRunning(Boolean running) {
+        isRunning = running;
     }
 }
