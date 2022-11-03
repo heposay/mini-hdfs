@@ -6,10 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -35,6 +32,8 @@ public class DataNodeManager {
      * 心跳检测时间间隙
      */
     private final static long HEARTBEAT_CHECK_INTERVAL_TIME = 30 * 1000;
+
+    private final static int DATANODE_DUPLICATE = 2;
 
 
     public DataNodeManager() {
@@ -108,6 +107,32 @@ public class DataNodeManager {
         }
 
 
+    }
+
+    /**
+     * 分配副本对应的数据节点
+     * @param fileSize 文件大小
+     * @return 数据节点集合
+     */
+    public List<DataNodeInfo> getAllocateDataNodes(long fileSize) {
+        synchronized (this) {
+            // 取出来所有的datanode，并且按照已经存储的数据大小来排序
+            List<DataNodeInfo> datanodeList = new ArrayList<>(dataNodeInfoMap.values());
+            Collections.sort(datanodeList);
+
+            // 选择存储数据最少的头两个datanode出来
+            List<DataNodeInfo> selectedDatanodes =  new ArrayList<>();
+            if (datanodeList.size() > DATANODE_DUPLICATE)  {
+                for (int i = 0; i < DATANODE_DUPLICATE; i++) {
+                    selectedDatanodes.add(datanodeList.get(i));
+                    //记录该节点已经存储数据的大小
+                    selectedDatanodes.get(i).addStoredDataSize(fileSize);
+                }
+            }else {
+                selectedDatanodes.addAll(datanodeList);
+            }
+            return selectedDatanodes;
+        }
     }
 
     /**

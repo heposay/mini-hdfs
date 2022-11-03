@@ -24,7 +24,7 @@ public class NameNodeServiceActor {
 
     private static final String DATANAME_HONENAME = "dfs-data-01";
 
-    private static final String DATANAME_IP = "localhost";
+    private static final String DATANAME_IP = "127.0.0.1";
 
     private static final long NAMENODE_HEARTBEAT_INTERVAL_TIME = 30 * 1000;
 
@@ -70,13 +70,11 @@ public class NameNodeServiceActor {
         public void run() {
             try {
                 // 发送rpc接口调用请求到NameNode去进行注册
-                System.out.println("发送请求到NameNode进行注册.......");
                 // 我们写代码的时候，主要是在本地来运行和测试，有一些ip和hostname，就直接在代码里写死了
                 // 大家后面自己可以留空做一些完善，你可以加一些配置文件读取的代码
                 // 通过RPC接口发送到NameNode他的注册接口上去
                 RegisterRequest registerRequest = RegisterRequest.newBuilder().setIp(DATANAME_IP).setHostname(DATANAME_HONENAME).build();
                 RegisterResponse response = namenode.register(registerRequest);
-                System.out.println("接收到NameNode返回的注册响应：" + response.getStatus());
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -92,8 +90,6 @@ public class NameNodeServiceActor {
         public void run() {
             try {
                 while (true) {
-                    System.out.println("发送RPC请求到NameNode进行心跳.......");
-
                     // 通过RPC接口发送到NameNode他的注册接口上去
 
                     HeartbeatRequest request = HeartbeatRequest.newBuilder()
@@ -101,8 +97,6 @@ public class NameNodeServiceActor {
                             .setHostname(DATANAME_HONENAME)
                             .build();
                     HeartbeatResponse response = namenode.heartbeat(request);
-                    System.out.println("接收到NameNode返回的心跳响应：" + response.getStatus());
-
                     Thread.sleep(NAMENODE_HEARTBEAT_INTERVAL_TIME); // 每隔30秒发送一次心跳到NameNode上去
                 }
             } catch (InterruptedException e) {

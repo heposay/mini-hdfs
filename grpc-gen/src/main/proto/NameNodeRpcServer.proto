@@ -18,4 +18,5 @@ service NameNodeService {
 	rpc fetchEditsLog(FetchEditsLogRequest) returns (FetchEditsLogResponse);
 	rpc updateCheckpointTxid (UpdateCheckpointTxidRequest) returns (UpdateCheckpointTxidResponse);
 	rpc create (CreateFileRequest) returns (CreateFileResponse);
+	rpc allocateDataNodes(AllocateDataNodesRequest) returns (AllocateDataNodesResponse);
 }  

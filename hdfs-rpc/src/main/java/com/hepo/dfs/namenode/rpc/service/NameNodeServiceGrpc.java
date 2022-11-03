@@ -298,6 +298,37 @@ public final class NameNodeServiceGrpc {
     return getCreateMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest,
+      com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse> getAllocateDataNodesMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "allocateDataNodes",
+      requestType = com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest,
+      com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse> getAllocateDataNodesMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest, com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse> getAllocateDataNodesMethod;
+    if ((getAllocateDataNodesMethod = NameNodeServiceGrpc.getAllocateDataNodesMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getAllocateDataNodesMethod = NameNodeServiceGrpc.getAllocateDataNodesMethod) == null) {
+          NameNodeServiceGrpc.getAllocateDataNodesMethod = getAllocateDataNodesMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest, com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "allocateDataNodes"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("allocateDataNodes"))
+              .build();
+        }
+      }
+    }
+    return getAllocateDataNodesMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -409,6 +440,13 @@ public final class NameNodeServiceGrpc {
       asyncUnimplementedUnaryCall(getCreateMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void allocateDataNodes(com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getAllocateDataNodesMethod(), responseObserver);
+    }
+
     @Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -474,6 +512,13 @@ public final class NameNodeServiceGrpc {
                 com.hepo.dfs.namenode.rpc.model.CreateFileRequest,
                 com.hepo.dfs.namenode.rpc.model.CreateFileResponse>(
                   this, METHODID_CREATE)))
+          .addMethod(
+            getAllocateDataNodesMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest,
+                com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse>(
+                  this, METHODID_ALLOCATE_DATA_NODES)))
           .build();
     }
   }
@@ -563,6 +608,14 @@ public final class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getCreateMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void allocateDataNodes(com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getAllocateDataNodesMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -640,6 +693,13 @@ public final class NameNodeServiceGrpc {
     public com.hepo.dfs.namenode.rpc.model.CreateFileResponse create(com.hepo.dfs.namenode.rpc.model.CreateFileRequest request) {
       return blockingUnaryCall(
           getChannel(), getCreateMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse allocateDataNodes(com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getAllocateDataNodesMethod(), getCallOptions(), request);
     }
   }
 
@@ -728,6 +788,14 @@ public final class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getCreateMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse> allocateDataNodes(
+        com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getAllocateDataNodesMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -739,6 +807,7 @@ public final class NameNodeServiceGrpc {
   private static final int METHODID_FETCH_EDITS_LOG = 6;
   private static final int METHODID_UPDATE_CHECKPOINT_TXID = 7;
   private static final int METHODID_CREATE = 8;
+  private static final int METHODID_ALLOCATE_DATA_NODES = 9;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -792,6 +861,10 @@ public final class NameNodeServiceGrpc {
         case METHODID_CREATE:
           serviceImpl.create((com.hepo.dfs.namenode.rpc.model.CreateFileRequest) request,
               (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.CreateFileResponse>) responseObserver);
+          break;
+        case METHODID_ALLOCATE_DATA_NODES:
+          serviceImpl.allocateDataNodes((com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -863,6 +936,7 @@ public final class NameNodeServiceGrpc {
               .addMethod(getFetchEditsLogMethod())
               .addMethod(getUpdateCheckpointTxidMethod())
               .addMethod(getCreateMethod())
+              .addMethod(getAllocateDataNodesMethod())
               .build();
         }
       }

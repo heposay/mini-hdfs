@@ -80,3 +80,12 @@ message CreateFileRequest{
 message CreateFileResponse{
     int32 status = 1;
 }
+
+message AllocateDataNodesRequest{
+    string filename = 1;
+    int64 fileSize=2;
+}
+
+message AllocateDataNodesResponse{
+    string datanodes = 1;
+}

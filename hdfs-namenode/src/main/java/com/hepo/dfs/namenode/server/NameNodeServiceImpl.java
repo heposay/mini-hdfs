@@ -415,4 +415,17 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
             e.printStackTrace();
         }
     }
+
+    /**
+     * 为文件上传请求分配多个数据节点来传输多个副本
+     */
+    @Override
+    public void allocateDataNodes(AllocateDataNodesRequest request, StreamObserver<AllocateDataNodesResponse> responseObserver) {
+        long fileSize = request.getFileSize();
+        List<DataNodeInfo> datanodes = datanodeManager.getAllocateDataNodes(fileSize);
+        String datanodesJson = JSONArray.toJSONString(datanodes);
+        AllocateDataNodesResponse response = AllocateDataNodesResponse.newBuilder().setDatanodes(datanodesJson).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 }

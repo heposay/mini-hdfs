@@ -7,11 +7,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
 import io.grpc.netty.NettyChannelBuilder;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
-
 /**
  * 文件系统客户端的实现类
  *
@@ -71,9 +66,10 @@ public class FileSystemImpl implements FileSystem {
      *
      * @param file     文件字节流
      * @param filename 文件名
+     * @param fileSize 文件大小
      */
     @Override
-    public Boolean upload(byte[] file, String filename) {
+    public Boolean upload(byte[] file, String filename, long fileSize) {
         //用filename发送一个RPC接口调用master节点
         //master节点会进行查重，如果已经有了，则不让创建
         if (!createFile(filename)) {
@@ -83,7 +79,8 @@ public class FileSystemImpl implements FileSystem {
         //找master节点要多个数据节点的地址
         //考虑自己上传几个副本，找到副本对应的节点地址
         //尽可能分配数据节点的时候，保证让每个数据及诶单方的数据量都是比较均衡的
-
+        String datanodes = allocateDataNodes(filename, fileSize);
+        System.out.println("获取分配的datanode节点：" + datanodes);
 
         //依次把文件的副本上传到各个数据节点去。
         //此时有可能某些节点上传失败，需要有一个容错的机制
@@ -91,6 +88,12 @@ public class FileSystemImpl implements FileSystem {
         return true;
     }
 
+    /**
+     * 创建文件
+     *
+     * @param filename 文件名称
+     * @return 是否成功
+     */
     private Boolean createFile(String filename) {
         CreateFileRequest request = CreateFileRequest.newBuilder().setFilename(filename).build();
         CreateFileResponse response = namenode.create(request);
@@ -100,4 +103,16 @@ public class FileSystemImpl implements FileSystem {
         return false;
     }
 
+    /**
+     * 获取分配好的datanode节点
+     *
+     * @param filename 文件名
+     * @param fileSize 文件大小
+     * @return datanode节点的JSON串
+     */
+    private String allocateDataNodes(String filename, long fileSize) {
+        AllocateDataNodesRequest request = AllocateDataNodesRequest.newBuilder().setFilename(filename).setFileSize(fileSize).build();
+        AllocateDataNodesResponse response = namenode.allocateDataNodes(request);
+        return response.getDatanodes();
+    }
 }

@@ -104,6 +104,16 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_hepo_dfs_namenode_rpc_CreateFileResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -131,9 +141,12 @@ public final class NameNodeRpcModel {
       "kpointTxidRequest\022\014\n\004txid\030\001 \001(\003\".\n\034Updat" +
       "eCheckpointTxidResponse\022\016\n\006status\030\001 \001(\005\"" +
       "%\n\021CreateFileRequest\022\020\n\010filename\030\001 \001(\t\"$" +
-      "\n\022CreateFileResponse\022\016\n\006status\030\001 \001(\005B5\n\037" +
-      "com.hepo.dfs.namenode.rpc.modelB\020NameNod" +
-      "eRpcModelP\001b\006proto3"
+      "\n\022CreateFileResponse\022\016\n\006status\030\001 \001(\005\">\n\030" +
+      "AllocateDataNodesRequest\022\020\n\010filename\030\001 \001" +
+      "(\t\022\020\n\010fileSize\030\002 \001(\003\".\n\031AllocateDataNode" +
+      "sResponse\022\021\n\tdatanodes\030\001 \001(\tB5\n\037com.hepo" +
+      ".dfs.namenode.rpc.modelB\020NameNodeRpcMode" +
+      "lP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -247,6 +260,18 @@ public final class NameNodeRpcModel {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_CreateFileResponse_descriptor,
         new String[] { "Status", });
+    internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesRequest_descriptor =
+      getDescriptor().getMessageTypes().get(18);
+    internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesRequest_descriptor,
+        new String[] { "Filename", "FileSize", });
+    internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesResponse_descriptor =
+      getDescriptor().getMessageTypes().get(19);
+    internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_AllocateDataNodesResponse_descriptor,
+        new String[] { "Datanodes", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

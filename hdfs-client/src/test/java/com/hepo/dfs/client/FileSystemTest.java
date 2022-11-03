@@ -15,8 +15,8 @@ public class FileSystemTest {
     private static FileSystem fileSystem = new FileSystemImpl();
 
     public static void main(String[] args) {
-        testMkdir();
-        //testUpload("/image/product/iphone14pro.img");
+        //testMkdir();
+        testUpload("/image/product/iphone14pro.img");
     }
 
 
@@ -42,6 +42,6 @@ public class FileSystemTest {
 
     //上传文件
     public static void testUpload(String filename) {
-        fileSystem.upload(null, filename);
+        fileSystem.upload(null, filename, 512L);
     }
 }

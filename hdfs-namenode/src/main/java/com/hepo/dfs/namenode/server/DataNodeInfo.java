@@ -7,13 +7,24 @@ package com.hepo.dfs.namenode.server;
  *
  * @author linhaibo
  */
-public class DataNodeInfo {
-
+public class DataNodeInfo implements Comparable<DataNodeInfo> {
+    /**
+     * ip地址
+     */
     private String ip;
-
+    /**
+     * 机器名字
+     */
     private String hostname;
-
+    /**
+     * 最近一次心跳的时间
+     */
     private Long latestHeartbeatTime;
+
+    /**
+     * 已经存储数据的大小
+     */
+    private long storedDataSize;
 
     public Long getLatestHeartbeatTime() {
         return latestHeartbeatTime;
@@ -27,6 +38,7 @@ public class DataNodeInfo {
         this.ip = ip;
         this.hostname = hostname;
         this.latestHeartbeatTime = System.currentTimeMillis();
+        this.storedDataSize = 0L;
     }
 
     public String getIp() {
@@ -43,5 +55,37 @@ public class DataNodeInfo {
 
     public void setHostname(String hostname) {
         this.hostname = hostname;
+    }
+
+    public long getStoredDataSize() {
+        return storedDataSize;
+    }
+
+    public void setStoredDataSize(long storedDataSize) {
+        this.storedDataSize = storedDataSize;
+    }
+
+    public void addStoredDataSize(long storedDataSize) {
+        this.storedDataSize += storedDataSize;
+    }
+
+    @Override
+    public int compareTo(DataNodeInfo o) {
+        if (this.storedDataSize > o.getStoredDataSize()) {
+            return 1;
+        }else if (this.storedDataSize < o.getStoredDataSize()) {
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "DataNodeInfo{" +
+                "ip='" + ip + '\'' +
+                ", hostname='" + hostname + '\'' +
+                ", latestHeartbeatTime=" + latestHeartbeatTime +
+                ", storedDataSize=" + storedDataSize +
+                '}';
     }
 }
