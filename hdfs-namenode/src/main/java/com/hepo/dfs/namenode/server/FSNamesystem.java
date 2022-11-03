@@ -264,6 +264,8 @@ public class FSNamesystem {
             System.out.println("当前没有任何editlog文件，不进行恢复......");
             return;
         }
+        //fixbug:更新缓冲区txid
+        editLog.setTxidSeq(Long.parseLong(files.get(files.size() - 1).getName().split(StringPoolConstant.DASH)[2].split("[.]")[0]));
 
         //开始回放数据
         for (File file : files) {
