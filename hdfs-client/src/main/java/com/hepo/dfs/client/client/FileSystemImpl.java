@@ -1,6 +1,8 @@
 package com.hepo.dfs.client.client;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hepo.dfs.namenode.rpc.model.*;
 import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
@@ -79,12 +81,18 @@ public class FileSystemImpl implements FileSystem {
         //找master节点要多个数据节点的地址
         //考虑自己上传几个副本，找到副本对应的节点地址
         //尽可能分配数据节点的时候，保证让每个数据及诶单方的数据量都是比较均衡的
-        String datanodes = allocateDataNodes(filename, fileSize);
-        System.out.println("获取分配的datanode节点：" + datanodes);
+        String datanodesJson = allocateDataNodes(filename, fileSize);
+        System.out.println("获取分配的datanode节点：" + datanodesJson);
 
         //依次把文件的副本上传到各个数据节点去。
         //此时有可能某些节点上传失败，需要有一个容错的机制
-
+        JSONArray datanodes = JSONArray.parseArray(datanodesJson);
+        for (int i = 0; i < datanodes.size(); i++) {
+            JSONObject datanode = datanodes.getJSONObject(i);
+            String hostname = datanode.getString("hostname");
+            int uploadServerPort = datanode.getInteger("uplaodServerPort");
+            FileUploadClient.sendFile(hostname, uploadServerPort, file, filename, fileSize);
+        }
         return true;
     }
 

@@ -3,6 +3,12 @@ package com.hepo.dfs.client;
 import com.hepo.dfs.client.client.FileSystem;
 import com.hepo.dfs.client.client.FileSystemImpl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+
 /**
  * Description:
  * Project:  mini-hdfs
@@ -16,7 +22,7 @@ public class FileSystemTest {
 
     public static void main(String[] args) {
         //testMkdir();
-        testUpload("/image/product/iphone14pro.img");
+        testUpload("/Users/linhaibo/Documents/tmp/cat.jpeg");
     }
 
 
@@ -42,6 +48,23 @@ public class FileSystemTest {
 
     //上传文件
     public static void testUpload(String filename) {
-        fileSystem.upload(null, filename, 512L);
+        try {
+            File file  = new File(filename);
+            long fileLength = file.length();
+
+            ByteBuffer buffer = ByteBuffer.allocate((int) fileLength);
+
+            FileInputStream fis = new FileInputStream(file);
+            FileChannel channel = fis.getChannel();
+            channel.read(buffer);
+            buffer.flip();
+            byte[] fileBytes = buffer.array();
+
+
+            fileSystem.upload(fileBytes, "/image/product/pig.jpg", fileLength);
+        }catch (IOException e) {
+
+        }
+
     }
 }
