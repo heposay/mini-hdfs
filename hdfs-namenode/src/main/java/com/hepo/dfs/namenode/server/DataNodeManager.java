@@ -9,6 +9,8 @@ import java.nio.channels.FileChannel;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.hepo.dfs.namenode.server.NameNodeConfig.*;
+
 /**
  * Description: 这个组件，就是负责管理集群里的所有的datanode的
  * Project:  mini-hdfs
@@ -22,18 +24,6 @@ public class DataNodeManager {
      * 内存中维护的datanode列表
      */
     private Map<String, DataNodeInfo> dataNodeInfoMap = new ConcurrentHashMap<>();
-
-    /**
-     * 心跳过期时间
-     */
-    private final static long HEARTBEAT_LAST_EXPIRATION_TIME = 90 * 1000;
-
-    /**
-     * 心跳检测时间间隙
-     */
-    private final static long HEARTBEAT_CHECK_INTERVAL_TIME = 30 * 1000;
-
-    private final static int DATANODE_DUPLICATE = 2;
 
 
     public DataNodeManager() {
@@ -55,8 +45,8 @@ public class DataNodeManager {
     /**
      * 对datanode进行注册
      */
-    public Boolean register(String ip, String hostname) {
-        DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname);
+    public Boolean register(String ip, String hostname, Integer uploadServerPort) {
+        DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname, uploadServerPort);
         dataNodeInfoMap.put(ip + "-" + hostname, dataNodeInfo);
         return true;
     }

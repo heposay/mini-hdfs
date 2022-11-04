@@ -16,6 +16,11 @@ public class DataNodeInfo implements Comparable<DataNodeInfo> {
      * 机器名字
      */
     private String hostname;
+
+    /**
+     * uploadServer端口号
+     */
+    private int uplaodServerPort;
     /**
      * 最近一次心跳的时间
      */
@@ -34,9 +39,10 @@ public class DataNodeInfo implements Comparable<DataNodeInfo> {
         this.latestHeartbeatTime = latestHeartbeatTime;
     }
 
-    public DataNodeInfo(String ip, String hostname) {
+    public DataNodeInfo(String ip, String hostname, Integer uplaodServerPort) {
         this.ip = ip;
         this.hostname = hostname;
+        this.uplaodServerPort = uplaodServerPort;
         this.latestHeartbeatTime = System.currentTimeMillis();
         this.storedDataSize = 0L;
     }
@@ -67,6 +73,14 @@ public class DataNodeInfo implements Comparable<DataNodeInfo> {
 
     public void addStoredDataSize(long storedDataSize) {
         this.storedDataSize += storedDataSize;
+    }
+
+    public int getUplaodServerPort() {
+        return uplaodServerPort;
+    }
+
+    public void setUplaodServerPort(int uplaodServerPort) {
+        this.uplaodServerPort = uplaodServerPort;
     }
 
     @Override

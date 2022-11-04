@@ -6,6 +6,8 @@ import io.grpc.ServerBuilder;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import static com.hepo.dfs.namenode.server.NameNodeConfig.*;
+
 /**
  * Description: NameNode 的rpc服务接口
  * Project:  mini-hdfs
@@ -27,10 +29,7 @@ public class NameNodeRpcServer {
 
     private Server server;
 
-    /**
-     * NameNode默认端口
-     */
-    private static final int DEFAULT_PORT = 50070;
+
 
     public NameNodeRpcServer(FSNamesystem namesystem, DataNodeManager dataNodeManager) {
         this.namesystem = namesystem;
@@ -43,12 +42,12 @@ public class NameNodeRpcServer {
      */
     public void start() throws IOException {
         //启动rpc server 服务，并监听端口
-        server = ServerBuilder.forPort(DEFAULT_PORT)
+        server = ServerBuilder.forPort(NAMENODE_DEFAULT_PORT)
                 .addService(new NameNodeServiceImpl(namesystem, dataNodeManager))
                 .build()
                 .start();
 
-        System.out.println("NameNodeRpcServer启动，监听端口号：" + DEFAULT_PORT);
+        System.out.println("NameNodeRpcServer启动，监听端口号：" + NAMENODE_DEFAULT_PORT);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {

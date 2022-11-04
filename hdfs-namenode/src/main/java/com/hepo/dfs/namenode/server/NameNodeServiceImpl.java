@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static com.hepo.dfs.namenode.server.NameNodeConfig.*;
+
 /**
  * Description: NameNode的服务接口实现类（所有的处理逻辑都在该类完成）
  * Project:  mini-hdfs
@@ -19,12 +21,6 @@ import java.util.List;
  * @author linhaibo
  */
 public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImplBase {
-
-
-    private static final Integer STATUS_SUCCESS = 1;
-    private static final Integer STATUS_FAILURE = 2;
-    private static final Integer STATUS_SHUTDOWN = 3;
-    private static final Integer STATUS_DUPLICATE = 4;
 
 
     /**
@@ -54,10 +50,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
      */
     private Long currentBufferedMaxTxid = 0L;
 
-    /**
-     * 默认拉取日志的数目
-     */
-    private static final int BACKUP_NODE_FETCH_SIZE = 10;
 
     public NameNodeServiceImpl(FSNamesystem namesystem, DataNodeManager datanodeManager) {
         this.namesystem = namesystem;
@@ -72,8 +64,8 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
      */
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterResponse> responseObserver) {
-        datanodeManager.register(request.getIp(), request.getHostname());
-        System.out.println("收到客户端[" + request.getIp() + StringPoolConstant.COLON + request.getHostname() + "]的注册信息");
+        datanodeManager.register(request.getIp(), request.getHostname(), request.getUploadServerPort());
+        System.out.println("收到客户端[" + request.getIp() + StringPoolConstant.COLON + request.getHostname() + ", uploadServerPort:" + request.getUploadServerPort() + "]的注册信息");
         RegisterResponse response = RegisterResponse.newBuilder()
                 .setStatus(STATUS_SUCCESS).build();
         responseObserver.onNext(response);
@@ -91,7 +83,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
             Boolean isLive = datanodeManager.heartbeat(request.getIp(), request.getHostname());
             if (isLive) {
                 response = HeartbeatResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
-            }else {
+            } else {
                 response = HeartbeatResponse.newBuilder().setStatus(STATUS_FAILURE).build();
             }
         } else {
@@ -147,7 +139,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
     public void fetchEditsLog(FetchEditsLogRequest request, StreamObserver<FetchEditsLogResponse> responseObserver) {
         FetchEditsLogResponse response = null;
         //如果系统已经停止了，就不允许其他再来拉取数据
-        if(!isRunning) {
+        if (!isRunning) {
             response = FetchEditsLogResponse.newBuilder()
                     .setEditsLog(new JSONArray().toJSONString())
                     .build();
@@ -341,7 +333,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
      * 创建文件
      */
     @Override
-    public void create(CreateFileRequest request,StreamObserver<CreateFileResponse> responseObserver) {
+    public void create(CreateFileRequest request, StreamObserver<CreateFileResponse> responseObserver) {
         // 把文件名的查重和创建文件放在一起来执行
         // 如果说很多个客户端万一同时要发起文件创建，都有一个文件名过来
         // 多线程并发的情况下，文件名的查重和创建都是正确执行的
@@ -355,13 +347,13 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                 Boolean success = namesystem.create(filename);
                 if (success) {
                     response = CreateFileResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
-                }else {
+                } else {
                     response = CreateFileResponse.newBuilder().setStatus(STATUS_DUPLICATE).build();
                 }
             }
             responseObserver.onNext(response);
             responseObserver.onCompleted();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -380,13 +372,13 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                 Boolean success = namesystem.rename(path);
                 if (success) {
                     response = RenameResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
-                }else {
+                } else {
                     response = RenameResponse.newBuilder().setStatus(STATUS_DUPLICATE).build();
                 }
             }
             responseObserver.onNext(response);
             responseObserver.onCompleted();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -405,13 +397,13 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
                 Boolean success = namesystem.delete(path);
                 if (success) {
                     response = DeleteResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
-                }else {
+                } else {
                     response = DeleteResponse.newBuilder().setStatus(STATUS_DUPLICATE).build();
                 }
             }
             responseObserver.onNext(response);
             responseObserver.onCompleted();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

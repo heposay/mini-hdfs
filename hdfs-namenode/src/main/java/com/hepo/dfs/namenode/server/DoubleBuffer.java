@@ -9,6 +9,8 @@ import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static com.hepo.dfs.namenode.server.NameNodeConfig.*;
+
 /**
  * 内存双缓冲
  *
@@ -16,10 +18,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class DoubleBuffer {
 
-    /**
-     * 单块editslog缓冲区的最大大小：默认是25kb
-     */
-    private static final Integer EDIT_LOG_BUFFER_LIMIT = 25 * 1024;
+
     /**
      * 是专门用来承载线程写入edits log
      */
@@ -154,7 +153,7 @@ public class DoubleBuffer {
         public void flush() throws IOException {
             byte[] data = buffer.toByteArray();
             ByteBuffer dataBuffer = ByteBuffer.wrap(data);
-            String editsLogFilePath = "/Users/linhaibo/Documents/tmp/editslog/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
+            String editsLogFilePath = NAMENODE_DIR + "/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
             //将已刷盘的txid保存到flushedTxids索引里面,格式为 1_100,101_200
             flushedTxids.add(startTxid + StringPoolConstant.UNDERLINE + endTxid);
 

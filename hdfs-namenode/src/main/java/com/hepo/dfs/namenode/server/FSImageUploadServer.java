@@ -9,6 +9,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.Iterator;
+import static com.hepo.dfs.namenode.server.NameNodeConfig.*;
 
 /**
  * Description: 负责fsImage文件上传的server
@@ -24,20 +25,6 @@ public class FSImageUploadServer extends Thread {
     private Selector selector;
 
 
-    /**
-     * FsImagesUpload组件的默认端口
-     */
-    private final static int DEFAULT_PORT = 9000;
-
-    /**
-     * FsImagesUpload组件的默认最大连接数
-     */
-    private final static int DEFAULT_BACKLOG = 100;
-
-    /**
-     * 默认缓存区大小：1MB
-     */
-    private final static int DEFAULT_BUFFER_SIZE = 1024 * 1024;
 
     private volatile boolean isRunning = true;
 
@@ -54,7 +41,7 @@ public class FSImageUploadServer extends Thread {
             selector = Selector.open();
             serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.configureBlocking(false);
-            serverSocketChannel.bind(new InetSocketAddress(DEFAULT_PORT), DEFAULT_BACKLOG);
+            serverSocketChannel.bind(new InetSocketAddress(IMAGE_UPLOAD_DEFAULT_PORT), IMAGE_UPLOAD_DEFAULT_BACKLOG);
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         } catch (IOException e) {
             e.printStackTrace();
@@ -153,7 +140,7 @@ public class FSImageUploadServer extends Thread {
                 //获取channel
                 socketChannel = (SocketChannel) selectionKey.channel();
                 //分配一兆的缓冲区
-                ByteBuffer buffer = ByteBuffer.allocate(DEFAULT_BUFFER_SIZE);
+                ByteBuffer buffer = ByteBuffer.allocate(IMAGE_UPLOAD_DEFAULT_BUFFER_SIZE);
                 int total = 0;
                 int count;
                 if ((count = socketChannel.read(buffer)) > 0) {
