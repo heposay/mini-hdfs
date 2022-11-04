@@ -118,21 +118,31 @@ FSEditLog不停的往一块缓冲区里去写数据，一旦写满了之后，�
 
 
 
+7.采用分布式方式管理dataNode节点，每台dataNode都存储部分数据，每个文件都两个副本冗余，dataNode节点自动上报存储信息到master节点
+
+多个机器之间的负载均衡：master节点必须知道每台机器放了多少数据量的文件，然后把这些机器的数据量的大小进行排序，选择数据量最小的两台机器就可以了。
+
+
+
 
 
 ## 重要接口的流程图
 
 
 
+创建文件夹
+
 ![image-20221103120434575](/Users/linhaibo/Documents/code/personal/mini-hdfs/README.assets/image-20221103120434575.png)
 
 
 
+文件上传
 
+![image-20221103200919358](/Users/linhaibo/Documents/code/personal/mini-hdfs/README.assets/image-20221103200919358.png)
 
 ## 重要阶段测试流程
 
-阶段一：准备整体测试namenode和backupnode的故障重启之后拉取editlog进行回放功能
+**阶段一：准备整体测试namenode和backupnode的故障重启之后拉取editlog进行回放功能**
 
 1.客户端发送1000条数据给namenode，backupnode同样也拉取到1000条数据。此时有2个磁盘文件+内存缓冲里的部分数据。
 
@@ -143,3 +153,11 @@ FSEditLog不停的往一块缓冲区里去写数据，一旦写满了之后，�
 4.客户端优雅关闭namenode，调用shutdown接口，namenode会将内存缓冲的数据刷到磁盘上，checkpoint txid 刷入磁盘
 
 5.重启namenode，恢复元数据，backupnode会继续拉取数据。观察日志打印。
+
+
+
+
+
+**阶段二：测试文件上传的功能**
+
+1.
