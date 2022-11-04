@@ -62,6 +62,11 @@ private static final long serialVersionUID = 0L;
             hostname_ = s;
             break;
           }
+          case 24: {
+
+            uploadServerPort_ = input.readInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -83,13 +88,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_descriptor;
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             RegisterRequest.class, Builder.class);
   }
@@ -105,7 +110,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof String) {
       return (String) ref;
     } else {
-      com.google.protobuf.ByteString bs =
+      com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
       ip_ = s;
@@ -120,7 +125,7 @@ private static final long serialVersionUID = 0L;
       getIpBytes() {
     Object ref = ip_;
     if (ref instanceof String) {
-      com.google.protobuf.ByteString b =
+      com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
       ip_ = b;
@@ -141,7 +146,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof String) {
       return (String) ref;
     } else {
-      com.google.protobuf.ByteString bs =
+      com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
       hostname_ = s;
@@ -156,7 +161,7 @@ private static final long serialVersionUID = 0L;
       getHostnameBytes() {
     Object ref = hostname_;
     if (ref instanceof String) {
-      com.google.protobuf.ByteString b =
+      com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
       hostname_ = b;
@@ -164,6 +169,16 @@ private static final long serialVersionUID = 0L;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
+  }
+
+  public static final int UPLOADSERVERPORT_FIELD_NUMBER = 3;
+  private int uploadServerPort_;
+  /**
+   * <code>int32 uploadServerPort = 3;</code>
+   * @return The uploadServerPort.
+   */
+  public int getUploadServerPort() {
+    return uploadServerPort_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -186,6 +201,9 @@ private static final long serialVersionUID = 0L;
     if (!getHostnameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hostname_);
     }
+    if (uploadServerPort_ != 0) {
+      output.writeInt32(3, uploadServerPort_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -200,6 +218,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!getHostnameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hostname_);
+    }
+    if (uploadServerPort_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(3, uploadServerPort_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -220,6 +242,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getIp())) return false;
     if (!getHostname()
         .equals(other.getHostname())) return false;
+    if (getUploadServerPort()
+        != other.getUploadServerPort()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -235,6 +259,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getIp().hashCode();
     hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
     hash = (53 * hash) + getHostname().hashCode();
+    hash = (37 * hash) + UPLOADSERVERPORT_FIELD_NUMBER;
+    hash = (53 * hash) + getUploadServerPort();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -339,13 +365,13 @@ private static final long serialVersionUID = 0L;
       RegisterRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               RegisterRequest.class, Builder.class);
     }
@@ -372,13 +398,15 @@ private static final long serialVersionUID = 0L;
 
       hostname_ = "";
 
+      uploadServerPort_ = 0;
+
       return this;
     }
 
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RegisterRequest_descriptor;
     }
 
     @Override
@@ -400,6 +428,7 @@ private static final long serialVersionUID = 0L;
       RegisterRequest result = new RegisterRequest(this);
       result.ip_ = ip_;
       result.hostname_ = hostname_;
+      result.uploadServerPort_ = uploadServerPort_;
       onBuilt();
       return result;
     }
@@ -456,6 +485,9 @@ private static final long serialVersionUID = 0L;
         hostname_ = other.hostname_;
         onChanged();
       }
+      if (other.getUploadServerPort() != 0) {
+        setUploadServerPort(other.getUploadServerPort());
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -510,7 +542,7 @@ private static final long serialVersionUID = 0L;
         getIpBytes() {
       Object ref = ip_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         ip_ = b;
@@ -529,7 +561,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-
+  
       ip_ = value;
       onChanged();
       return this;
@@ -539,7 +571,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearIp() {
-
+      
       ip_ = getDefaultInstance().getIp();
       onChanged();
       return this;
@@ -555,7 +587,7 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+      
       ip_ = value;
       onChanged();
       return this;
@@ -586,7 +618,7 @@ private static final long serialVersionUID = 0L;
         getHostnameBytes() {
       Object ref = hostname_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         hostname_ = b;
@@ -605,7 +637,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-
+  
       hostname_ = value;
       onChanged();
       return this;
@@ -615,7 +647,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearHostname() {
-
+      
       hostname_ = getDefaultInstance().getHostname();
       onChanged();
       return this;
@@ -631,8 +663,38 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+      
       hostname_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int uploadServerPort_ ;
+    /**
+     * <code>int32 uploadServerPort = 3;</code>
+     * @return The uploadServerPort.
+     */
+    public int getUploadServerPort() {
+      return uploadServerPort_;
+    }
+    /**
+     * <code>int32 uploadServerPort = 3;</code>
+     * @param value The uploadServerPort to set.
+     * @return This builder for chaining.
+     */
+    public Builder setUploadServerPort(int value) {
+      
+      uploadServerPort_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 uploadServerPort = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearUploadServerPort() {
+      
+      uploadServerPort_ = 0;
       onChanged();
       return this;
     }

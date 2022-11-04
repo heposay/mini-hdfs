@@ -8,7 +8,8 @@ option java_outer_classname = "NameNodeRpcModel";
 
 message RegisterRequest{  
     string ip  = 1;  
-    string hostname  = 2;  
+    string hostname  = 2;
+    int32 uploadServerPort = 3;
 }  
 message RegisterResponse{  
     int32 status  = 1;   

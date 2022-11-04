@@ -30,4 +30,10 @@ public interface RegisterRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getHostnameBytes();
+
+  /**
+   * <code>int32 uploadServerPort = 3;</code>
+   * @return The uploadServerPort.
+   */
+  int getUploadServerPort();
 }
