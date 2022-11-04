@@ -8,6 +8,7 @@ import com.hepo.dfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
 import io.grpc.netty.NettyChannelBuilder;
+import static com.hepo.dfs.client.datanode.server.DataNodeConfig.*;
 
 /**
  * Description: 负责跟一组NameNode中的某一个进行通信的线程组件
@@ -18,15 +19,7 @@ import io.grpc.netty.NettyChannelBuilder;
  */
 public class NameNodeServiceActor {
 
-    private static final String NAMENODE_HOSTNAME = "localhost";
 
-    private static final Integer NAMENODE_PORT = 50070;
-
-    private static final String DATANAME_HONENAME = "dfs-data-01";
-
-    private static final String DATANAME_IP = "127.0.0.1";
-
-    private static final long NAMENODE_HEARTBEAT_INTERVAL_TIME = 30 * 1000;
 
 
     /**
@@ -73,7 +66,11 @@ public class NameNodeServiceActor {
                 // 我们写代码的时候，主要是在本地来运行和测试，有一些ip和hostname，就直接在代码里写死了
                 // 大家后面自己可以留空做一些完善，你可以加一些配置文件读取的代码
                 // 通过RPC接口发送到NameNode他的注册接口上去
-                RegisterRequest registerRequest = RegisterRequest.newBuilder().setIp(DATANAME_IP).setHostname(DATANAME_HONENAME).build();
+                RegisterRequest registerRequest = RegisterRequest.newBuilder()
+                        .setIp(DATANAME_IP)
+                        .setHostname(DATANAME_HONENAME)
+                        .setUploadServerPort(FILE_UPLOAD_SERVER_PORT)
+                        .build();
                 RegisterResponse response = namenode.register(registerRequest);
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

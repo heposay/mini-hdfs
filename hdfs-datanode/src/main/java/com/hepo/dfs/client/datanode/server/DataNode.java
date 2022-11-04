@@ -26,6 +26,9 @@ public class DataNode {
         this.shouldRun = true;
         this.offerService = new NameNodeGroupOfferService();
         this.offerService.start();
+
+        FileUploadServer fileUploadServer = new FileUploadServer();
+        fileUploadServer.start();
     }
 
     private void run() {
