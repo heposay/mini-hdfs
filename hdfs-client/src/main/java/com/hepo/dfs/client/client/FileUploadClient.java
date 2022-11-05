@@ -78,7 +78,7 @@ public class FileUploadClient {
                         ByteBuffer buffer = ByteBuffer.allocate(1024);
                         int count = channel.read(buffer);
                         if (count > 0) {
-                            System.out.println("[" + Thread.currentThread().getName() + "]收到响应：" + new String(buffer.array(), 0, count));
+                            System.out.println("[" + hostname + ":" + uploadServerPort + "]收到响应：" + new String(buffer.array(), 0, count));
                             sending = false;
                         }
                     }

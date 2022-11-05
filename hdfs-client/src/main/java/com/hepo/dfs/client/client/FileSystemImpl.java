@@ -105,6 +105,7 @@ public class FileSystemImpl implements FileSystem {
     private Boolean createFile(String filename) {
         CreateFileRequest request = CreateFileRequest.newBuilder().setFilename(filename).build();
         CreateFileResponse response = namenode.create(request);
+        System.out.println("向NameNode发送创建文件的请求，响应结果：" + response.getStatus());
         if (response.getStatus() == 1) {
             return true;
         }

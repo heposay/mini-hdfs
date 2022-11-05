@@ -22,7 +22,8 @@ public class FileSystemTest {
 
     public static void main(String[] args) {
         //testMkdir();
-        testUpload("/Users/linhaibo/Documents/tmp/cat.jpeg");
+//        testUpload("/Users/linhaibo/Documents/tmp/cat.jpeg");
+        testShutdown();
     }
 
 
@@ -61,9 +62,9 @@ public class FileSystemTest {
             byte[] fileBytes = buffer.array();
 
 
-            fileSystem.upload(fileBytes, "/image/product/pig.jpg", fileLength);
+            fileSystem.upload(fileBytes, "/image/product/pig2.jpg", fileLength);
         }catch (IOException e) {
-
+            e.printStackTrace();
         }
 
     }
