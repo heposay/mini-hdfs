@@ -6,87 +6,110 @@ option java_multiple_files = true;
 option java_package = "com.hepo.dfs.namenode.rpc.model";
 option java_outer_classname = "NameNodeRpcModel";
 
-message RegisterRequest{  
-    string ip  = 1;  
-    string hostname  = 2;
-    int32 uploadServerPort = 3;
-}  
-message RegisterResponse{  
-    int32 status  = 1;   
+message RegisterRequest{
+  string ip = 1;
+  string hostname = 2;
+  int32 uploadServerPort = 3;
 }
-message HeartbeatRequest{  
-    string ip  = 1;  
-    string hostname  = 2;  
-}  
-message HeartbeatResponse{  
-    int32 status  = 1;   
+message RegisterResponse{
+  int32 status = 1;
+}
+message HeartbeatRequest{
+  string ip = 1;
+  string hostname = 2;
+}
+message HeartbeatResponse{
+  int32 status = 1;
+  string commands = 2;
 }
 
 message MkdirRequest{
-    string path = 1;
+  string path = 1;
 }
 
 message MkdirResponse{
-    int32 status = 1;
+  int32 status = 1;
 }
 
 message DeleteRequest{
-    string path = 1;
+  string path = 1;
 }
 
 message DeleteResponse{
-    int32 status = 1;
+  int32 status = 1;
 }
 
 message RenameRequest{
-    string path = 1;
+  string path = 1;
 }
 
 message RenameResponse{
-    int32 status = 1;
+  int32 status = 1;
 }
 
 message ShutdownRequest{
-    int32 code = 1;
+  int32 code = 1;
 }
 
 message ShutdownResponse{
-    int32 status = 1;
+  int32 status = 1;
 }
 
 message FetchEditsLogRequest{
-    int32 code = 1;
-    int64 syncedTxid = 2;
+  int32 code = 1;
+  int64 syncedTxid = 2;
 
 }
 
 message FetchEditsLogResponse{
-    string editsLog = 1;
+  string editsLog = 1;
 }
 
 
 message UpdateCheckpointTxidRequest{
-    int64 txid = 1;
+  int64 txid = 1;
 
 }
 
 message UpdateCheckpointTxidResponse{
-    int32 status = 1;
+  int32 status = 1;
 }
 
 message CreateFileRequest{
-    string filename = 1;
+  string filename = 1;
 }
 
 message CreateFileResponse{
-    int32 status = 1;
+  int32 status = 1;
 }
 
 message AllocateDataNodesRequest{
-    string filename = 1;
-    int64 fileSize=2;
+  string filename = 1;
+  int64 fileSize = 2;
 }
 
 message AllocateDataNodesResponse{
-    string datanodes = 1;
+  string datanodes = 1;
+}
+
+
+message InformReplicaReceivedRequest{
+  string ip = 1;
+  string hostname = 2;
+  string filename = 3;
+}
+
+message InformReplicaReceivedResponse{
+  int32 status = 1;
+}
+
+message ReportCompleteStorageInfoRequest{
+  string ip = 1;
+  string hostname = 2;
+  string filenames = 3;
+  int64 storageDataSize = 4;
+}
+
+message ReportCompleteStorageInfoResponse{
+  int32 status = 1;
 }

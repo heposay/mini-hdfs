@@ -24,7 +24,7 @@ public final class NameNodeServer {
   static {
     String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022\031com.hepo.dfs." +
-      "namenode.rpc\032\026NameNodeRpcModel.proto2\302\010\n" +
+      "namenode.rpc\032\026NameNodeRpcModel.proto2\350\n\n" +
       "\017NameNodeService\022c\n\010register\022*.com.hepo." +
       "dfs.namenode.rpc.RegisterRequest\032+.com.h" +
       "epo.dfs.namenode.rpc.RegisterResponse\022f\n" +
@@ -52,8 +52,16 @@ public final class NameNodeServer {
       "e\022~\n\021allocateDataNodes\0223.com.hepo.dfs.na" +
       "menode.rpc.AllocateDataNodesRequest\0324.co" +
       "m.hepo.dfs.namenode.rpc.AllocateDataNode" +
-      "sResponseB5\n!com.hepo.dfs.namenode.rpc.s" +
-      "erviceB\016NameNodeServerP\001b\006proto3"
+      "sResponse\022\212\001\n\025informReplicaReceived\0227.co" +
+      "m.hepo.dfs.namenode.rpc.InformReplicaRec" +
+      "eivedRequest\0328.com.hepo.dfs.namenode.rpc" +
+      ".InformReplicaReceivedResponse\022\226\001\n\031repor" +
+      "tCompleteStorageInfo\022;.com.hepo.dfs.name" +
+      "node.rpc.ReportCompleteStorageInfoReques" +
+      "t\032<.com.hepo.dfs.namenode.rpc.ReportComp" +
+      "leteStorageInfoResponseB5\n!com.hepo.dfs." +
+      "namenode.rpc.serviceB\016NameNodeServerP\001b\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

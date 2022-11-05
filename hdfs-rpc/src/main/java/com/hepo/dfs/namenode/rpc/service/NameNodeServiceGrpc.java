@@ -329,6 +329,68 @@ public final class NameNodeServiceGrpc {
     return getAllocateDataNodesMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest,
+      com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse> getInformReplicaReceivedMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "informReplicaReceived",
+      requestType = com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest,
+      com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse> getInformReplicaReceivedMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest, com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse> getInformReplicaReceivedMethod;
+    if ((getInformReplicaReceivedMethod = NameNodeServiceGrpc.getInformReplicaReceivedMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getInformReplicaReceivedMethod = NameNodeServiceGrpc.getInformReplicaReceivedMethod) == null) {
+          NameNodeServiceGrpc.getInformReplicaReceivedMethod = getInformReplicaReceivedMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest, com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "informReplicaReceived"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("informReplicaReceived"))
+              .build();
+        }
+      }
+    }
+    return getInformReplicaReceivedMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest,
+      com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse> getReportCompleteStorageInfoMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "reportCompleteStorageInfo",
+      requestType = com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest,
+      com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse> getReportCompleteStorageInfoMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest, com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse> getReportCompleteStorageInfoMethod;
+    if ((getReportCompleteStorageInfoMethod = NameNodeServiceGrpc.getReportCompleteStorageInfoMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getReportCompleteStorageInfoMethod = NameNodeServiceGrpc.getReportCompleteStorageInfoMethod) == null) {
+          NameNodeServiceGrpc.getReportCompleteStorageInfoMethod = getReportCompleteStorageInfoMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest, com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "reportCompleteStorageInfo"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("reportCompleteStorageInfo"))
+              .build();
+        }
+      }
+    }
+    return getReportCompleteStorageInfoMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -447,6 +509,20 @@ public final class NameNodeServiceGrpc {
       asyncUnimplementedUnaryCall(getAllocateDataNodesMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void informReplicaReceived(com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getInformReplicaReceivedMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void reportCompleteStorageInfo(com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getReportCompleteStorageInfoMethod(), responseObserver);
+    }
+
     @Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -519,6 +595,20 @@ public final class NameNodeServiceGrpc {
                 com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest,
                 com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse>(
                   this, METHODID_ALLOCATE_DATA_NODES)))
+          .addMethod(
+            getInformReplicaReceivedMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest,
+                com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse>(
+                  this, METHODID_INFORM_REPLICA_RECEIVED)))
+          .addMethod(
+            getReportCompleteStorageInfoMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest,
+                com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse>(
+                  this, METHODID_REPORT_COMPLETE_STORAGE_INFO)))
           .build();
     }
   }
@@ -616,6 +706,22 @@ public final class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getAllocateDataNodesMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void informReplicaReceived(com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getInformReplicaReceivedMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void reportCompleteStorageInfo(com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getReportCompleteStorageInfoMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -700,6 +806,20 @@ public final class NameNodeServiceGrpc {
     public com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse allocateDataNodes(com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest request) {
       return blockingUnaryCall(
           getChannel(), getAllocateDataNodesMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse informReplicaReceived(com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getInformReplicaReceivedMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse reportCompleteStorageInfo(com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getReportCompleteStorageInfoMethod(), getCallOptions(), request);
     }
   }
 
@@ -796,6 +916,22 @@ public final class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getAllocateDataNodesMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse> informReplicaReceived(
+        com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getInformReplicaReceivedMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse> reportCompleteStorageInfo(
+        com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getReportCompleteStorageInfoMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -808,6 +944,8 @@ public final class NameNodeServiceGrpc {
   private static final int METHODID_UPDATE_CHECKPOINT_TXID = 7;
   private static final int METHODID_CREATE = 8;
   private static final int METHODID_ALLOCATE_DATA_NODES = 9;
+  private static final int METHODID_INFORM_REPLICA_RECEIVED = 10;
+  private static final int METHODID_REPORT_COMPLETE_STORAGE_INFO = 11;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -865,6 +1003,14 @@ public final class NameNodeServiceGrpc {
         case METHODID_ALLOCATE_DATA_NODES:
           serviceImpl.allocateDataNodes((com.hepo.dfs.namenode.rpc.model.AllocateDataNodesRequest) request,
               (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.AllocateDataNodesResponse>) responseObserver);
+          break;
+        case METHODID_INFORM_REPLICA_RECEIVED:
+          serviceImpl.informReplicaReceived((com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse>) responseObserver);
+          break;
+        case METHODID_REPORT_COMPLETE_STORAGE_INFO:
+          serviceImpl.reportCompleteStorageInfo((com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -937,6 +1083,8 @@ public final class NameNodeServiceGrpc {
               .addMethod(getUpdateCheckpointTxidMethod())
               .addMethod(getCreateMethod())
               .addMethod(getAllocateDataNodesMethod())
+              .addMethod(getInformReplicaReceivedMethod())
+              .addMethod(getReportCompleteStorageInfoMethod())
               .build();
         }
       }

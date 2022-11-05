@@ -12,4 +12,16 @@ public interface HeartbeatResponseOrBuilder extends
    * @return The status.
    */
   int getStatus();
+
+  /**
+   * <code>string commands = 2;</code>
+   * @return The commands.
+   */
+  String getCommands();
+  /**
+   * <code>string commands = 2;</code>
+   * @return The bytes for commands.
+   */
+  com.google.protobuf.ByteString
+      getCommandsBytes();
 }

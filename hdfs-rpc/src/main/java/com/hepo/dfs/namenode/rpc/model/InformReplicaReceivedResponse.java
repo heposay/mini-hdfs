@@ -4,26 +4,25 @@
 package com.hepo.dfs.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.hepo.dfs.namenode.rpc.HeartbeatResponse}
+ * Protobuf type {@code com.hepo.dfs.namenode.rpc.InformReplicaReceivedResponse}
  */
-public  final class HeartbeatResponse extends
+public  final class InformReplicaReceivedResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.HeartbeatResponse)
-    HeartbeatResponseOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.InformReplicaReceivedResponse)
+    InformReplicaReceivedResponseOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use HeartbeatResponse.newBuilder() to construct.
-  private HeartbeatResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use InformReplicaReceivedResponse.newBuilder() to construct.
+  private InformReplicaReceivedResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private HeartbeatResponse() {
-    commands_ = "";
+  private InformReplicaReceivedResponse() {
   }
 
   @Override
   @SuppressWarnings({"unused"})
   protected Object newInstance(
       UnusedPrivateParameter unused) {
-    return new HeartbeatResponse();
+    return new InformReplicaReceivedResponse();
   }
 
   @Override
@@ -31,7 +30,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private HeartbeatResponse(
+  private InformReplicaReceivedResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -52,12 +51,6 @@ private static final long serialVersionUID = 0L;
           case 8: {
 
             status_ = input.readInt32();
-            break;
-          }
-          case 18: {
-            String s = input.readStringRequireUtf8();
-
-            commands_ = s;
             break;
           }
           default: {
@@ -81,15 +74,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_descriptor;
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_InformReplicaReceivedResponse_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_InformReplicaReceivedResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            HeartbeatResponse.class, Builder.class);
+            InformReplicaReceivedResponse.class, Builder.class);
   }
 
   public static final int STATUS_FIELD_NUMBER = 1;
@@ -100,42 +93,6 @@ private static final long serialVersionUID = 0L;
    */
   public int getStatus() {
     return status_;
-  }
-
-  public static final int COMMANDS_FIELD_NUMBER = 2;
-  private volatile Object commands_;
-  /**
-   * <code>string commands = 2;</code>
-   * @return The commands.
-   */
-  public String getCommands() {
-    Object ref = commands_;
-    if (ref instanceof String) {
-      return (String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
-      commands_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string commands = 2;</code>
-   * @return The bytes for commands.
-   */
-  public com.google.protobuf.ByteString
-      getCommandsBytes() {
-    Object ref = commands_;
-    if (ref instanceof String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
-      commands_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -155,9 +112,6 @@ private static final long serialVersionUID = 0L;
     if (status_ != 0) {
       output.writeInt32(1, status_);
     }
-    if (!getCommandsBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, commands_);
-    }
     unknownFields.writeTo(output);
   }
 
@@ -171,9 +125,6 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(1, status_);
     }
-    if (!getCommandsBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, commands_);
-    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -184,15 +135,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof HeartbeatResponse)) {
+    if (!(obj instanceof InformReplicaReceivedResponse)) {
       return super.equals(obj);
     }
-    HeartbeatResponse other = (HeartbeatResponse) obj;
+    InformReplicaReceivedResponse other = (InformReplicaReceivedResponse) obj;
 
     if (getStatus()
         != other.getStatus()) return false;
-    if (!getCommands()
-        .equals(other.getCommands())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -206,76 +155,74 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + STATUS_FIELD_NUMBER;
     hash = (53 * hash) + getStatus();
-    hash = (37 * hash) + COMMANDS_FIELD_NUMBER;
-    hash = (53 * hash) + getCommands().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static HeartbeatResponse parseFrom(
+  public static InformReplicaReceivedResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HeartbeatResponse parseFrom(
+  public static InformReplicaReceivedResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HeartbeatResponse parseFrom(
+  public static InformReplicaReceivedResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HeartbeatResponse parseFrom(
+  public static InformReplicaReceivedResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HeartbeatResponse parseFrom(byte[] data)
+  public static InformReplicaReceivedResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HeartbeatResponse parseFrom(
+  public static InformReplicaReceivedResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HeartbeatResponse parseFrom(java.io.InputStream input)
+  public static InformReplicaReceivedResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HeartbeatResponse parseFrom(
+  public static InformReplicaReceivedResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HeartbeatResponse parseDelimitedFrom(java.io.InputStream input)
+  public static InformReplicaReceivedResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static HeartbeatResponse parseDelimitedFrom(
+  public static InformReplicaReceivedResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HeartbeatResponse parseFrom(
+  public static InformReplicaReceivedResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HeartbeatResponse parseFrom(
+  public static InformReplicaReceivedResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -288,7 +235,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(HeartbeatResponse prototype) {
+  public static Builder newBuilder(InformReplicaReceivedResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @Override
@@ -304,26 +251,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.hepo.dfs.namenode.rpc.HeartbeatResponse}
+   * Protobuf type {@code com.hepo.dfs.namenode.rpc.InformReplicaReceivedResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.HeartbeatResponse)
-      HeartbeatResponseOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.InformReplicaReceivedResponse)
+      InformReplicaReceivedResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_InformReplicaReceivedResponse_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_InformReplicaReceivedResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              HeartbeatResponse.class, Builder.class);
+              InformReplicaReceivedResponse.class, Builder.class);
     }
 
-    // Construct using com.hepo.dfs.namenode.rpc.model.HeartbeatResponse.newBuilder()
+    // Construct using com.hepo.dfs.namenode.rpc.model.InformReplicaReceivedResponse.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -343,25 +290,23 @@ private static final long serialVersionUID = 0L;
       super.clear();
       status_ = 0;
 
-      commands_ = "";
-
       return this;
     }
 
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_InformReplicaReceivedResponse_descriptor;
     }
 
     @Override
-    public HeartbeatResponse getDefaultInstanceForType() {
-      return HeartbeatResponse.getDefaultInstance();
+    public InformReplicaReceivedResponse getDefaultInstanceForType() {
+      return InformReplicaReceivedResponse.getDefaultInstance();
     }
 
     @Override
-    public HeartbeatResponse build() {
-      HeartbeatResponse result = buildPartial();
+    public InformReplicaReceivedResponse build() {
+      InformReplicaReceivedResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -369,10 +314,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @Override
-    public HeartbeatResponse buildPartial() {
-      HeartbeatResponse result = new HeartbeatResponse(this);
+    public InformReplicaReceivedResponse buildPartial() {
+      InformReplicaReceivedResponse result = new InformReplicaReceivedResponse(this);
       result.status_ = status_;
-      result.commands_ = commands_;
       onBuilt();
       return result;
     }
@@ -411,22 +355,18 @@ private static final long serialVersionUID = 0L;
     }
     @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof HeartbeatResponse) {
-        return mergeFrom((HeartbeatResponse)other);
+      if (other instanceof InformReplicaReceivedResponse) {
+        return mergeFrom((InformReplicaReceivedResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(HeartbeatResponse other) {
-      if (other == HeartbeatResponse.getDefaultInstance()) return this;
+    public Builder mergeFrom(InformReplicaReceivedResponse other) {
+      if (other == InformReplicaReceivedResponse.getDefaultInstance()) return this;
       if (other.getStatus() != 0) {
         setStatus(other.getStatus());
-      }
-      if (!other.getCommands().isEmpty()) {
-        commands_ = other.commands_;
-        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -443,11 +383,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      HeartbeatResponse parsedMessage = null;
+      InformReplicaReceivedResponse parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (HeartbeatResponse) e.getUnfinishedMessage();
+        parsedMessage = (InformReplicaReceivedResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -486,82 +426,6 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
-
-    private Object commands_ = "";
-    /**
-     * <code>string commands = 2;</code>
-     * @return The commands.
-     */
-    public String getCommands() {
-      Object ref = commands_;
-      if (!(ref instanceof String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        commands_ = s;
-        return s;
-      } else {
-        return (String) ref;
-      }
-    }
-    /**
-     * <code>string commands = 2;</code>
-     * @return The bytes for commands.
-     */
-    public com.google.protobuf.ByteString
-        getCommandsBytes() {
-      Object ref = commands_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
-        commands_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string commands = 2;</code>
-     * @param value The commands to set.
-     * @return This builder for chaining.
-     */
-    public Builder setCommands(
-        String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      commands_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string commands = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearCommands() {
-      
-      commands_ = getDefaultInstance().getCommands();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string commands = 2;</code>
-     * @param value The bytes for commands to set.
-     * @return This builder for chaining.
-     */
-    public Builder setCommandsBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      commands_ = value;
-      onChanged();
-      return this;
-    }
     @Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -575,41 +439,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.HeartbeatResponse)
+    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.InformReplicaReceivedResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.HeartbeatResponse)
-  private static final HeartbeatResponse DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.InformReplicaReceivedResponse)
+  private static final InformReplicaReceivedResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new HeartbeatResponse();
+    DEFAULT_INSTANCE = new InformReplicaReceivedResponse();
   }
 
-  public static HeartbeatResponse getDefaultInstance() {
+  public static InformReplicaReceivedResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<HeartbeatResponse>
-      PARSER = new com.google.protobuf.AbstractParser<HeartbeatResponse>() {
+  private static final com.google.protobuf.Parser<InformReplicaReceivedResponse>
+      PARSER = new com.google.protobuf.AbstractParser<InformReplicaReceivedResponse>() {
     @Override
-    public HeartbeatResponse parsePartialFrom(
+    public InformReplicaReceivedResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new HeartbeatResponse(input, extensionRegistry);
+      return new InformReplicaReceivedResponse(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<HeartbeatResponse> parser() {
+  public static com.google.protobuf.Parser<InformReplicaReceivedResponse> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<HeartbeatResponse> getParserForType() {
+  public com.google.protobuf.Parser<InformReplicaReceivedResponse> getParserForType() {
     return PARSER;
   }
 
   @Override
-  public HeartbeatResponse getDefaultInstanceForType() {
+  public InformReplicaReceivedResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 
