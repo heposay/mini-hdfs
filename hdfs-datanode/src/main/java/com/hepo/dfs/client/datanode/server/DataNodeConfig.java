@@ -21,5 +21,7 @@ public class DataNodeConfig {
 
     public static final long NAMENODE_HEARTBEAT_INTERVAL_TIME = 30 * 1000;
 
-    public final static int FILE_UPLOAD_SERVER_PORT = 9300;
+    public final static int FILE_UPLOAD_SERVER_PORT = 9301;
+
+    public final static int FILE_UPLOAD_SERVER_WORKER_SIZE = 3;
 }

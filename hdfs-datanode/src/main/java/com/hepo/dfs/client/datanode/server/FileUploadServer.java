@@ -33,13 +33,21 @@ public class FileUploadServer extends Thread {
      */
     private final Map<String, CacheImage> cacheImageMap = new HashMap<>();
 
+    private String dataDir = DATA_DIR;
+
+
+    /**
+     * 与namenode进行通信的客户端
+     */
+    private NameNodeRpcClient nameNodeRpcClient;
+
     static class CacheImage {
-        String fileName;
+        FilenamePath filenamePath;
         long imageLength;
         long hasReadImageLength;
 
-        public CacheImage(String fileName, long imageLength, long hasReadImageLength) {
-            this.fileName = fileName;
+        public CacheImage(FilenamePath filenamePath, long imageLength, long hasReadImageLength) {
+            this.filenamePath = filenamePath;
             this.imageLength = imageLength;
             this.hasReadImageLength = hasReadImageLength;
         }
@@ -47,27 +55,76 @@ public class FileUploadServer extends Thread {
         @Override
         public String toString() {
             return "CacheImage{" +
-                    "fileName='" + fileName + '\'' +
+                    "filenamePath='" + filenamePath + '\'' +
                     ", imageLength=" + imageLength +
                     ", hasReadImageLength=" + hasReadImageLength +
                     '}';
         }
     }
 
-    public FileUploadServer() {
+    /**
+     * 文件名目录
+     */
+    static class FilenamePath {
+        //相对路径名
+        private String relativeFilenamePath;
+        //绝对路径名
+        private String absoluteFilenamePath;
+
+        public FilenamePath() {
+        }
+
+        public FilenamePath(String relativeFilenamePath, String absoluteFilenamePath) {
+            this.relativeFilenamePath = relativeFilenamePath;
+            this.absoluteFilenamePath = absoluteFilenamePath;
+        }
+
+        public String getRelativeFilenamePath() {
+            return relativeFilenamePath;
+        }
+
+        public void setRelativeFilenamePath(String relativeFilenamePath) {
+            this.relativeFilenamePath = relativeFilenamePath;
+        }
+
+        public String getAbsoluteFilenamePath() {
+            return absoluteFilenamePath;
+        }
+
+        public void setAbsoluteFilenamePath(String absoluteFilenamePath) {
+            this.absoluteFilenamePath = absoluteFilenamePath;
+        }
+
+        @Override
+        public String toString() {
+            return "FilenamePath{" +
+                    "relativeFilenamePath='" + relativeFilenamePath + '\'' +
+                    ", absoluteFilenamePath='" + absoluteFilenamePath + '\'' +
+                    '}';
+        }
+    }
+
+    /**
+     * NIOServer的初始化，监听端口、队列初始化、线程初始化
+     *
+     * @param nameNodeRpcClient namenode的客户端
+     */
+    public FileUploadServer(NameNodeRpcClient nameNodeRpcClient) {
         ServerSocketChannel ssc = null;
         try {
+            this.nameNodeRpcClient = nameNodeRpcClient;
+
             selector = Selector.open();
 
             ssc = ServerSocketChannel.open();
             ssc.configureBlocking(false);
-            ssc.socket().bind(new InetSocketAddress(FILE_UPLOAD_SERVER_PORT));
+            ssc.socket().bind(new InetSocketAddress(FILE_UPLOAD_SERVER_PORT), 100);
             ssc.register(selector, SelectionKey.OP_ACCEPT);
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < FILE_UPLOAD_SERVER_WORKER_SIZE; i++) {
                 queues.add(new LinkedBlockingQueue<>());
             }
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < FILE_UPLOAD_SERVER_WORKER_SIZE; i++) {
                 //3个worker处理线程
                 new Worker(queues.get(i)).start();
             }
@@ -92,6 +149,7 @@ public class FileUploadServer extends Thread {
         }
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         while (true) {
@@ -116,7 +174,7 @@ public class FileUploadServer extends Thread {
      * 主线程负责将请求放到对应的queue，然后worker线程负责从queue获取请求，并处理
      * 所以这里性能非常高
      */
-    private void handleRequest(SelectionKey key) {
+    private void handleRequest(SelectionKey key) throws IOException {
         SocketChannel channel = null;
         try {
             if (key.isAcceptable()) {
@@ -126,6 +184,7 @@ public class FileUploadServer extends Thread {
                 if (channel != null) {
                     channel.configureBlocking(false);
                     channel.register(selector, SelectionKey.OP_READ);
+                    System.out.println("客户端[" + channel.getRemoteAddress().toString() + "]开始建立连接.....");
                 }
             } else if (key.isReadable()) {
                 //轮询查出每一个客户端，然后将客户端的hashcode与队列的大小进行取模，然后将key放到对应的队列中
@@ -135,7 +194,10 @@ public class FileUploadServer extends Thread {
                 queues.get(queueIndex).put(key);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            if (channel != null) {
+                channel.close();
+            }
         }
     }
 
@@ -170,7 +232,7 @@ public class FileUploadServer extends Thread {
                     ByteBuffer buffer = ByteBuffer.allocate(10 * 1024);
 
                     //从请求中解析文件名
-                    String filename = getFileName(channel, buffer);
+                    FilenamePath filename = getFileName(channel, buffer);
                     System.out.println("从网络请求解析出来文件名：" + filename);
                     if (filename == null) {
                         channel.close();
@@ -188,7 +250,7 @@ public class FileUploadServer extends Thread {
                     System.out.println("初始化已经读取的文件大小：" + hasReadImageLength);
 
                     //构建本地文件输出流
-                    FileOutputStream fos = new FileOutputStream(filename);
+                    FileOutputStream fos = new FileOutputStream(filename.getAbsoluteFilenamePath());
                     FileChannel fileChannel = fos.getChannel();
                     fileChannel.position(fileChannel.size());
 
@@ -214,6 +276,10 @@ public class FileUploadServer extends Thread {
                         channel.write(data);
                         cacheImageMap.remove(clientAddr);
                         System.out.println("文件读取完毕，返回响应给客户端。。。。");
+
+                        //增量上报Master节点自己已经接收到一个副本
+                        nameNodeRpcClient.informReplicaReceived(filename.getAbsoluteFilenamePath());
+                        System.out.println("增量上报收到的文件副本给NameNode节点......");
                     } else {
                         CacheImage cacheImage = new CacheImage(filename, imageLength, hasReadImageLength);
                         cacheImageMap.put(clientAddr, cacheImage);
@@ -236,30 +302,32 @@ public class FileUploadServer extends Thread {
         }
 
         /**
-         * 获取filename并创建文件
+         * 从网络请求中获取文件名
          *
          * @param channel 客户端channel
          * @param buffer  缓冲区
          * @return 文件名
          * @throws IOException 如果客户端连接发生断开，会抛出该异常。
          */
-        private String getFileName(SocketChannel channel, ByteBuffer buffer) throws IOException {
-            String filename = null;
+        private FilenamePath getFileName(SocketChannel channel, ByteBuffer buffer) throws IOException {
+            FilenamePath filename = new FilenamePath();
             String clientAddr = channel.getRemoteAddress().toString();
             //尝试从缓存中获取，如果没有，则从channel里面获取
             if (cacheImageMap.containsKey(clientAddr)) {
-                filename = cacheImageMap.get(clientAddr).fileName;
+                filename = cacheImageMap.get(clientAddr).filenamePath;
             } else {
                 //获取文件名
-                filename = getFileNameFromChannel(channel, buffer);
-                if (filename == null) {
+                String relativeFilenamePath = getRelativeFilenamePath(channel, buffer);
+                if (relativeFilenamePath == null) {
                     return null;
                 }
+                filename.relativeFilenamePath = relativeFilenamePath;
+
                 //解析文件名，然后创建目录
-                String[] splitDir = filename.split("/");
-                StringBuilder dirPath = new StringBuilder(DATA_DIR);
-                for (int i = 1; i < splitDir.length - 1; i++) {
-                    dirPath.append("/").append(splitDir[i]);
+                String[] splitRelativeDir = relativeFilenamePath.split("/");
+                StringBuilder dirPath = new StringBuilder(dataDir);
+                for (int i = 1; i < splitRelativeDir.length - 1; i++) {
+                    dirPath.append("/").append(splitRelativeDir[i]);
                 }
 
                 File dir = new File(dirPath.toString());
@@ -267,19 +335,19 @@ public class FileUploadServer extends Thread {
                     dir.mkdirs();
                 }
                 //拼接最终的filename
-                filename = dirPath + "/" + splitDir[splitDir.length - 1];
+                filename.absoluteFilenamePath = dirPath + "/" + splitRelativeDir[splitRelativeDir.length - 1];
             }
             return filename;
         }
 
         /**
-         * 从网络请求获取文件名
+         * 从网络请求获取相对路径文件名
          *
          * @param channel 客户端channel
          * @param buffer  数据缓冲区
          * @return 文件名
          */
-        private String getFileNameFromChannel(SocketChannel channel, ByteBuffer buffer) throws IOException {
+        private String getRelativeFilenamePath(SocketChannel channel, ByteBuffer buffer) throws IOException {
             int len = channel.read(buffer);
             if (len > 0) {
                 buffer.flip();
@@ -313,7 +381,7 @@ public class FileUploadServer extends Thread {
             String clientAddr = channel.getRemoteAddress().toString();
             if (cacheImageMap.containsKey(clientAddr)) {
                 imageLength = cacheImageMap.get(clientAddr).imageLength;
-            }else {
+            } else {
                 byte[] imageLengthBytes = new byte[8];
                 buffer.get(imageLengthBytes, 0, 8);
 
