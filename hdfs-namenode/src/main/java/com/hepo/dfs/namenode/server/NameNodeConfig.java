@@ -11,7 +11,7 @@ public class NameNodeConfig {
     /**
      * 心跳过期时间
      */
-    public final static long HEARTBEAT_LAST_EXPIRATION_TIME = 90 * 1000;
+    public final static long HEARTBEAT_LAST_EXPIRATION_TIME = 5 * 60 * 1000;
 
     /**
      * 心跳检测时间间隙

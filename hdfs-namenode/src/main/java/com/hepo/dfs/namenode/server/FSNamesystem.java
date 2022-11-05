@@ -1,7 +1,6 @@
 package com.hepo.dfs.namenode.server;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -11,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.hepo.dfs.namenode.server.NameNodeConfig.NAMENODE_DIR;
 
 /**
  * Description: 负责管理组件的所有元数据
@@ -24,22 +25,27 @@ public class FSNamesystem {
     /**
      * 负责管理内存中文件目录树的组件
      */
-    private FSDirectory directory;
+    private final FSDirectory directory;
 
     /**
      * 负责管理内存中edit log的组件
      */
-    private FSEditLog editLog;
+    private final FSEditLog editLog;
 
     /**
      * 负责管理集群里的所有的datanode的组件
      */
-    private DataNodeManager dataNodeManager;
+    private final DataNodeManager dataNodeManager;
 
     /**
      * 最近一次checkpoint更新的txid
      */
     private long checkpointTxid;
+
+    /**
+     * 每个文件对应的副本所在的DataNode
+     */
+    private final Map<String, List<DataNodeInfo>> replicasByFilename = new HashMap<>();
 
     /**
      * 初始化组件
@@ -67,7 +73,6 @@ public class FSNamesystem {
      * 创建文件
      *
      * @param filename 文件名，包含所在的绝对路径： /products/img001.jpg
-     * @return
      */
     public Boolean create(String filename) {
         if (!directory.create(filename)) {
@@ -87,8 +92,6 @@ public class FSNamesystem {
 
     /**
      * 获取FSEditLog组件
-     *
-     * @return
      */
     public FSEditLog getEditLog() {
         return editLog;
@@ -108,7 +111,7 @@ public class FSNamesystem {
      * 将checkpoint txid 保存到磁盘上去
      */
     public void saveCheckpointTxid() {
-        String path = "/Users/linhaibo/Documents/tmp/editslog/checkpoint-txid.meta";
+        String path = NAMENODE_DIR + "/checkpoint-txid.meta";
 
         RandomAccessFile raf = null;
         FileOutputStream out = null;
@@ -157,7 +160,6 @@ public class FSNamesystem {
             loadFSImage();
             loadCheckpointTxid();
             loadEditLog();
-            loadDataInfo();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,7 +174,7 @@ public class FSNamesystem {
         FileInputStream in = null;
         FileChannel channel = null;
         try {
-            String path = "/Users/linhaibo/Documents/tmp/editslog/fsimage.meta";
+            String path = NAMENODE_DIR + "/fsimage.meta";
             File file = new File(path);
             if (!file.exists()) {
                 System.out.println("fsimage文件当前不存在，不进行恢复.......");
@@ -219,7 +221,7 @@ public class FSNamesystem {
         FileInputStream fis = null;
         FileChannel channel = null;
         try {
-            String path = "/Users/linhaibo/Documents/tmp/editslog/checkpoint-txid.meta";
+            String path = NAMENODE_DIR + "/checkpoint-txid.meta";
             File file = new File(path);
             if (!file.exists()) {
                 System.out.println("checkpoint txid文件不存在，不进行恢复.......");
@@ -231,7 +233,7 @@ public class FSNamesystem {
             ByteBuffer buffer = ByteBuffer.allocate(1024);
             int count = channel.read(buffer);
 
-            Long checkpointTxid = Long.valueOf(new String(buffer.array(), 0, count));
+            long checkpointTxid = Long.parseLong(new String(buffer.array(), 0, count));
             System.out.println("恢复checkpoint txid：" + checkpointTxid);
 
             this.checkpointTxid = checkpointTxid;
@@ -252,7 +254,7 @@ public class FSNamesystem {
      * 加载和回放editlog
      */
     private void loadEditLog() throws IOException {
-        File dir = new File("/Users/linhaibo/Documents/tmp/editslog/");
+        File dir = new File(NAMENODE_DIR + "/");
         List<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(dir.listFiles())));
         files = files.stream().filter(f -> f.getName().contains("edits")).sorted((o1, o2) -> {
             Integer o1StartTxid = Integer.valueOf(o1.getName().split("-")[1]);
@@ -277,7 +279,7 @@ public class FSNamesystem {
 
             // 如果是checkpointTxid之后的那些editlog都要加载出来
             if (endTxid > checkpointTxid) {
-                String currentEditsLogFile = "/Users/linhaibo/Documents/tmp/editslog/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
+                String currentEditsLogFile = NAMENODE_DIR + "/edits-" + startTxid + StringPoolConstant.DASH + endTxid + ".log";
                 //读取editlog文件
                 List<String> editLogs = Files.readAllLines(Paths.get(currentEditsLogFile), StandardCharsets.UTF_8);
                 //开始回放editlog
@@ -301,54 +303,6 @@ public class FSNamesystem {
     }
 
 
-    /**
-     * 加载datainfo信息
-     */
-    private void loadDataInfo() {
-        FileInputStream in = null;
-        FileChannel channel = null;
-        try {
-            String path = "/Users/linhaibo/Documents/tmp/datanode/datanode-info.meta";
-            File file = new File(path);
-            if (!file.exists()) {
-                System.out.println("datanode-info文件当前不存在，不进行恢复.......");
-                return;
-            }
-            in = new FileInputStream(path);
-            channel = in.getChannel();
-            //读取数据
-            ByteBuffer buffer = ByteBuffer.allocate(1024);
-            int count = channel.read(buffer);
-            buffer.flip();
-            //解析数据
-            String datanodeInfoJson = new String(buffer.array(), 0, count);
-            System.out.println("恢复datanode info文件中的数据：" + datanodeInfoJson);
-
-            Map<String, DataNodeInfo> datainfo = JSONObject.parseObject(datanodeInfoJson, new TypeReference<Map<String, DataNodeInfo>>() {
-            });
-            dataNodeManager.setDataNodeInfoMap(datainfo);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (channel != null) {
-                try {
-                    channel.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-    }
 
     /**
      * todo 修改目录名
@@ -370,4 +324,20 @@ public class FSNamesystem {
         return true;
     }
 
+    /**
+     * 给指定的文件增加一个成功接收的文件副本
+     *
+     * @param ip       ip
+     * @param hostname 主机名
+     * @param filename 文件名
+     */
+    public void addReceivedReplica(String ip, String hostname, String filename) {
+        synchronized (replicasByFilename) {
+            List<DataNodeInfo> replicas = replicasByFilename.computeIfAbsent(filename, k -> new ArrayList<>());
+
+            DataNodeInfo datanode = dataNodeManager.getDataNodeInfo(ip, hostname);
+            replicas.add(datanode);
+            System.out.println("收到增量上报，当前的副本信息为：" + replicasByFilename);
+        }
+    }
 }

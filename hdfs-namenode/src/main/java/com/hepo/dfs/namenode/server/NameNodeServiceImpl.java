@@ -9,6 +9,7 @@ import io.grpc.stub.StreamObserver;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.hepo.dfs.namenode.server.NameNodeConfig.*;
@@ -64,10 +65,17 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
      */
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterResponse> responseObserver) {
-        datanodeManager.register(request.getIp(), request.getHostname(), request.getUploadServerPort());
         System.out.println("收到客户端[" + request.getIp() + StringPoolConstant.COLON + request.getHostname() + ", uploadServerPort:" + request.getUploadServerPort() + "]的注册信息");
-        RegisterResponse response = RegisterResponse.newBuilder()
-                .setStatus(STATUS_SUCCESS).build();
+        Boolean result = datanodeManager.register(request.getIp(), request.getHostname(), request.getUploadServerPort());
+        RegisterResponse response = null;
+        if (result) {
+            response = RegisterResponse.newBuilder()
+                    .setStatus(STATUS_SUCCESS).build();
+        }else {
+            response = RegisterResponse.newBuilder()
+                    .setStatus(STATUS_FAILURE).build();
+        }
+
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
@@ -80,11 +88,24 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         System.out.println("收到客户端[" + request.getIp() + StringPoolConstant.COLON + request.getHostname() + "]的心跳信息");
         HeartbeatResponse response = null;
         if (isRunning) {
-            Boolean isLive = datanodeManager.heartbeat(request.getIp(), request.getHostname());
-            if (isLive) {
-                response = HeartbeatResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+            Boolean result = datanodeManager.heartbeat(request.getIp(), request.getHostname());
+            List<Command> commands = new ArrayList<Command>();
+            if (result) {
+                response = HeartbeatResponse.newBuilder()
+                        .setStatus(STATUS_SUCCESS)
+                        .setCommands(JSONArray.toJSONString(commands))
+                        .build();
             } else {
-                response = HeartbeatResponse.newBuilder().setStatus(STATUS_FAILURE).build();
+                //拼接commands
+                Command register = new Command(Command.REGISTER);
+                Command reportCompleteStorageInfo = new Command(Command.REPORT_COMPLETE_STORAGE_INFO);
+                commands.add(register);
+                commands.add(reportCompleteStorageInfo);
+
+                response = HeartbeatResponse.newBuilder()
+                        .setStatus(STATUS_FAILURE)
+                        .setCommands(JSONArray.toJSONString(commands))
+                        .build();
             }
         } else {
             response = HeartbeatResponse.newBuilder().setStatus(STATUS_SHUTDOWN).build();
@@ -125,7 +146,6 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         this.isRunning = false;
         namesystem.flush();
         namesystem.saveCheckpointTxid();
-        datanodeManager.flush();
         ShutdownResponse response = ShutdownResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
         System.out.println("收到客户端发来的shutdown请求:" + request.getCode());
         responseObserver.onNext(response);
@@ -416,8 +436,54 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         long fileSize = request.getFileSize();
         List<DataNodeInfo> datanodes = datanodeManager.getAllocateDataNodes(fileSize);
         String datanodesJson = JSONArray.toJSONString(datanodes);
-        AllocateDataNodesResponse response = AllocateDataNodesResponse.newBuilder().setDatanodes(datanodesJson).build();
+        AllocateDataNodesResponse response = AllocateDataNodesResponse.newBuilder()
+                .setDatanodes(datanodesJson)
+                .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+
+    /**
+     * 数据节点通知接收到了文件副本
+     */
+    @Override
+    public void informReplicaReceived(InformReplicaReceivedRequest request, StreamObserver<InformReplicaReceivedResponse> responseObserver) {
+        String ip = request.getIp();
+        String hostname = request.getHostname();
+        String filename = request.getFilename();
+
+        namesystem.addReceivedReplica(ip, hostname, filename);
+
+        InformReplicaReceivedResponse response = InformReplicaReceivedResponse.newBuilder()
+                .setStatus(STATUS_SUCCESS)
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    /**
+     * DataNode上报全量信息
+     */
+    @Override
+    public void reportCompleteStorageInfo(ReportCompleteStorageInfoRequest request, StreamObserver<ReportCompleteStorageInfoResponse> responseObserver) {
+        String ip = request.getIp();
+        String hostname = request.getHostname();
+        String filenamesJson = request.getFilenames();
+        long storageDataSize = request.getStorageDataSize();
+
+        datanodeManager.setStorageSize(ip, hostname, storageDataSize);
+        JSONArray filenames = JSONArray.parseArray(filenamesJson);
+        for (int i = 0; i < filenames.size(); i++) {
+            String filename =filenames.getString(i);
+            namesystem.addReceivedReplica(ip, hostname, filename);
+        }
+
+        ReportCompleteStorageInfoResponse response = ReportCompleteStorageInfoResponse.newBuilder()
+                .setStatus(STATUS_SUCCESS)
+                .build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
 }

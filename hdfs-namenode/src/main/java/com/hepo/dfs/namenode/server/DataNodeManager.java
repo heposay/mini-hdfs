@@ -1,11 +1,5 @@
 package com.hepo.dfs.namenode.server;
 
-import com.alibaba.fastjson.JSONObject;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,12 +36,23 @@ public class DataNodeManager {
     }
 
 
+    public DataNodeInfo getDataNodeInfo(String ip, String hostname) {
+        return dataNodeInfoMap.get(ip + StringPoolConstant.DASH + hostname);
+    }
+
     /**
      * 对datanode进行注册
      */
     public Boolean register(String ip, String hostname, Integer uploadServerPort) {
+        String key = ip + StringPoolConstant.DASH + hostname;
+        if (dataNodeInfoMap.containsKey(key)) {
+            System.out.println("dataNodeInfoMap已经存在该信息，不进行重复注册");
+            return false;
+        }
+
         DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname, uploadServerPort);
-        dataNodeInfoMap.put(ip + "-" + hostname, dataNodeInfo);
+        dataNodeInfoMap.put(key, dataNodeInfo);
+        System.out.println("DataNode注册：ip=" + ip + ",hostname=" + hostname + ", uploadServerPort=" + uploadServerPort);
         return true;
     }
 
@@ -55,52 +60,31 @@ public class DataNodeManager {
      * datanode进行心跳
      */
     public Boolean heartbeat(String ip, String hostname) {
-        DataNodeInfo dataNodeInfo = dataNodeInfoMap.get(ip + "-" + hostname);
-        if (dataNodeInfo != null) {
-            dataNodeInfo.setLatestHeartbeatTime(System.currentTimeMillis());
-            return true;
+        DataNodeInfo dataNodeInfo = dataNodeInfoMap.get(ip + StringPoolConstant.DASH + hostname);
+        if (dataNodeInfo == null) {
+            // 这个时候就需要指示DataNode重新注册以及全量上报
+            System.out.println("心跳失败，需要重新注册.......");
+            return false;
         }
-        return false;
+        dataNodeInfo.setLatestHeartbeatTime(System.currentTimeMillis());
+        return true;
     }
 
     /**
-     * 将datanodeInfoMap元数据刷到磁盘中
+     * 设置一个DataNode的存储数据的大小
+     *
+     * @param ip          ip地址
+     * @param hostname    主机名
+     * @param storageSize 存储大小
      */
-    public void flush() {
-        FileOutputStream fos = null;
-        FileChannel channel = null;
-        try {
-            String path = "/Users/linhaibo/Documents/tmp/datanode/datanode-info.meta";
-            fos = new FileOutputStream(path);
-            channel = fos.getChannel();
-
-            ByteBuffer buffer = ByteBuffer.wrap(JSONObject.toJSONString(dataNodeInfoMap).getBytes());
-            channel.write(buffer);
-            channel.force(false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (channel != null) {
-                try {
-                    channel.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-
+    public void setStorageSize(String ip, String hostname, long storageSize) {
+        DataNodeInfo dataNodeInfo = dataNodeInfoMap.get(ip + StringPoolConstant.DASH + hostname);
+        dataNodeInfo.setStoredDataSize(storageSize);
     }
 
     /**
      * 分配副本对应的数据节点
+     *
      * @param fileSize 文件大小
      * @return 数据节点集合
      */
@@ -111,14 +95,14 @@ public class DataNodeManager {
             Collections.sort(datanodeList);
 
             // 选择存储数据最少的头两个datanode出来
-            List<DataNodeInfo> selectedDatanodes =  new ArrayList<>();
-            if (datanodeList.size() > DATANODE_DUPLICATE)  {
+            List<DataNodeInfo> selectedDatanodes = new ArrayList<>();
+            if (datanodeList.size() > DATANODE_DUPLICATE) {
                 for (int i = 0; i < DATANODE_DUPLICATE; i++) {
                     selectedDatanodes.add(datanodeList.get(i));
                     //记录该节点已经存储数据的大小
                     selectedDatanodes.get(i).addStoredDataSize(fileSize);
                 }
-            }else {
+            } else {
                 selectedDatanodes.addAll(datanodeList);
             }
             return selectedDatanodes;
@@ -128,6 +112,7 @@ public class DataNodeManager {
     /**
      * datanode是否存活的监控线程
      */
+    @SuppressWarnings("InfiniteLoopStatement")
     class DataNodeAliveMonitor extends Thread {
 
         @Override
@@ -141,7 +126,7 @@ public class DataNodeManager {
                         //遍历所有的datanode节点的心跳时间，如果心跳时间超过90秒没有更新，说明该节点已经离线，则把该服务摘除
                         dataNodeInfo = iterator.next();
                         if (System.currentTimeMillis() - dataNodeInfo.getLatestHeartbeatTime() > HEARTBEAT_LAST_EXPIRATION_TIME) {
-                            toRemoveDatanodes.add(dataNodeInfo.getIp() + "-" + dataNodeInfo.getHostname());
+                            toRemoveDatanodes.add(dataNodeInfo.getIp() + StringPoolConstant.DASH + dataNodeInfo.getHostname());
                         }
                     }
                     if (!toRemoveDatanodes.isEmpty()) {
