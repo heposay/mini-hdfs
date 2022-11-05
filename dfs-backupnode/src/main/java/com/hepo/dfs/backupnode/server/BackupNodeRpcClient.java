@@ -25,9 +25,9 @@ public class BackupNodeRpcClient {
 
     private static final String BACKUPNODE_IP = "localhost";
 
-    private static final long NAMENODE_HEARTBEAT_INTERVAL_TIME = 3 * 1000;
+    private static final long NAMENODE_HEARTBEAT_INTERVAL_TIME = 5 * 60 * 1000;
 
-    private NameNodeServiceGrpc.NameNodeServiceBlockingStub namenode;
+    private final NameNodeServiceGrpc.NameNodeServiceBlockingStub namenode;
 
 
     private Boolean isNamenodeRunning = true;
@@ -44,7 +44,7 @@ public class BackupNodeRpcClient {
         try {
             register();
             startHeartbeat();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -65,7 +65,6 @@ public class BackupNodeRpcClient {
         String editsLogJson = response.getEditsLog();
         return JSONArray.parseArray(editsLogJson);
     }
-
 
 
     /**
@@ -94,9 +93,12 @@ public class BackupNodeRpcClient {
      * 向自己负责通信的那个NameNode进行注册
      */
     private void register() throws Exception {
-        BackupNodeRpcClient.RegisterThread registerThread = new BackupNodeRpcClient.RegisterThread();
-        registerThread.start();
-        registerThread.join();
+        // 发送rpc接口调用请求到NameNode去进行注册
+        System.out.println("发送请求到NameNode进行注册.......");
+        RegisterRequest registerRequest = RegisterRequest.newBuilder().setIp(BACKUPNODE_IP).setHostname(BACKUPNODE_HONENAME).build();
+        RegisterResponse response = namenode.register(registerRequest);
+        System.out.println("接收到NameNode返回的注册响应：" + ResponseUtil.getMsg(response.getStatus()));
+        Thread.sleep(500);
     }
 
     /**
@@ -104,25 +106,6 @@ public class BackupNodeRpcClient {
      */
     private void startHeartbeat() {
         new BackupNodeRpcClient.HeartbeatThread().start();
-    }
-
-    /**
-     * 负责注册的后天线程
-     */
-    class RegisterThread extends Thread {
-        @Override
-        public void run() {
-            try {
-                // 发送rpc接口调用请求到NameNode去进行注册
-                System.out.println("发送请求到NameNode进行注册.......");
-                RegisterRequest registerRequest = RegisterRequest.newBuilder().setIp(BACKUPNODE_IP).setHostname(BACKUPNODE_HONENAME).build();
-                RegisterResponse response = namenode.register(registerRequest);
-                System.out.println("接收到NameNode返回的注册响应：" + ResponseUtil.getMsg(response.getStatus()));
-                Thread.sleep(500);
-            } catch (Exception e) {
-                isNamenodeRunning = false;
-            }
-        }
     }
 
     /**
@@ -146,12 +129,16 @@ public class BackupNodeRpcClient {
                     System.out.println("接收到NameNode返回心跳响应：" + ResponseUtil.getMsg(response.getStatus()));
                     if (ResponseStatus.SUCCESS.equals(response.getStatus())) {
                         isNamenodeRunning = true;
-                    }else {
+                    } else if (ResponseStatus.FAILURE.equals(response.getStatus())) {
+                        isNamenodeRunning = true;
+                        //重新注册
+                        register();
+                    } else {
                         isNamenodeRunning = false;
                     }
 
                     Thread.sleep(NAMENODE_HEARTBEAT_INTERVAL_TIME); // 每隔30秒发送一次心跳到NameNode上去
-                }catch (Exception e) {
+                } catch (Exception e) {
                     isNamenodeRunning = false;
                 }
 

@@ -34,12 +34,10 @@ public class EditsLogFetcher extends Thread {
         while (backupNode.isRunning()) {
             try {
                 if (!namesystem.isFinishedRecover()) {
-                    System.out.println("当前还没完成元数据恢复，不进行editlog同步......");
                     Thread.sleep(1000);
                     continue;
                 }
                 if (!namenode.isNamenodeRunning()) {
-                    System.out.println("NameNode当前处于故障阶段，不进行editlog同步.....");
                     Thread.sleep(1000);
                     continue;
                 }
@@ -54,7 +52,6 @@ public class EditsLogFetcher extends Thread {
                 }
                 if (editsLogs.size() < BACKUP_NODE_FETCH_SIZE) {
                     Thread.sleep(1000);
-                    System.out.println("拉取到的edits log不足10条数据，等待1秒后再次继续去拉取");
                 }
                 for (int i = 0; i < editsLogs.size(); i++) {
                     JSONObject editsLog = editsLogs.getJSONObject(i);
