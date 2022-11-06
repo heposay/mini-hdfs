@@ -134,6 +134,16 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_hepo_dfs_namenode_rpc_ReportCompleteStorageInfoResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -148,33 +158,36 @@ public final class NameNodeRpcModel {
       "(\t\022\020\n\010hostname\030\002 \001(\t\022\030\n\020uploadServerPort" +
       "\030\003 \001(\005\"\"\n\020RegisterResponse\022\016\n\006status\030\001 \001" +
       "(\005\"0\n\020HeartbeatRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010ho" +
-      "stname\030\002 \001(\t\"#\n\021HeartbeatResponse\022\016\n\006sta" +
-      "tus\030\001 \001(\005\"\034\n\014MkdirRequest\022\014\n\004path\030\001 \001(\t\"" +
-      "\037\n\rMkdirResponse\022\016\n\006status\030\001 \001(\005\"\035\n\rDele" +
-      "teRequest\022\014\n\004path\030\001 \001(\t\" \n\016DeleteRespons" +
-      "e\022\016\n\006status\030\001 \001(\005\"\035\n\rRenameRequest\022\014\n\004pa" +
-      "th\030\001 \001(\t\" \n\016RenameResponse\022\016\n\006status\030\001 \001" +
-      "(\005\"\037\n\017ShutdownRequest\022\014\n\004code\030\001 \001(\005\"\"\n\020S" +
-      "hutdownResponse\022\016\n\006status\030\001 \001(\005\"8\n\024Fetch" +
-      "EditsLogRequest\022\014\n\004code\030\001 \001(\005\022\022\n\nsyncedT" +
-      "xid\030\002 \001(\003\")\n\025FetchEditsLogResponse\022\020\n\010ed" +
-      "itsLog\030\001 \001(\t\"+\n\033UpdateCheckpointTxidRequ" +
-      "est\022\014\n\004txid\030\001 \001(\003\".\n\034UpdateCheckpointTxi" +
-      "dResponse\022\016\n\006status\030\001 \001(\005\"%\n\021CreateFileR" +
-      "equest\022\020\n\010filename\030\001 \001(\t\"$\n\022CreateFileRe" +
-      "sponse\022\016\n\006status\030\001 \001(\005\">\n\030AllocateDataNo" +
-      "desRequest\022\020\n\010filename\030\001 \001(\t\022\020\n\010fileSize" +
-      "\030\002 \001(\003\".\n\031AllocateDataNodesResponse\022\021\n\td" +
-      "atanodes\030\001 \001(\t\"N\n\034InformReplicaReceivedR" +
-      "equest\022\n\n\002ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\022\020\n\010" +
-      "filename\030\003 \001(\t\"/\n\035InformReplicaReceivedR" +
-      "esponse\022\016\n\006status\030\001 \001(\005\"l\n ReportComplet" +
-      "eStorageInfoRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010hostn" +
-      "ame\030\002 \001(\t\022\021\n\tfilenames\030\003 \001(\t\022\027\n\017storageD" +
-      "ataSize\030\004 \001(\003\"3\n!ReportCompleteStorageIn" +
-      "foResponse\022\016\n\006status\030\001 \001(\005B5\n\037com.hepo.d" +
-      "fs.namenode.rpc.modelB\020NameNodeRpcModelP" +
-      "\001b\006proto3"
+      "stname\030\002 \001(\t\"5\n\021HeartbeatResponse\022\016\n\006sta" +
+      "tus\030\001 \001(\005\022\020\n\010commands\030\002 \001(\t\"\034\n\014MkdirRequ" +
+      "est\022\014\n\004path\030\001 \001(\t\"\037\n\rMkdirResponse\022\016\n\006st" +
+      "atus\030\001 \001(\005\"\035\n\rDeleteRequest\022\014\n\004path\030\001 \001(" +
+      "\t\" \n\016DeleteResponse\022\016\n\006status\030\001 \001(\005\"\035\n\rR" +
+      "enameRequest\022\014\n\004path\030\001 \001(\t\" \n\016RenameResp" +
+      "onse\022\016\n\006status\030\001 \001(\005\"\037\n\017ShutdownRequest\022" +
+      "\014\n\004code\030\001 \001(\005\"\"\n\020ShutdownResponse\022\016\n\006sta" +
+      "tus\030\001 \001(\005\"8\n\024FetchEditsLogRequest\022\014\n\004cod" +
+      "e\030\001 \001(\005\022\022\n\nsyncedTxid\030\002 \001(\003\")\n\025FetchEdit" +
+      "sLogResponse\022\020\n\010editsLog\030\001 \001(\t\"+\n\033Update" +
+      "CheckpointTxidRequest\022\014\n\004txid\030\001 \001(\003\".\n\034U" +
+      "pdateCheckpointTxidResponse\022\016\n\006status\030\001 " +
+      "\001(\005\"%\n\021CreateFileRequest\022\020\n\010filename\030\001 \001" +
+      "(\t\"$\n\022CreateFileResponse\022\016\n\006status\030\001 \001(\005" +
+      "\">\n\030AllocateDataNodesRequest\022\020\n\010filename" +
+      "\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\".\n\031AllocateData" +
+      "NodesResponse\022\021\n\tdatanodes\030\001 \001(\t\"N\n\034Info" +
+      "rmReplicaReceivedRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010" +
+      "hostname\030\002 \001(\t\022\020\n\010filename\030\003 \001(\t\"/\n\035Info" +
+      "rmReplicaReceivedResponse\022\016\n\006status\030\001 \001(" +
+      "\005\"l\n ReportCompleteStorageInfoRequest\022\n\n" +
+      "\002ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\022\021\n\tfilenames" +
+      "\030\003 \001(\t\022\027\n\017storageDataSize\030\004 \001(\003\"3\n!Repor" +
+      "tCompleteStorageInfoResponse\022\016\n\006status\030\001" +
+      " \001(\005\"-\n\031GetDataNodeForFileRequest\022\020\n\010fil" +
+      "ename\030\001 \001(\t\"2\n\032GetDataNodeForFileRespons" +
+      "e\022\024\n\014dataNodeInfo\030\001 \001(\tB5\n\037com.hepo.dfs." +
+      "namenode.rpc.modelB\020NameNodeRpcModelP\001b\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -203,7 +216,7 @@ public final class NameNodeRpcModel {
     internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_HeartbeatResponse_descriptor,
-        new String[] { "Status", });
+        new String[] { "Status", "Commands", });
     internal_static_com_hepo_dfs_namenode_rpc_MkdirRequest_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_com_hepo_dfs_namenode_rpc_MkdirRequest_fieldAccessorTable = new
@@ -324,6 +337,18 @@ public final class NameNodeRpcModel {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_hepo_dfs_namenode_rpc_ReportCompleteStorageInfoResponse_descriptor,
         new String[] { "Status", });
+    internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_descriptor =
+      getDescriptor().getMessageTypes().get(24);
+    internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_descriptor,
+        new String[] { "Filename", });
+    internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileResponse_descriptor =
+      getDescriptor().getMessageTypes().get(25);
+    internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileResponse_descriptor,
+        new String[] { "DataNodeInfo", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
