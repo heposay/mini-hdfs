@@ -9,6 +9,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
 import io.grpc.netty.NettyChannelBuilder;
 
+import java.io.IOException;
+
 /**
  * 文件系统客户端的实现类
  *
@@ -30,6 +32,11 @@ public class FileSystemImpl implements FileSystem {
      */
     private NameNodeServiceGrpc.NameNodeServiceBlockingStub namenode;
 
+    /**
+     * 文件上传客户端
+     */
+    private FileUploadClient fileUploadClient;
+
     public FileSystemImpl() {
         //初始化namenode组件
         ManagedChannel channel = NettyChannelBuilder
@@ -37,6 +44,7 @@ public class FileSystemImpl implements FileSystem {
                 .negotiationType(NegotiationType.PLAINTEXT)
                 .build();
         this.namenode = NameNodeServiceGrpc.newBlockingStub(channel);
+        this.fileUploadClient = new FileUploadClient();
     }
 
     /**
@@ -91,10 +99,35 @@ public class FileSystemImpl implements FileSystem {
             JSONObject datanode = datanodes.getJSONObject(i);
             String hostname = datanode.getString("hostname");
             int uploadServerPort = datanode.getInteger("uplaodServerPort");
-            FileUploadClient.sendFile(hostname, uploadServerPort, file, filename, fileSize);
+            fileUploadClient.sendFile(hostname, uploadServerPort, file, filename, fileSize);
         }
         return true;
     }
+
+    @Override
+    public byte[] download(String filename) throws IOException {
+        //1.调用Namenode的接口，获取该文件副本所在的DataNode
+        JSONObject datanode =getDataNodeForFile(filename);
+        //2.打开DataNode的网络连接，发送文件名过去
+        //3.尝试从连接读取DataNode发送过来的文件流数据
+        String hostname = datanode.getString("hostname");
+        Integer uploadServerPort = datanode.getInteger("uploadServerPort");
+        return fileUploadClient.readFile(hostname, uploadServerPort, filename);
+    }
+
+    /**
+     * 获取文件的某个副本所在的机器
+     * @param filename 文件名
+     * @return DataNode所在的机器
+     */
+    private JSONObject getDataNodeForFile(String filename) {
+        GetDataNodeForFileRequest request = GetDataNodeForFileRequest.newBuilder()
+                .setFilename(filename)
+                .build();
+        GetDataNodeForFileResponse response = namenode.getDataNodeForFile(request);
+        return JSONObject.parseObject(response.getDataNodeInfo());
+    }
+
 
     /**
      * 创建文件

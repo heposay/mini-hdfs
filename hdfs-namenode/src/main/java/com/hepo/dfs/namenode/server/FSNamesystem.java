@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 import static com.hepo.dfs.namenode.server.NameNodeConfig.NAMENODE_DIR;
@@ -46,6 +47,11 @@ public class FSNamesystem {
      * 每个文件对应的副本所在的DataNode
      */
     private final Map<String, List<DataNodeInfo>> replicasByFilename = new HashMap<>();
+
+    /**
+     * 文件副本持有的读写锁
+     */
+    private ReentrantReadWriteLock replicasByFilenameLock = new ReentrantReadWriteLock();
 
     /**
      * 初始化组件
@@ -303,7 +309,6 @@ public class FSNamesystem {
     }
 
 
-
     /**
      * todo 修改目录名
      *
@@ -332,12 +337,33 @@ public class FSNamesystem {
      * @param filename 文件名
      */
     public void addReceivedReplica(String ip, String hostname, String filename) {
-        synchronized (replicasByFilename) {
+        try {
+            replicasByFilenameLock.writeLock().lock();
             List<DataNodeInfo> replicas = replicasByFilename.computeIfAbsent(filename, k -> new ArrayList<>());
 
             DataNodeInfo datanode = dataNodeManager.getDataNodeInfo(ip, hostname);
             replicas.add(datanode);
             System.out.println("收到增量上报，当前的副本信息为：" + replicasByFilename);
+        } finally {
+            replicasByFilenameLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * 获取文件副本所在的DataNode节点信息
+     *
+     * @param filename
+     * @return
+     */
+    public DataNodeInfo getDataNodeForFile(String filename) {
+        try {
+            replicasByFilenameLock.readLock().lock();
+            List<DataNodeInfo> dataNodeInfos = replicasByFilename.get(filename);
+            Random random = new Random();
+            int index = random.nextInt(dataNodeInfos.size());
+            return dataNodeInfos.get(index);
+        } finally {
+            replicasByFilenameLock.readLock().unlock();
         }
     }
 }

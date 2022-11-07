@@ -23,7 +23,8 @@ public class FileSystemTest {
     public static void main(String[] args) {
         //testMkdir();
 //        testUpload("/Users/linhaibo/Documents/tmp/cat.jpeg");
-        testShutdown();
+//        testShutdown();
+        testDownload("/image/product/pig2.jpg");
     }
 
 
@@ -66,6 +67,13 @@ public class FileSystemTest {
         }catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public static void testDownload(String filename) {
+        try {
+            byte[] fileBytes = fileSystem.download(filename);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

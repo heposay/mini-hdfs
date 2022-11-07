@@ -1,5 +1,7 @@
 package com.hepo.dfs.client.client;
 
+import java.io.IOException;
+
 /**
  * 客户端文件系统的接口
  * @author zhonghuashishan
@@ -27,5 +29,14 @@ public interface FileSystem {
 	 * @return boolean
 	 */
 	Boolean upload(byte[] file, String filename, long fileSize);
+
+
+	/**
+	 * 文件下载
+	 * @param filename 文件名
+	 * @return 文件的字节流
+	 * @throws IOException
+	 */
+	byte[] download(String filename) throws IOException;
 	
 }
