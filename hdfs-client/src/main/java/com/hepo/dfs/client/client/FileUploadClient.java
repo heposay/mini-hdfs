@@ -122,6 +122,10 @@ public class FileUploadClient {
         SocketChannel channel = null;
         Selector selector = null;
 
+        ByteBuffer fileLengthBuffer = null;
+        ByteBuffer fileBuffer = null;
+        Long fileLength = null;
+
         try {
             //与服务端DataNode建立短连接，发送完一个文件立刻释放网络连接
             channel = SocketChannel.open();
@@ -166,12 +170,20 @@ public class FileUploadClient {
                     } else if (key.isReadable()) {
                         //读取服务端发回来的响应
                         channel = (SocketChannel) key.channel();
-                        ByteBuffer fileLengthBuffer = ByteBuffer.allocate(8);
-                        channel.read(fileLengthBuffer);
-                        if (!fileLengthBuffer.hasRemaining()) {
-                            fileLengthBuffer.rewind();
-                            long fileLength = fileLengthBuffer.getLong();
-                            ByteBuffer fileBuffer = ByteBuffer.allocate((int) fileLength);
+                        if (fileLength == null) {
+                            if (fileLengthBuffer == null) {
+                                fileLengthBuffer = ByteBuffer.allocate(8);
+                            }
+                            channel.read(fileLengthBuffer);
+
+                            if (!fileLengthBuffer.hasRemaining()) {
+                                fileLengthBuffer.rewind();
+                                fileLength = fileLengthBuffer.getLong();
+                            }
+                        }else {
+                            if (fileBuffer == null) {
+                                fileBuffer = ByteBuffer.allocate(Math.toIntExact(fileLength));
+                            }
                             channel.read(fileBuffer);
                             if (!fileBuffer.hasRemaining()) {
                                 fileBuffer.rewind();
@@ -179,6 +191,7 @@ public class FileUploadClient {
                                 reading = false;
                             }
                         }
+
                     }
                 }
             }

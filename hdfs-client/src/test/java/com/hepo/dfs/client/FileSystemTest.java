@@ -5,6 +5,7 @@ import com.hepo.dfs.client.client.FileSystemImpl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -22,8 +23,8 @@ public class FileSystemTest {
 
     public static void main(String[] args) {
         //testMkdir();
-//        testUpload("/Users/linhaibo/Documents/tmp/cat.jpeg");
-//        testShutdown();
+        //testShutdown();
+        //testUpload("/Users/linhaibo/Documents/tmp/cat.jpeg");
         testDownload("/image/product/pig2.jpg");
     }
 
@@ -51,7 +52,7 @@ public class FileSystemTest {
     //上传文件
     public static void testUpload(String filename) {
         try {
-            File file  = new File(filename);
+            File file = new File(filename);
             long fileLength = file.length();
 
             ByteBuffer buffer = ByteBuffer.allocate((int) fileLength);
@@ -64,7 +65,7 @@ public class FileSystemTest {
 
 
             fileSystem.upload(fileBytes, "/image/product/pig2.jpg", fileLength);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -72,7 +73,15 @@ public class FileSystemTest {
     public static void testDownload(String filename) {
         try {
             byte[] fileBytes = fileSystem.download(filename);
-        }catch (IOException e) {
+            ByteBuffer fileBuffer = ByteBuffer.wrap(fileBytes);
+
+            FileOutputStream fos = new FileOutputStream("/Users/linhaibo/Documents/tmp/download/pig.jpg");
+            FileChannel channel = fos.getChannel();
+            channel.write(fileBuffer);
+
+            fos.close();
+            channel.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

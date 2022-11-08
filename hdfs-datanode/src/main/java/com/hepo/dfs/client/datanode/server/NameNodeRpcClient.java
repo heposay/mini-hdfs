@@ -62,6 +62,8 @@ public class NameNodeRpcClient {
      */
     public void informReplicaReceived(String filename) {
         InformReplicaReceivedRequest request = InformReplicaReceivedRequest.newBuilder()
+                .setIp(DATANAME_IP)
+                .setHostname(DATANAME_HONENAME)
                 .setFilename(filename)
                 .build();
         namenode.informReplicaReceived(request);

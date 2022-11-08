@@ -108,10 +108,11 @@ public class FileSystemImpl implements FileSystem {
     public byte[] download(String filename) throws IOException {
         //1.调用Namenode的接口，获取该文件副本所在的DataNode
         JSONObject datanode =getDataNodeForFile(filename);
+        System.out.println("获取要下载的DataNode节点：" + datanode);
         //2.打开DataNode的网络连接，发送文件名过去
         //3.尝试从连接读取DataNode发送过来的文件流数据
         String hostname = datanode.getString("hostname");
-        Integer uploadServerPort = datanode.getInteger("uploadServerPort");
+        Integer uploadServerPort = datanode.getInteger("uplaodServerPort");
         return fileUploadClient.readFile(hostname, uploadServerPort, filename);
     }
 
