@@ -4,26 +4,27 @@
 package com.hepo.dfs.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.hepo.dfs.namenode.rpc.GetDataNodeForFileRequest}
+ * Protobuf type {@code com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasRequest}
  */
-public  final class GetDataNodeForFileRequest extends
+public  final class ChooseDataNodeFromReplicasRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.GetDataNodeForFileRequest)
-    GetDataNodeForFileRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasRequest)
+    ChooseDataNodeFromReplicasRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use GetDataNodeForFileRequest.newBuilder() to construct.
-  private GetDataNodeForFileRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ChooseDataNodeFromReplicasRequest.newBuilder() to construct.
+  private ChooseDataNodeFromReplicasRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private GetDataNodeForFileRequest() {
+  private ChooseDataNodeFromReplicasRequest() {
     filename_ = "";
+    excludedDataNodeId_ = "";
   }
 
   @Override
   @SuppressWarnings({"unused"})
   protected Object newInstance(
       UnusedPrivateParameter unused) {
-    return new GetDataNodeForFileRequest();
+    return new ChooseDataNodeFromReplicasRequest();
   }
 
   @Override
@@ -31,7 +32,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private GetDataNodeForFileRequest(
+  private ChooseDataNodeFromReplicasRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -55,6 +56,12 @@ private static final long serialVersionUID = 0L;
             filename_ = s;
             break;
           }
+          case 18: {
+            String s = input.readStringRequireUtf8();
+
+            excludedDataNodeId_ = s;
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -76,15 +83,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_descriptor;
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            GetDataNodeForFileRequest.class, Builder.class);
+            ChooseDataNodeFromReplicasRequest.class, Builder.class);
   }
 
   public static final int FILENAME_FIELD_NUMBER = 1;
@@ -123,6 +130,42 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int EXCLUDEDDATANODEID_FIELD_NUMBER = 2;
+  private volatile Object excludedDataNodeId_;
+  /**
+   * <code>string excludedDataNodeId = 2;</code>
+   * @return The excludedDataNodeId.
+   */
+  public String getExcludedDataNodeId() {
+    Object ref = excludedDataNodeId_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      excludedDataNodeId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string excludedDataNodeId = 2;</code>
+   * @return The bytes for excludedDataNodeId.
+   */
+  public com.google.protobuf.ByteString
+      getExcludedDataNodeIdBytes() {
+    Object ref = excludedDataNodeId_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      excludedDataNodeId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @Override
   public final boolean isInitialized() {
@@ -140,6 +183,9 @@ private static final long serialVersionUID = 0L;
     if (!getFilenameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, filename_);
     }
+    if (!getExcludedDataNodeIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, excludedDataNodeId_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -152,6 +198,9 @@ private static final long serialVersionUID = 0L;
     if (!getFilenameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, filename_);
     }
+    if (!getExcludedDataNodeIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, excludedDataNodeId_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -162,13 +211,15 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof GetDataNodeForFileRequest)) {
+    if (!(obj instanceof ChooseDataNodeFromReplicasRequest)) {
       return super.equals(obj);
     }
-    GetDataNodeForFileRequest other = (GetDataNodeForFileRequest) obj;
+    ChooseDataNodeFromReplicasRequest other = (ChooseDataNodeFromReplicasRequest) obj;
 
     if (!getFilename()
         .equals(other.getFilename())) return false;
+    if (!getExcludedDataNodeId()
+        .equals(other.getExcludedDataNodeId())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -182,74 +233,76 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + FILENAME_FIELD_NUMBER;
     hash = (53 * hash) + getFilename().hashCode();
+    hash = (37 * hash) + EXCLUDEDDATANODEID_FIELD_NUMBER;
+    hash = (53 * hash) + getExcludedDataNodeId().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static GetDataNodeForFileRequest parseFrom(
+  public static ChooseDataNodeFromReplicasRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GetDataNodeForFileRequest parseFrom(
+  public static ChooseDataNodeFromReplicasRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GetDataNodeForFileRequest parseFrom(
+  public static ChooseDataNodeFromReplicasRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GetDataNodeForFileRequest parseFrom(
+  public static ChooseDataNodeFromReplicasRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GetDataNodeForFileRequest parseFrom(byte[] data)
+  public static ChooseDataNodeFromReplicasRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GetDataNodeForFileRequest parseFrom(
+  public static ChooseDataNodeFromReplicasRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GetDataNodeForFileRequest parseFrom(java.io.InputStream input)
+  public static ChooseDataNodeFromReplicasRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GetDataNodeForFileRequest parseFrom(
+  public static ChooseDataNodeFromReplicasRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GetDataNodeForFileRequest parseDelimitedFrom(java.io.InputStream input)
+  public static ChooseDataNodeFromReplicasRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static GetDataNodeForFileRequest parseDelimitedFrom(
+  public static ChooseDataNodeFromReplicasRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GetDataNodeForFileRequest parseFrom(
+  public static ChooseDataNodeFromReplicasRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GetDataNodeForFileRequest parseFrom(
+  public static ChooseDataNodeFromReplicasRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -262,7 +315,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(GetDataNodeForFileRequest prototype) {
+  public static Builder newBuilder(ChooseDataNodeFromReplicasRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @Override
@@ -278,26 +331,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.hepo.dfs.namenode.rpc.GetDataNodeForFileRequest}
+   * Protobuf type {@code com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.GetDataNodeForFileRequest)
-      GetDataNodeForFileRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasRequest)
+      ChooseDataNodeFromReplicasRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              GetDataNodeForFileRequest.class, Builder.class);
+              ChooseDataNodeFromReplicasRequest.class, Builder.class);
     }
 
-    // Construct using com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest.newBuilder()
+    // Construct using com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -317,23 +370,25 @@ private static final long serialVersionUID = 0L;
       super.clear();
       filename_ = "";
 
+      excludedDataNodeId_ = "";
+
       return this;
     }
 
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_GetDataNodeForFileRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_descriptor;
     }
 
     @Override
-    public GetDataNodeForFileRequest getDefaultInstanceForType() {
-      return GetDataNodeForFileRequest.getDefaultInstance();
+    public ChooseDataNodeFromReplicasRequest getDefaultInstanceForType() {
+      return ChooseDataNodeFromReplicasRequest.getDefaultInstance();
     }
 
     @Override
-    public GetDataNodeForFileRequest build() {
-      GetDataNodeForFileRequest result = buildPartial();
+    public ChooseDataNodeFromReplicasRequest build() {
+      ChooseDataNodeFromReplicasRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -341,9 +396,10 @@ private static final long serialVersionUID = 0L;
     }
 
     @Override
-    public GetDataNodeForFileRequest buildPartial() {
-      GetDataNodeForFileRequest result = new GetDataNodeForFileRequest(this);
+    public ChooseDataNodeFromReplicasRequest buildPartial() {
+      ChooseDataNodeFromReplicasRequest result = new ChooseDataNodeFromReplicasRequest(this);
       result.filename_ = filename_;
+      result.excludedDataNodeId_ = excludedDataNodeId_;
       onBuilt();
       return result;
     }
@@ -382,18 +438,22 @@ private static final long serialVersionUID = 0L;
     }
     @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof GetDataNodeForFileRequest) {
-        return mergeFrom((GetDataNodeForFileRequest)other);
+      if (other instanceof ChooseDataNodeFromReplicasRequest) {
+        return mergeFrom((ChooseDataNodeFromReplicasRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(GetDataNodeForFileRequest other) {
-      if (other == GetDataNodeForFileRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(ChooseDataNodeFromReplicasRequest other) {
+      if (other == ChooseDataNodeFromReplicasRequest.getDefaultInstance()) return this;
       if (!other.getFilename().isEmpty()) {
         filename_ = other.filename_;
+        onChanged();
+      }
+      if (!other.getExcludedDataNodeId().isEmpty()) {
+        excludedDataNodeId_ = other.excludedDataNodeId_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -411,11 +471,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      GetDataNodeForFileRequest parsedMessage = null;
+      ChooseDataNodeFromReplicasRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (GetDataNodeForFileRequest) e.getUnfinishedMessage();
+        parsedMessage = (ChooseDataNodeFromReplicasRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -500,6 +560,82 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
+
+    private Object excludedDataNodeId_ = "";
+    /**
+     * <code>string excludedDataNodeId = 2;</code>
+     * @return The excludedDataNodeId.
+     */
+    public String getExcludedDataNodeId() {
+      Object ref = excludedDataNodeId_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        excludedDataNodeId_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
+    }
+    /**
+     * <code>string excludedDataNodeId = 2;</code>
+     * @return The bytes for excludedDataNodeId.
+     */
+    public com.google.protobuf.ByteString
+        getExcludedDataNodeIdBytes() {
+      Object ref = excludedDataNodeId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        excludedDataNodeId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string excludedDataNodeId = 2;</code>
+     * @param value The excludedDataNodeId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setExcludedDataNodeId(
+        String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      excludedDataNodeId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string excludedDataNodeId = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearExcludedDataNodeId() {
+      
+      excludedDataNodeId_ = getDefaultInstance().getExcludedDataNodeId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string excludedDataNodeId = 2;</code>
+     * @param value The bytes for excludedDataNodeId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setExcludedDataNodeIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      excludedDataNodeId_ = value;
+      onChanged();
+      return this;
+    }
     @Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -513,41 +649,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.GetDataNodeForFileRequest)
+    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.GetDataNodeForFileRequest)
-  private static final GetDataNodeForFileRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasRequest)
+  private static final ChooseDataNodeFromReplicasRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new GetDataNodeForFileRequest();
+    DEFAULT_INSTANCE = new ChooseDataNodeFromReplicasRequest();
   }
 
-  public static GetDataNodeForFileRequest getDefaultInstance() {
+  public static ChooseDataNodeFromReplicasRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<GetDataNodeForFileRequest>
-      PARSER = new com.google.protobuf.AbstractParser<GetDataNodeForFileRequest>() {
+  private static final com.google.protobuf.Parser<ChooseDataNodeFromReplicasRequest>
+      PARSER = new com.google.protobuf.AbstractParser<ChooseDataNodeFromReplicasRequest>() {
     @Override
-    public GetDataNodeForFileRequest parsePartialFrom(
+    public ChooseDataNodeFromReplicasRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new GetDataNodeForFileRequest(input, extensionRegistry);
+      return new ChooseDataNodeFromReplicasRequest(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<GetDataNodeForFileRequest> parser() {
+  public static com.google.protobuf.Parser<ChooseDataNodeFromReplicasRequest> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<GetDataNodeForFileRequest> getParserForType() {
+  public com.google.protobuf.Parser<ChooseDataNodeFromReplicasRequest> getParserForType() {
     return PARSER;
   }
 
   @Override
-  public GetDataNodeForFileRequest getDefaultInstanceForType() {
+  public ChooseDataNodeFromReplicasRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

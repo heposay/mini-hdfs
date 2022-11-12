@@ -507,13 +507,44 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         responseObserver.onCompleted();
     }
 
+    /**
+     * 获取文件的某个副本所在的DataNode
+     */
     @Override
-    public void getDataNodeForFile(GetDataNodeForFileRequest request, StreamObserver<GetDataNodeForFileResponse> responseObserver) {
-        DataNodeInfo dataNodeInfo = namesystem.getDataNodeForFile(request.getFilename());
-        GetDataNodeForFileResponse response = GetDataNodeForFileResponse.newBuilder()
+    public void chooseDataNodeFromReplicas(ChooseDataNodeFromReplicasRequest request, StreamObserver<ChooseDataNodeFromReplicasResponse> responseObserver) {
+        DataNodeInfo dataNodeInfo = namesystem.chooseDataNodeFromReplicas(request.getFilename(), request.getExcludedDataNodeId());
+        ChooseDataNodeFromReplicasResponse response = ChooseDataNodeFromReplicasResponse.newBuilder()
                 .setDataNodeInfo(JSONObject.toJSONString(dataNodeInfo))
                 .build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+    }
+
+    /**
+     * 重新分配一个数据节点
+     */
+    @Override
+    public void reallocateDataNode(ReallocateDataNodeRequest request, StreamObserver<ReallocateDataNodeResponse> responseObserver) {
+        long fileSize = request.getFileSize();
+        String excludedDataNodeId = request.getExcludedDataNodeId();
+        DataNodeInfo datanode = datanodeManager.reallocateDataNode(fileSize, excludedDataNodeId);
+        ReallocateDataNodeResponse response = ReallocateDataNodeResponse.newBuilder().setDatanode(JSONObject.toJSONString(datanode)).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    /**
+     * 集群重平衡调整
+     * @param request
+     * @param responseObserver
+     */
+    @Override
+    public void rebalance(RebalanceRequest request, StreamObserver<RebalanceResponse> responseObserver) {
+         datanodeManager.createRebalanceTasks();
+
+         RebalanceResponse response = RebalanceResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+         responseObserver.onNext(response);
+         responseObserver.onCompleted();
+
     }
 }

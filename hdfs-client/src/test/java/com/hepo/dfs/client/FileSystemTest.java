@@ -65,8 +65,8 @@ public class FileSystemTest {
 
 
             fileSystem.upload(fileBytes, "/image/product/pig2.jpg", fileLength);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

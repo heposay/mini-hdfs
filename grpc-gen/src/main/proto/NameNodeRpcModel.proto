@@ -114,10 +114,28 @@ message ReportCompleteStorageInfoResponse{
   int32 status = 1;
 }
 
-message GetDataNodeForFileRequest{
+message ChooseDataNodeFromReplicasRequest{
   string filename = 1;
+  string excludedDataNodeId = 2;
 }
 
-message GetDataNodeForFileResponse{
+message ChooseDataNodeFromReplicasResponse{
   string dataNodeInfo = 1;
+}
+
+
+message ReallocateDataNodeRequest{
+  string filename = 1;
+  int64 fileSize = 2;
+  string excludedDataNodeId = 3;
+}
+message ReallocateDataNodeResponse{
+  string datanode = 1;
+}
+
+
+message RebalanceRequest{
+}
+message RebalanceResponse{
+  int32 status = 1;
 }

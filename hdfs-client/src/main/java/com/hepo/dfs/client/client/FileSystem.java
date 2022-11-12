@@ -28,7 +28,7 @@ public interface FileSystem {
 	 * @param fileSize 文件大小
 	 * @return boolean
 	 */
-	Boolean upload(byte[] file, String filename, long fileSize);
+	Boolean upload(byte[] file, String filename, long fileSize) throws Exception;
 
 
 	/**

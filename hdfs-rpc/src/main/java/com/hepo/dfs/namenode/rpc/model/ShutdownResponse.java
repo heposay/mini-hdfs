@@ -74,13 +74,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_descriptor;
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             ShutdownResponse.class, Builder.class);
   }
@@ -256,16 +256,16 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.ShutdownResponse)
-      com.hepo.dfs.namenode.rpc.model.ShutdownResponseOrBuilder {
+      ShutdownResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               ShutdownResponse.class, Builder.class);
     }
@@ -296,7 +296,7 @@ private static final long serialVersionUID = 0L;
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownResponse_descriptor;
     }
 
     @Override
@@ -411,7 +411,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setStatus(int value) {
-
+      
       status_ = value;
       onChanged();
       return this;
@@ -421,7 +421,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearStatus() {
-
+      
       status_ = 0;
       onChanged();
       return this;

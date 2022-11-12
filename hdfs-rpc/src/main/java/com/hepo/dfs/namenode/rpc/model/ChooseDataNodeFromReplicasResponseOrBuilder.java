@@ -3,8 +3,8 @@
 
 package com.hepo.dfs.namenode.rpc.model;
 
-public interface GetDataNodeForFileResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:com.hepo.dfs.namenode.rpc.GetDataNodeForFileResponse)
+public interface ChooseDataNodeFromReplicasResponseOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**

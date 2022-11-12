@@ -29,7 +29,7 @@ public class FileUploadClient {
      * @param file             文件字节流
      * @param fileSize         文件大小
      */
-    public void sendFile(String hostname, int uploadServerPort, byte[] file, String filename, long fileSize) {
+    public Boolean sendFile(String hostname, int uploadServerPort, byte[] file, String filename, long fileSize) {
         SocketChannel channel = null;
         Selector selector = null;
         try {
@@ -90,24 +90,24 @@ public class FileUploadClient {
                 }
 
             }
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return false;
         } finally {
-            if (channel != null) {
-                try {
+            try {
+                if (channel != null) {
                     channel.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
-            }
-            if (selector != null) {
-                try {
+                if (selector != null) {
                     selector.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
+        return true;
     }
 
     /**
@@ -180,7 +180,7 @@ public class FileUploadClient {
                                 fileLengthBuffer.rewind();
                                 fileLength = fileLengthBuffer.getLong();
                             }
-                        }else {
+                        } else {
                             if (fileBuffer == null) {
                                 fileBuffer = ByteBuffer.allocate(Math.toIntExact(fileLength));
                             }

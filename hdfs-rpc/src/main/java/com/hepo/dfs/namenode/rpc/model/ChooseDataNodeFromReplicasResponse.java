@@ -4,25 +4,26 @@
 package com.hepo.dfs.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.hepo.dfs.namenode.rpc.ShutdownRequest}
+ * Protobuf type {@code com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasResponse}
  */
-public  final class ShutdownRequest extends
+public  final class ChooseDataNodeFromReplicasResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.ShutdownRequest)
-    ShutdownRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
+    ChooseDataNodeFromReplicasResponseOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use ShutdownRequest.newBuilder() to construct.
-  private ShutdownRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ChooseDataNodeFromReplicasResponse.newBuilder() to construct.
+  private ChooseDataNodeFromReplicasResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private ShutdownRequest() {
+  private ChooseDataNodeFromReplicasResponse() {
+    dataNodeInfo_ = "";
   }
 
   @Override
   @SuppressWarnings({"unused"})
   protected Object newInstance(
       UnusedPrivateParameter unused) {
-    return new ShutdownRequest();
+    return new ChooseDataNodeFromReplicasResponse();
   }
 
   @Override
@@ -30,7 +31,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private ShutdownRequest(
+  private ChooseDataNodeFromReplicasResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -48,9 +49,10 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 8: {
+          case 10: {
+            String s = input.readStringRequireUtf8();
 
-            code_ = input.readInt32();
+            dataNodeInfo_ = s;
             break;
           }
           default: {
@@ -74,25 +76,51 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            ShutdownRequest.class, Builder.class);
+            ChooseDataNodeFromReplicasResponse.class, Builder.class);
   }
 
-  public static final int CODE_FIELD_NUMBER = 1;
-  private int code_;
+  public static final int DATANODEINFO_FIELD_NUMBER = 1;
+  private volatile Object dataNodeInfo_;
   /**
-   * <code>int32 code = 1;</code>
-   * @return The code.
+   * <code>string dataNodeInfo = 1;</code>
+   * @return The dataNodeInfo.
    */
-  public int getCode() {
-    return code_;
+  public String getDataNodeInfo() {
+    Object ref = dataNodeInfo_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      dataNodeInfo_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string dataNodeInfo = 1;</code>
+   * @return The bytes for dataNodeInfo.
+   */
+  public com.google.protobuf.ByteString
+      getDataNodeInfoBytes() {
+    Object ref = dataNodeInfo_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      dataNodeInfo_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -109,8 +137,8 @@ private static final long serialVersionUID = 0L;
   @Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (code_ != 0) {
-      output.writeInt32(1, code_);
+    if (!getDataNodeInfoBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, dataNodeInfo_);
     }
     unknownFields.writeTo(output);
   }
@@ -121,9 +149,8 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (code_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, code_);
+    if (!getDataNodeInfoBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, dataNodeInfo_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -135,13 +162,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof ShutdownRequest)) {
+    if (!(obj instanceof ChooseDataNodeFromReplicasResponse)) {
       return super.equals(obj);
     }
-    ShutdownRequest other = (ShutdownRequest) obj;
+    ChooseDataNodeFromReplicasResponse other = (ChooseDataNodeFromReplicasResponse) obj;
 
-    if (getCode()
-        != other.getCode()) return false;
+    if (!getDataNodeInfo()
+        .equals(other.getDataNodeInfo())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -153,76 +180,76 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + CODE_FIELD_NUMBER;
-    hash = (53 * hash) + getCode();
+    hash = (37 * hash) + DATANODEINFO_FIELD_NUMBER;
+    hash = (53 * hash) + getDataNodeInfo().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static ShutdownRequest parseFrom(
+  public static ChooseDataNodeFromReplicasResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ShutdownRequest parseFrom(
+  public static ChooseDataNodeFromReplicasResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(
+  public static ChooseDataNodeFromReplicasResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ShutdownRequest parseFrom(
+  public static ChooseDataNodeFromReplicasResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(byte[] data)
+  public static ChooseDataNodeFromReplicasResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ShutdownRequest parseFrom(
+  public static ChooseDataNodeFromReplicasResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(java.io.InputStream input)
+  public static ChooseDataNodeFromReplicasResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ShutdownRequest parseFrom(
+  public static ChooseDataNodeFromReplicasResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ShutdownRequest parseDelimitedFrom(java.io.InputStream input)
+  public static ChooseDataNodeFromReplicasResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static ShutdownRequest parseDelimitedFrom(
+  public static ChooseDataNodeFromReplicasResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(
+  public static ChooseDataNodeFromReplicasResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ShutdownRequest parseFrom(
+  public static ChooseDataNodeFromReplicasResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -235,7 +262,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(ShutdownRequest prototype) {
+  public static Builder newBuilder(ChooseDataNodeFromReplicasResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @Override
@@ -251,26 +278,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.hepo.dfs.namenode.rpc.ShutdownRequest}
+   * Protobuf type {@code com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.ShutdownRequest)
-      ShutdownRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
+      ChooseDataNodeFromReplicasResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ShutdownRequest.class, Builder.class);
+              ChooseDataNodeFromReplicasResponse.class, Builder.class);
     }
 
-    // Construct using com.hepo.dfs.namenode.rpc.model.ShutdownRequest.newBuilder()
+    // Construct using com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -288,7 +315,7 @@ private static final long serialVersionUID = 0L;
     @Override
     public Builder clear() {
       super.clear();
-      code_ = 0;
+      dataNodeInfo_ = "";
 
       return this;
     }
@@ -296,17 +323,17 @@ private static final long serialVersionUID = 0L;
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor;
     }
 
     @Override
-    public ShutdownRequest getDefaultInstanceForType() {
-      return ShutdownRequest.getDefaultInstance();
+    public ChooseDataNodeFromReplicasResponse getDefaultInstanceForType() {
+      return ChooseDataNodeFromReplicasResponse.getDefaultInstance();
     }
 
     @Override
-    public ShutdownRequest build() {
-      ShutdownRequest result = buildPartial();
+    public ChooseDataNodeFromReplicasResponse build() {
+      ChooseDataNodeFromReplicasResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -314,9 +341,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @Override
-    public ShutdownRequest buildPartial() {
-      ShutdownRequest result = new ShutdownRequest(this);
-      result.code_ = code_;
+    public ChooseDataNodeFromReplicasResponse buildPartial() {
+      ChooseDataNodeFromReplicasResponse result = new ChooseDataNodeFromReplicasResponse(this);
+      result.dataNodeInfo_ = dataNodeInfo_;
       onBuilt();
       return result;
     }
@@ -355,18 +382,19 @@ private static final long serialVersionUID = 0L;
     }
     @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof ShutdownRequest) {
-        return mergeFrom((ShutdownRequest)other);
+      if (other instanceof ChooseDataNodeFromReplicasResponse) {
+        return mergeFrom((ChooseDataNodeFromReplicasResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(ShutdownRequest other) {
-      if (other == ShutdownRequest.getDefaultInstance()) return this;
-      if (other.getCode() != 0) {
-        setCode(other.getCode());
+    public Builder mergeFrom(ChooseDataNodeFromReplicasResponse other) {
+      if (other == ChooseDataNodeFromReplicasResponse.getDefaultInstance()) return this;
+      if (!other.getDataNodeInfo().isEmpty()) {
+        dataNodeInfo_ = other.dataNodeInfo_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -383,11 +411,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      ShutdownRequest parsedMessage = null;
+      ChooseDataNodeFromReplicasResponse parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (ShutdownRequest) e.getUnfinishedMessage();
+        parsedMessage = (ChooseDataNodeFromReplicasResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -397,32 +425,78 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int code_ ;
+    private Object dataNodeInfo_ = "";
     /**
-     * <code>int32 code = 1;</code>
-     * @return The code.
+     * <code>string dataNodeInfo = 1;</code>
+     * @return The dataNodeInfo.
      */
-    public int getCode() {
-      return code_;
+    public String getDataNodeInfo() {
+      Object ref = dataNodeInfo_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        dataNodeInfo_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
     }
     /**
-     * <code>int32 code = 1;</code>
-     * @param value The code to set.
+     * <code>string dataNodeInfo = 1;</code>
+     * @return The bytes for dataNodeInfo.
+     */
+    public com.google.protobuf.ByteString
+        getDataNodeInfoBytes() {
+      Object ref = dataNodeInfo_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        dataNodeInfo_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string dataNodeInfo = 1;</code>
+     * @param value The dataNodeInfo to set.
      * @return This builder for chaining.
      */
-    public Builder setCode(int value) {
-      
-      code_ = value;
+    public Builder setDataNodeInfo(
+        String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      dataNodeInfo_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 code = 1;</code>
+     * <code>string dataNodeInfo = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearCode() {
+    public Builder clearDataNodeInfo() {
       
-      code_ = 0;
+      dataNodeInfo_ = getDefaultInstance().getDataNodeInfo();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string dataNodeInfo = 1;</code>
+     * @param value The bytes for dataNodeInfo to set.
+     * @return This builder for chaining.
+     */
+    public Builder setDataNodeInfoBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      dataNodeInfo_ = value;
       onChanged();
       return this;
     }
@@ -439,41 +513,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.ShutdownRequest)
+    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.ShutdownRequest)
-  private static final ShutdownRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
+  private static final ChooseDataNodeFromReplicasResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new ShutdownRequest();
+    DEFAULT_INSTANCE = new ChooseDataNodeFromReplicasResponse();
   }
 
-  public static ShutdownRequest getDefaultInstance() {
+  public static ChooseDataNodeFromReplicasResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<ShutdownRequest>
-      PARSER = new com.google.protobuf.AbstractParser<ShutdownRequest>() {
+  private static final com.google.protobuf.Parser<ChooseDataNodeFromReplicasResponse>
+      PARSER = new com.google.protobuf.AbstractParser<ChooseDataNodeFromReplicasResponse>() {
     @Override
-    public ShutdownRequest parsePartialFrom(
+    public ChooseDataNodeFromReplicasResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new ShutdownRequest(input, extensionRegistry);
+      return new ChooseDataNodeFromReplicasResponse(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<ShutdownRequest> parser() {
+  public static com.google.protobuf.Parser<ChooseDataNodeFromReplicasResponse> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<ShutdownRequest> getParserForType() {
+  public com.google.protobuf.Parser<ChooseDataNodeFromReplicasResponse> getParserForType() {
     return PARSER;
   }
 
   @Override
-  public ShutdownRequest getDefaultInstanceForType() {
+  public ChooseDataNodeFromReplicasResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

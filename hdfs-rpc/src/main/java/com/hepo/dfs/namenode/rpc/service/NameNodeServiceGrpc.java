@@ -391,35 +391,97 @@ public final class NameNodeServiceGrpc {
     return getReportCompleteStorageInfoMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest,
-      com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse> getGetDataNodeForFileMethod;
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest,
+      com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> getChooseDataNodeFromReplicasMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "getDataNodeForFile",
-      requestType = com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest.class,
-      responseType = com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse.class,
+      fullMethodName = SERVICE_NAME + '/' + "chooseDataNodeFromReplicas",
+      requestType = com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest,
-      com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse> getGetDataNodeForFileMethod() {
-    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest, com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse> getGetDataNodeForFileMethod;
-    if ((getGetDataNodeForFileMethod = NameNodeServiceGrpc.getGetDataNodeForFileMethod) == null) {
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest,
+      com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> getChooseDataNodeFromReplicasMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest, com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> getChooseDataNodeFromReplicasMethod;
+    if ((getChooseDataNodeFromReplicasMethod = NameNodeServiceGrpc.getChooseDataNodeFromReplicasMethod) == null) {
       synchronized (NameNodeServiceGrpc.class) {
-        if ((getGetDataNodeForFileMethod = NameNodeServiceGrpc.getGetDataNodeForFileMethod) == null) {
-          NameNodeServiceGrpc.getGetDataNodeForFileMethod = getGetDataNodeForFileMethod =
-              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest, com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse>newBuilder()
+        if ((getChooseDataNodeFromReplicasMethod = NameNodeServiceGrpc.getChooseDataNodeFromReplicasMethod) == null) {
+          NameNodeServiceGrpc.getChooseDataNodeFromReplicasMethod = getChooseDataNodeFromReplicasMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest, com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "getDataNodeForFile"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "chooseDataNodeFromReplicas"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest.getDefaultInstance()))
+                  com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("getDataNodeForFile"))
+                  com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("chooseDataNodeFromReplicas"))
               .build();
         }
       }
     }
-    return getGetDataNodeForFileMethod;
+    return getChooseDataNodeFromReplicasMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest,
+      com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse> getReallocateDataNodeMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "reallocateDataNode",
+      requestType = com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest,
+      com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse> getReallocateDataNodeMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest, com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse> getReallocateDataNodeMethod;
+    if ((getReallocateDataNodeMethod = NameNodeServiceGrpc.getReallocateDataNodeMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getReallocateDataNodeMethod = NameNodeServiceGrpc.getReallocateDataNodeMethod) == null) {
+          NameNodeServiceGrpc.getReallocateDataNodeMethod = getReallocateDataNodeMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest, com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "reallocateDataNode"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("reallocateDataNode"))
+              .build();
+        }
+      }
+    }
+    return getReallocateDataNodeMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.RebalanceRequest,
+      com.hepo.dfs.namenode.rpc.model.RebalanceResponse> getRebalanceMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "rebalance",
+      requestType = com.hepo.dfs.namenode.rpc.model.RebalanceRequest.class,
+      responseType = com.hepo.dfs.namenode.rpc.model.RebalanceResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.RebalanceRequest,
+      com.hepo.dfs.namenode.rpc.model.RebalanceResponse> getRebalanceMethod() {
+    io.grpc.MethodDescriptor<com.hepo.dfs.namenode.rpc.model.RebalanceRequest, com.hepo.dfs.namenode.rpc.model.RebalanceResponse> getRebalanceMethod;
+    if ((getRebalanceMethod = NameNodeServiceGrpc.getRebalanceMethod) == null) {
+      synchronized (NameNodeServiceGrpc.class) {
+        if ((getRebalanceMethod = NameNodeServiceGrpc.getRebalanceMethod) == null) {
+          NameNodeServiceGrpc.getRebalanceMethod = getRebalanceMethod =
+              io.grpc.MethodDescriptor.<com.hepo.dfs.namenode.rpc.model.RebalanceRequest, com.hepo.dfs.namenode.rpc.model.RebalanceResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "rebalance"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.RebalanceRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hepo.dfs.namenode.rpc.model.RebalanceResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new NameNodeServiceMethodDescriptorSupplier("rebalance"))
+              .build();
+        }
+      }
+    }
+    return getRebalanceMethod;
   }
 
   /**
@@ -556,9 +618,23 @@ public final class NameNodeServiceGrpc {
 
     /**
      */
-    public void getDataNodeForFile(com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest request,
-        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(getGetDataNodeForFileMethod(), responseObserver);
+    public void chooseDataNodeFromReplicas(com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getChooseDataNodeFromReplicasMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void reallocateDataNode(com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getReallocateDataNodeMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void rebalance(com.hepo.dfs.namenode.rpc.model.RebalanceRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.RebalanceResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(getRebalanceMethod(), responseObserver);
     }
 
     @Override public final io.grpc.ServerServiceDefinition bindService() {
@@ -648,12 +724,26 @@ public final class NameNodeServiceGrpc {
                 com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse>(
                   this, METHODID_REPORT_COMPLETE_STORAGE_INFO)))
           .addMethod(
-            getGetDataNodeForFileMethod(),
+            getChooseDataNodeFromReplicasMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest,
-                com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse>(
-                  this, METHODID_GET_DATA_NODE_FOR_FILE)))
+                com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest,
+                com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse>(
+                  this, METHODID_CHOOSE_DATA_NODE_FROM_REPLICAS)))
+          .addMethod(
+            getReallocateDataNodeMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest,
+                com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse>(
+                  this, METHODID_REALLOCATE_DATA_NODE)))
+          .addMethod(
+            getRebalanceMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hepo.dfs.namenode.rpc.model.RebalanceRequest,
+                com.hepo.dfs.namenode.rpc.model.RebalanceResponse>(
+                  this, METHODID_REBALANCE)))
           .build();
     }
   }
@@ -770,10 +860,26 @@ public final class NameNodeServiceGrpc {
 
     /**
      */
-    public void getDataNodeForFile(com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest request,
-        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse> responseObserver) {
+    public void chooseDataNodeFromReplicas(com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getGetDataNodeForFileMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getChooseDataNodeFromReplicasMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void reallocateDataNode(com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getReallocateDataNodeMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void rebalance(com.hepo.dfs.namenode.rpc.model.RebalanceRequest request,
+        io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.RebalanceResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getRebalanceMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -877,9 +983,23 @@ public final class NameNodeServiceGrpc {
 
     /**
      */
-    public com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse getDataNodeForFile(com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest request) {
+    public com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse chooseDataNodeFromReplicas(com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest request) {
       return blockingUnaryCall(
-          getChannel(), getGetDataNodeForFileMethod(), getCallOptions(), request);
+          getChannel(), getChooseDataNodeFromReplicasMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse reallocateDataNode(com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getReallocateDataNodeMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hepo.dfs.namenode.rpc.model.RebalanceResponse rebalance(com.hepo.dfs.namenode.rpc.model.RebalanceRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getRebalanceMethod(), getCallOptions(), request);
     }
   }
 
@@ -995,10 +1115,26 @@ public final class NameNodeServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse> getDataNodeForFile(
-        com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse> chooseDataNodeFromReplicas(
+        com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest request) {
       return futureUnaryCall(
-          getChannel().newCall(getGetDataNodeForFileMethod(), getCallOptions()), request);
+          getChannel().newCall(getChooseDataNodeFromReplicasMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse> reallocateDataNode(
+        com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getReallocateDataNodeMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.hepo.dfs.namenode.rpc.model.RebalanceResponse> rebalance(
+        com.hepo.dfs.namenode.rpc.model.RebalanceRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getRebalanceMethod(), getCallOptions()), request);
     }
   }
 
@@ -1014,7 +1150,9 @@ public final class NameNodeServiceGrpc {
   private static final int METHODID_ALLOCATE_DATA_NODES = 9;
   private static final int METHODID_INFORM_REPLICA_RECEIVED = 10;
   private static final int METHODID_REPORT_COMPLETE_STORAGE_INFO = 11;
-  private static final int METHODID_GET_DATA_NODE_FOR_FILE = 12;
+  private static final int METHODID_CHOOSE_DATA_NODE_FROM_REPLICAS = 12;
+  private static final int METHODID_REALLOCATE_DATA_NODE = 13;
+  private static final int METHODID_REBALANCE = 14;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -1081,9 +1219,17 @@ public final class NameNodeServiceGrpc {
           serviceImpl.reportCompleteStorageInfo((com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoRequest) request,
               (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ReportCompleteStorageInfoResponse>) responseObserver);
           break;
-        case METHODID_GET_DATA_NODE_FOR_FILE:
-          serviceImpl.getDataNodeForFile((com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileRequest) request,
-              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.GetDataNodeForFileResponse>) responseObserver);
+        case METHODID_CHOOSE_DATA_NODE_FROM_REPLICAS:
+          serviceImpl.chooseDataNodeFromReplicas((com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse>) responseObserver);
+          break;
+        case METHODID_REALLOCATE_DATA_NODE:
+          serviceImpl.reallocateDataNode((com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeResponse>) responseObserver);
+          break;
+        case METHODID_REBALANCE:
+          serviceImpl.rebalance((com.hepo.dfs.namenode.rpc.model.RebalanceRequest) request,
+              (io.grpc.stub.StreamObserver<com.hepo.dfs.namenode.rpc.model.RebalanceResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -1158,7 +1304,9 @@ public final class NameNodeServiceGrpc {
               .addMethod(getAllocateDataNodesMethod())
               .addMethod(getInformReplicaReceivedMethod())
               .addMethod(getReportCompleteStorageInfoMethod())
-              .addMethod(getGetDataNodeForFileMethod())
+              .addMethod(getChooseDataNodeFromReplicasMethod())
+              .addMethod(getReallocateDataNodeMethod())
+              .addMethod(getRebalanceMethod())
               .build();
         }
       }

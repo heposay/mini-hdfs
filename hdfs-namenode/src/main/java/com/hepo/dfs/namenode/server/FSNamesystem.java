@@ -441,15 +441,51 @@ public class FSNamesystem {
      * @param filename
      * @return
      */
-    public DataNodeInfo getDataNodeForFile(String filename) {
+    public DataNodeInfo chooseDataNodeFromReplicas(String filename, String excludedDataNodeId) {
         try {
             replicasByFilenameLock.readLock().lock();
+            DataNodeInfo excludedDataNode = dataNodeManager.getDataNodeInfo(excludedDataNodeId);
             List<DataNodeInfo> dataNodeInfos = replicasByFilename.get(filename);
+            int size = dataNodeInfos.size();
+            if (size == 1) {
+                if (dataNodeInfos.get(0).equals(excludedDataNode)) {
+                    return null;
+                }
+            }
             Random random = new Random();
-            int index = random.nextInt(dataNodeInfos.size());
-            return dataNodeInfos.get(index);
+            while (true) {
+                int index = random.nextInt(size);
+                DataNodeInfo dataNodeInfo = dataNodeInfos.get(index);
+                if (!dataNodeInfo.equals(excludedDataNode)) {
+                    return dataNodeInfo;
+                }
+            }
         } finally {
             replicasByFilenameLock.readLock().unlock();
+        }
+    }
+
+    /**
+     * 从数据节点删除掉一个文件副本
+     *
+     * @param id   dataNode标识
+     * @param file 文件
+     */
+    public void removeReplicaFromDataNode(String id, String file) {
+        try {
+            replicasByFilenameLock.writeLock().lock();
+
+            filesByDataNode.get(id).remove(file);
+            Iterator<DataNodeInfo> iterator = replicasByFilename.get(file.split("_")[0]).iterator();
+            while (iterator.hasNext()) {
+                DataNodeInfo dataNodeInfo = iterator.next();
+                if (dataNodeInfo.getId().equals(id)) {
+                    iterator.remove();
+                }
+
+            }
+        } finally {
+            replicasByFilenameLock.writeLock().unlock();
         }
     }
 }

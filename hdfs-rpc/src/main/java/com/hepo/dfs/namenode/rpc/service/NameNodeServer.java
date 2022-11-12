@@ -24,7 +24,7 @@ public final class NameNodeServer {
   static {
     String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022\031com.hepo.dfs." +
-      "namenode.rpc\032\026NameNodeRpcModel.proto2\354\013\n" +
+      "namenode.rpc\032\026NameNodeRpcModel.proto2\360\r\n" +
       "\017NameNodeService\022c\n\010register\022*.com.hepo." +
       "dfs.namenode.rpc.RegisterRequest\032+.com.h" +
       "epo.dfs.namenode.rpc.RegisterResponse\022f\n" +
@@ -59,12 +59,18 @@ public final class NameNodeServer {
       "tCompleteStorageInfo\022;.com.hepo.dfs.name" +
       "node.rpc.ReportCompleteStorageInfoReques" +
       "t\032<.com.hepo.dfs.namenode.rpc.ReportComp" +
-      "leteStorageInfoResponse\022\201\001\n\022getDataNodeF" +
-      "orFile\0224.com.hepo.dfs.namenode.rpc.GetDa" +
-      "taNodeForFileRequest\0325.com.hepo.dfs.name" +
-      "node.rpc.GetDataNodeForFileResponseB5\n!c" +
-      "om.hepo.dfs.namenode.rpc.serviceB\016NameNo" +
-      "deServerP\001b\006proto3"
+      "leteStorageInfoResponse\022\231\001\n\032chooseDataNo" +
+      "deFromReplicas\022<.com.hepo.dfs.namenode.r" +
+      "pc.ChooseDataNodeFromReplicasRequest\032=.c" +
+      "om.hepo.dfs.namenode.rpc.ChooseDataNodeF" +
+      "romReplicasResponse\022\201\001\n\022reallocateDataNo" +
+      "de\0224.com.hepo.dfs.namenode.rpc.Reallocat" +
+      "eDataNodeRequest\0325.com.hepo.dfs.namenode" +
+      ".rpc.ReallocateDataNodeResponse\022f\n\trebal" +
+      "ance\022+.com.hepo.dfs.namenode.rpc.Rebalan" +
+      "ceRequest\032,.com.hepo.dfs.namenode.rpc.Re" +
+      "balanceResponseB5\n!com.hepo.dfs.namenode" +
+      ".rpc.serviceB\016NameNodeServerP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

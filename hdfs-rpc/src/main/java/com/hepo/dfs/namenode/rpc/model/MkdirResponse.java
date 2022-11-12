@@ -74,13 +74,13 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor;
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             MkdirResponse.class, Builder.class);
   }
@@ -259,13 +259,13 @@ private static final long serialVersionUID = 0L;
       MkdirResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               MkdirResponse.class, Builder.class);
     }
@@ -296,7 +296,7 @@ private static final long serialVersionUID = 0L;
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.hepo.dfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_MkdirResponse_descriptor;
     }
 
     @Override
@@ -411,7 +411,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setStatus(int value) {
-
+      
       status_ = value;
       onChanged();
       return this;
@@ -421,7 +421,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearStatus() {
-
+      
       status_ = 0;
       onChanged();
       return this;

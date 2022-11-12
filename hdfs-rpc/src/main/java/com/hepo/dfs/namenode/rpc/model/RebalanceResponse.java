@@ -4,25 +4,25 @@
 package com.hepo.dfs.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.hepo.dfs.namenode.rpc.ShutdownRequest}
+ * Protobuf type {@code com.hepo.dfs.namenode.rpc.RebalanceResponse}
  */
-public  final class ShutdownRequest extends
+public  final class RebalanceResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.ShutdownRequest)
-    ShutdownRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.RebalanceResponse)
+    RebalanceResponseOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use ShutdownRequest.newBuilder() to construct.
-  private ShutdownRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use RebalanceResponse.newBuilder() to construct.
+  private RebalanceResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private ShutdownRequest() {
+  private RebalanceResponse() {
   }
 
   @Override
   @SuppressWarnings({"unused"})
   protected Object newInstance(
       UnusedPrivateParameter unused) {
-    return new ShutdownRequest();
+    return new RebalanceResponse();
   }
 
   @Override
@@ -30,7 +30,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private ShutdownRequest(
+  private RebalanceResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -50,7 +50,7 @@ private static final long serialVersionUID = 0L;
             break;
           case 8: {
 
-            code_ = input.readInt32();
+            status_ = input.readInt32();
             break;
           }
           default: {
@@ -74,25 +74,25 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RebalanceResponse_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RebalanceResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            ShutdownRequest.class, Builder.class);
+            RebalanceResponse.class, Builder.class);
   }
 
-  public static final int CODE_FIELD_NUMBER = 1;
-  private int code_;
+  public static final int STATUS_FIELD_NUMBER = 1;
+  private int status_;
   /**
-   * <code>int32 code = 1;</code>
-   * @return The code.
+   * <code>int32 status = 1;</code>
+   * @return The status.
    */
-  public int getCode() {
-    return code_;
+  public int getStatus() {
+    return status_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -109,8 +109,8 @@ private static final long serialVersionUID = 0L;
   @Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (code_ != 0) {
-      output.writeInt32(1, code_);
+    if (status_ != 0) {
+      output.writeInt32(1, status_);
     }
     unknownFields.writeTo(output);
   }
@@ -121,9 +121,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (code_ != 0) {
+    if (status_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, code_);
+        .computeInt32Size(1, status_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -135,13 +135,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof ShutdownRequest)) {
+    if (!(obj instanceof RebalanceResponse)) {
       return super.equals(obj);
     }
-    ShutdownRequest other = (ShutdownRequest) obj;
+    RebalanceResponse other = (RebalanceResponse) obj;
 
-    if (getCode()
-        != other.getCode()) return false;
+    if (getStatus()
+        != other.getStatus()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -153,76 +153,76 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + CODE_FIELD_NUMBER;
-    hash = (53 * hash) + getCode();
+    hash = (37 * hash) + STATUS_FIELD_NUMBER;
+    hash = (53 * hash) + getStatus();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static ShutdownRequest parseFrom(
+  public static RebalanceResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ShutdownRequest parseFrom(
+  public static RebalanceResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(
+  public static RebalanceResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ShutdownRequest parseFrom(
+  public static RebalanceResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(byte[] data)
+  public static RebalanceResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ShutdownRequest parseFrom(
+  public static RebalanceResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(java.io.InputStream input)
+  public static RebalanceResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ShutdownRequest parseFrom(
+  public static RebalanceResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ShutdownRequest parseDelimitedFrom(java.io.InputStream input)
+  public static RebalanceResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static ShutdownRequest parseDelimitedFrom(
+  public static RebalanceResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(
+  public static RebalanceResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ShutdownRequest parseFrom(
+  public static RebalanceResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -235,7 +235,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(ShutdownRequest prototype) {
+  public static Builder newBuilder(RebalanceResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @Override
@@ -251,26 +251,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.hepo.dfs.namenode.rpc.ShutdownRequest}
+   * Protobuf type {@code com.hepo.dfs.namenode.rpc.RebalanceResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.ShutdownRequest)
-      ShutdownRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.RebalanceResponse)
+      RebalanceResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RebalanceResponse_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RebalanceResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ShutdownRequest.class, Builder.class);
+              RebalanceResponse.class, Builder.class);
     }
 
-    // Construct using com.hepo.dfs.namenode.rpc.model.ShutdownRequest.newBuilder()
+    // Construct using com.hepo.dfs.namenode.rpc.model.RebalanceResponse.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -288,7 +288,7 @@ private static final long serialVersionUID = 0L;
     @Override
     public Builder clear() {
       super.clear();
-      code_ = 0;
+      status_ = 0;
 
       return this;
     }
@@ -296,17 +296,17 @@ private static final long serialVersionUID = 0L;
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ShutdownRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_RebalanceResponse_descriptor;
     }
 
     @Override
-    public ShutdownRequest getDefaultInstanceForType() {
-      return ShutdownRequest.getDefaultInstance();
+    public RebalanceResponse getDefaultInstanceForType() {
+      return RebalanceResponse.getDefaultInstance();
     }
 
     @Override
-    public ShutdownRequest build() {
-      ShutdownRequest result = buildPartial();
+    public RebalanceResponse build() {
+      RebalanceResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -314,9 +314,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @Override
-    public ShutdownRequest buildPartial() {
-      ShutdownRequest result = new ShutdownRequest(this);
-      result.code_ = code_;
+    public RebalanceResponse buildPartial() {
+      RebalanceResponse result = new RebalanceResponse(this);
+      result.status_ = status_;
       onBuilt();
       return result;
     }
@@ -355,18 +355,18 @@ private static final long serialVersionUID = 0L;
     }
     @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof ShutdownRequest) {
-        return mergeFrom((ShutdownRequest)other);
+      if (other instanceof RebalanceResponse) {
+        return mergeFrom((RebalanceResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(ShutdownRequest other) {
-      if (other == ShutdownRequest.getDefaultInstance()) return this;
-      if (other.getCode() != 0) {
-        setCode(other.getCode());
+    public Builder mergeFrom(RebalanceResponse other) {
+      if (other == RebalanceResponse.getDefaultInstance()) return this;
+      if (other.getStatus() != 0) {
+        setStatus(other.getStatus());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -383,11 +383,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      ShutdownRequest parsedMessage = null;
+      RebalanceResponse parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (ShutdownRequest) e.getUnfinishedMessage();
+        parsedMessage = (RebalanceResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -397,32 +397,32 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int code_ ;
+    private int status_ ;
     /**
-     * <code>int32 code = 1;</code>
-     * @return The code.
+     * <code>int32 status = 1;</code>
+     * @return The status.
      */
-    public int getCode() {
-      return code_;
+    public int getStatus() {
+      return status_;
     }
     /**
-     * <code>int32 code = 1;</code>
-     * @param value The code to set.
+     * <code>int32 status = 1;</code>
+     * @param value The status to set.
      * @return This builder for chaining.
      */
-    public Builder setCode(int value) {
+    public Builder setStatus(int value) {
       
-      code_ = value;
+      status_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int32 code = 1;</code>
+     * <code>int32 status = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearCode() {
+    public Builder clearStatus() {
       
-      code_ = 0;
+      status_ = 0;
       onChanged();
       return this;
     }
@@ -439,41 +439,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.ShutdownRequest)
+    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.RebalanceResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.ShutdownRequest)
-  private static final ShutdownRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.RebalanceResponse)
+  private static final RebalanceResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new ShutdownRequest();
+    DEFAULT_INSTANCE = new RebalanceResponse();
   }
 
-  public static ShutdownRequest getDefaultInstance() {
+  public static RebalanceResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<ShutdownRequest>
-      PARSER = new com.google.protobuf.AbstractParser<ShutdownRequest>() {
+  private static final com.google.protobuf.Parser<RebalanceResponse>
+      PARSER = new com.google.protobuf.AbstractParser<RebalanceResponse>() {
     @Override
-    public ShutdownRequest parsePartialFrom(
+    public RebalanceResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new ShutdownRequest(input, extensionRegistry);
+      return new RebalanceResponse(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<ShutdownRequest> parser() {
+  public static com.google.protobuf.Parser<RebalanceResponse> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<ShutdownRequest> getParserForType() {
+  public com.google.protobuf.Parser<RebalanceResponse> getParserForType() {
     return PARSER;
   }
 
   @Override
-  public ShutdownRequest getDefaultInstanceForType() {
+  public RebalanceResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

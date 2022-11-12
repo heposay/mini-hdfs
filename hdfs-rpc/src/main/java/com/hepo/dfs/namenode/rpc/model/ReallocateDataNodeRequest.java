@@ -4,27 +4,27 @@
 package com.hepo.dfs.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.hepo.dfs.namenode.rpc.HeartbeatRequest}
+ * Protobuf type {@code com.hepo.dfs.namenode.rpc.ReallocateDataNodeRequest}
  */
-public  final class HeartbeatRequest extends
+public  final class ReallocateDataNodeRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.HeartbeatRequest)
-    HeartbeatRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:com.hepo.dfs.namenode.rpc.ReallocateDataNodeRequest)
+    ReallocateDataNodeRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use HeartbeatRequest.newBuilder() to construct.
-  private HeartbeatRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ReallocateDataNodeRequest.newBuilder() to construct.
+  private ReallocateDataNodeRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private HeartbeatRequest() {
-    ip_ = "";
-    hostname_ = "";
+  private ReallocateDataNodeRequest() {
+    filename_ = "";
+    excludedDataNodeId_ = "";
   }
 
   @Override
   @SuppressWarnings({"unused"})
   protected Object newInstance(
       UnusedPrivateParameter unused) {
-    return new HeartbeatRequest();
+    return new ReallocateDataNodeRequest();
   }
 
   @Override
@@ -32,7 +32,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private HeartbeatRequest(
+  private ReallocateDataNodeRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -53,13 +53,18 @@ private static final long serialVersionUID = 0L;
           case 10: {
             String s = input.readStringRequireUtf8();
 
-            ip_ = s;
+            filename_ = s;
             break;
           }
-          case 18: {
+          case 16: {
+
+            fileSize_ = input.readInt64();
+            break;
+          }
+          case 26: {
             String s = input.readStringRequireUtf8();
 
-            hostname_ = s;
+            excludedDataNodeId_ = s;
             break;
           }
           default: {
@@ -83,83 +88,93 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_descriptor;
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ReallocateDataNodeRequest_descriptor;
   }
 
   @Override
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ReallocateDataNodeRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            HeartbeatRequest.class, Builder.class);
+            ReallocateDataNodeRequest.class, Builder.class);
   }
 
-  public static final int IP_FIELD_NUMBER = 1;
-  private volatile Object ip_;
+  public static final int FILENAME_FIELD_NUMBER = 1;
+  private volatile Object filename_;
   /**
-   * <code>string ip = 1;</code>
-   * @return The ip.
+   * <code>string filename = 1;</code>
+   * @return The filename.
    */
-  public String getIp() {
-    Object ref = ip_;
+  public String getFilename() {
+    Object ref = filename_;
     if (ref instanceof String) {
       return (String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
-      ip_ = s;
+      filename_ = s;
       return s;
     }
   }
   /**
-   * <code>string ip = 1;</code>
-   * @return The bytes for ip.
+   * <code>string filename = 1;</code>
+   * @return The bytes for filename.
    */
   public com.google.protobuf.ByteString
-      getIpBytes() {
-    Object ref = ip_;
+      getFilenameBytes() {
+    Object ref = filename_;
     if (ref instanceof String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
-      ip_ = b;
+      filename_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
     }
   }
 
-  public static final int HOSTNAME_FIELD_NUMBER = 2;
-  private volatile Object hostname_;
+  public static final int FILESIZE_FIELD_NUMBER = 2;
+  private long fileSize_;
   /**
-   * <code>string hostname = 2;</code>
-   * @return The hostname.
+   * <code>int64 fileSize = 2;</code>
+   * @return The fileSize.
    */
-  public String getHostname() {
-    Object ref = hostname_;
+  public long getFileSize() {
+    return fileSize_;
+  }
+
+  public static final int EXCLUDEDDATANODEID_FIELD_NUMBER = 3;
+  private volatile Object excludedDataNodeId_;
+  /**
+   * <code>string excludedDataNodeId = 3;</code>
+   * @return The excludedDataNodeId.
+   */
+  public String getExcludedDataNodeId() {
+    Object ref = excludedDataNodeId_;
     if (ref instanceof String) {
       return (String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
-      hostname_ = s;
+      excludedDataNodeId_ = s;
       return s;
     }
   }
   /**
-   * <code>string hostname = 2;</code>
-   * @return The bytes for hostname.
+   * <code>string excludedDataNodeId = 3;</code>
+   * @return The bytes for excludedDataNodeId.
    */
   public com.google.protobuf.ByteString
-      getHostnameBytes() {
-    Object ref = hostname_;
+      getExcludedDataNodeIdBytes() {
+    Object ref = excludedDataNodeId_;
     if (ref instanceof String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
-      hostname_ = b;
+      excludedDataNodeId_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -180,11 +195,14 @@ private static final long serialVersionUID = 0L;
   @Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getIpBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ip_);
+    if (!getFilenameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, filename_);
     }
-    if (!getHostnameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hostname_);
+    if (fileSize_ != 0L) {
+      output.writeInt64(2, fileSize_);
+    }
+    if (!getExcludedDataNodeIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, excludedDataNodeId_);
     }
     unknownFields.writeTo(output);
   }
@@ -195,11 +213,15 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!getIpBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ip_);
+    if (!getFilenameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, filename_);
     }
-    if (!getHostnameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hostname_);
+    if (fileSize_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(2, fileSize_);
+    }
+    if (!getExcludedDataNodeIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, excludedDataNodeId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -211,15 +233,17 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof HeartbeatRequest)) {
+    if (!(obj instanceof ReallocateDataNodeRequest)) {
       return super.equals(obj);
     }
-    HeartbeatRequest other = (HeartbeatRequest) obj;
+    ReallocateDataNodeRequest other = (ReallocateDataNodeRequest) obj;
 
-    if (!getIp()
-        .equals(other.getIp())) return false;
-    if (!getHostname()
-        .equals(other.getHostname())) return false;
+    if (!getFilename()
+        .equals(other.getFilename())) return false;
+    if (getFileSize()
+        != other.getFileSize()) return false;
+    if (!getExcludedDataNodeId()
+        .equals(other.getExcludedDataNodeId())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -231,78 +255,81 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + IP_FIELD_NUMBER;
-    hash = (53 * hash) + getIp().hashCode();
-    hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
-    hash = (53 * hash) + getHostname().hashCode();
+    hash = (37 * hash) + FILENAME_FIELD_NUMBER;
+    hash = (53 * hash) + getFilename().hashCode();
+    hash = (37 * hash) + FILESIZE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getFileSize());
+    hash = (37 * hash) + EXCLUDEDDATANODEID_FIELD_NUMBER;
+    hash = (53 * hash) + getExcludedDataNodeId().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static HeartbeatRequest parseFrom(
+  public static ReallocateDataNodeRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HeartbeatRequest parseFrom(
+  public static ReallocateDataNodeRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HeartbeatRequest parseFrom(
+  public static ReallocateDataNodeRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HeartbeatRequest parseFrom(
+  public static ReallocateDataNodeRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HeartbeatRequest parseFrom(byte[] data)
+  public static ReallocateDataNodeRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static HeartbeatRequest parseFrom(
+  public static ReallocateDataNodeRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static HeartbeatRequest parseFrom(java.io.InputStream input)
+  public static ReallocateDataNodeRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HeartbeatRequest parseFrom(
+  public static ReallocateDataNodeRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HeartbeatRequest parseDelimitedFrom(java.io.InputStream input)
+  public static ReallocateDataNodeRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static HeartbeatRequest parseDelimitedFrom(
+  public static ReallocateDataNodeRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static HeartbeatRequest parseFrom(
+  public static ReallocateDataNodeRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static HeartbeatRequest parseFrom(
+  public static ReallocateDataNodeRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -315,7 +342,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(HeartbeatRequest prototype) {
+  public static Builder newBuilder(ReallocateDataNodeRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @Override
@@ -331,26 +358,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code com.hepo.dfs.namenode.rpc.HeartbeatRequest}
+   * Protobuf type {@code com.hepo.dfs.namenode.rpc.ReallocateDataNodeRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.HeartbeatRequest)
-      HeartbeatRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.ReallocateDataNodeRequest)
+      ReallocateDataNodeRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ReallocateDataNodeRequest_descriptor;
     }
 
     @Override
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ReallocateDataNodeRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              HeartbeatRequest.class, Builder.class);
+              ReallocateDataNodeRequest.class, Builder.class);
     }
 
-    // Construct using com.hepo.dfs.namenode.rpc.model.HeartbeatRequest.newBuilder()
+    // Construct using com.hepo.dfs.namenode.rpc.model.ReallocateDataNodeRequest.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -368,9 +395,11 @@ private static final long serialVersionUID = 0L;
     @Override
     public Builder clear() {
       super.clear();
-      ip_ = "";
+      filename_ = "";
 
-      hostname_ = "";
+      fileSize_ = 0L;
+
+      excludedDataNodeId_ = "";
 
       return this;
     }
@@ -378,17 +407,17 @@ private static final long serialVersionUID = 0L;
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_HeartbeatRequest_descriptor;
+      return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_ReallocateDataNodeRequest_descriptor;
     }
 
     @Override
-    public HeartbeatRequest getDefaultInstanceForType() {
-      return HeartbeatRequest.getDefaultInstance();
+    public ReallocateDataNodeRequest getDefaultInstanceForType() {
+      return ReallocateDataNodeRequest.getDefaultInstance();
     }
 
     @Override
-    public HeartbeatRequest build() {
-      HeartbeatRequest result = buildPartial();
+    public ReallocateDataNodeRequest build() {
+      ReallocateDataNodeRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -396,10 +425,11 @@ private static final long serialVersionUID = 0L;
     }
 
     @Override
-    public HeartbeatRequest buildPartial() {
-      HeartbeatRequest result = new HeartbeatRequest(this);
-      result.ip_ = ip_;
-      result.hostname_ = hostname_;
+    public ReallocateDataNodeRequest buildPartial() {
+      ReallocateDataNodeRequest result = new ReallocateDataNodeRequest(this);
+      result.filename_ = filename_;
+      result.fileSize_ = fileSize_;
+      result.excludedDataNodeId_ = excludedDataNodeId_;
       onBuilt();
       return result;
     }
@@ -438,22 +468,25 @@ private static final long serialVersionUID = 0L;
     }
     @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof HeartbeatRequest) {
-        return mergeFrom((HeartbeatRequest)other);
+      if (other instanceof ReallocateDataNodeRequest) {
+        return mergeFrom((ReallocateDataNodeRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(HeartbeatRequest other) {
-      if (other == HeartbeatRequest.getDefaultInstance()) return this;
-      if (!other.getIp().isEmpty()) {
-        ip_ = other.ip_;
+    public Builder mergeFrom(ReallocateDataNodeRequest other) {
+      if (other == ReallocateDataNodeRequest.getDefaultInstance()) return this;
+      if (!other.getFilename().isEmpty()) {
+        filename_ = other.filename_;
         onChanged();
       }
-      if (!other.getHostname().isEmpty()) {
-        hostname_ = other.hostname_;
+      if (other.getFileSize() != 0L) {
+        setFileSize(other.getFileSize());
+      }
+      if (!other.getExcludedDataNodeId().isEmpty()) {
+        excludedDataNodeId_ = other.excludedDataNodeId_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -471,11 +504,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      HeartbeatRequest parsedMessage = null;
+      ReallocateDataNodeRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (HeartbeatRequest) e.getUnfinishedMessage();
+        parsedMessage = (ReallocateDataNodeRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -485,154 +518,184 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private Object ip_ = "";
+    private Object filename_ = "";
     /**
-     * <code>string ip = 1;</code>
-     * @return The ip.
+     * <code>string filename = 1;</code>
+     * @return The filename.
      */
-    public String getIp() {
-      Object ref = ip_;
+    public String getFilename() {
+      Object ref = filename_;
       if (!(ref instanceof String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
-        ip_ = s;
+        filename_ = s;
         return s;
       } else {
         return (String) ref;
       }
     }
     /**
-     * <code>string ip = 1;</code>
-     * @return The bytes for ip.
+     * <code>string filename = 1;</code>
+     * @return The bytes for filename.
      */
     public com.google.protobuf.ByteString
-        getIpBytes() {
-      Object ref = ip_;
+        getFilenameBytes() {
+      Object ref = filename_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
-        ip_ = b;
+        filename_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string ip = 1;</code>
-     * @param value The ip to set.
+     * <code>string filename = 1;</code>
+     * @param value The filename to set.
      * @return This builder for chaining.
      */
-    public Builder setIp(
+    public Builder setFilename(
         String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      ip_ = value;
+      filename_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string ip = 1;</code>
+     * <code>string filename = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearIp() {
+    public Builder clearFilename() {
       
-      ip_ = getDefaultInstance().getIp();
+      filename_ = getDefaultInstance().getFilename();
       onChanged();
       return this;
     }
     /**
-     * <code>string ip = 1;</code>
-     * @param value The bytes for ip to set.
+     * <code>string filename = 1;</code>
+     * @param value The bytes for filename to set.
      * @return This builder for chaining.
      */
-    public Builder setIpBytes(
+    public Builder setFilenameBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      ip_ = value;
+      filename_ = value;
       onChanged();
       return this;
     }
 
-    private Object hostname_ = "";
+    private long fileSize_ ;
     /**
-     * <code>string hostname = 2;</code>
-     * @return The hostname.
+     * <code>int64 fileSize = 2;</code>
+     * @return The fileSize.
      */
-    public String getHostname() {
-      Object ref = hostname_;
+    public long getFileSize() {
+      return fileSize_;
+    }
+    /**
+     * <code>int64 fileSize = 2;</code>
+     * @param value The fileSize to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFileSize(long value) {
+      
+      fileSize_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 fileSize = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFileSize() {
+      
+      fileSize_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private Object excludedDataNodeId_ = "";
+    /**
+     * <code>string excludedDataNodeId = 3;</code>
+     * @return The excludedDataNodeId.
+     */
+    public String getExcludedDataNodeId() {
+      Object ref = excludedDataNodeId_;
       if (!(ref instanceof String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
-        hostname_ = s;
+        excludedDataNodeId_ = s;
         return s;
       } else {
         return (String) ref;
       }
     }
     /**
-     * <code>string hostname = 2;</code>
-     * @return The bytes for hostname.
+     * <code>string excludedDataNodeId = 3;</code>
+     * @return The bytes for excludedDataNodeId.
      */
     public com.google.protobuf.ByteString
-        getHostnameBytes() {
-      Object ref = hostname_;
+        getExcludedDataNodeIdBytes() {
+      Object ref = excludedDataNodeId_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
-        hostname_ = b;
+        excludedDataNodeId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string hostname = 2;</code>
-     * @param value The hostname to set.
+     * <code>string excludedDataNodeId = 3;</code>
+     * @param value The excludedDataNodeId to set.
      * @return This builder for chaining.
      */
-    public Builder setHostname(
+    public Builder setExcludedDataNodeId(
         String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      hostname_ = value;
+      excludedDataNodeId_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string hostname = 2;</code>
+     * <code>string excludedDataNodeId = 3;</code>
      * @return This builder for chaining.
      */
-    public Builder clearHostname() {
+    public Builder clearExcludedDataNodeId() {
       
-      hostname_ = getDefaultInstance().getHostname();
+      excludedDataNodeId_ = getDefaultInstance().getExcludedDataNodeId();
       onChanged();
       return this;
     }
     /**
-     * <code>string hostname = 2;</code>
-     * @param value The bytes for hostname to set.
+     * <code>string excludedDataNodeId = 3;</code>
+     * @param value The bytes for excludedDataNodeId to set.
      * @return This builder for chaining.
      */
-    public Builder setHostnameBytes(
+    public Builder setExcludedDataNodeIdBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      hostname_ = value;
+      excludedDataNodeId_ = value;
       onChanged();
       return this;
     }
@@ -649,41 +712,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.HeartbeatRequest)
+    // @@protoc_insertion_point(builder_scope:com.hepo.dfs.namenode.rpc.ReallocateDataNodeRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.HeartbeatRequest)
-  private static final HeartbeatRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.hepo.dfs.namenode.rpc.ReallocateDataNodeRequest)
+  private static final ReallocateDataNodeRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new HeartbeatRequest();
+    DEFAULT_INSTANCE = new ReallocateDataNodeRequest();
   }
 
-  public static HeartbeatRequest getDefaultInstance() {
+  public static ReallocateDataNodeRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<HeartbeatRequest>
-      PARSER = new com.google.protobuf.AbstractParser<HeartbeatRequest>() {
+  private static final com.google.protobuf.Parser<ReallocateDataNodeRequest>
+      PARSER = new com.google.protobuf.AbstractParser<ReallocateDataNodeRequest>() {
     @Override
-    public HeartbeatRequest parsePartialFrom(
+    public ReallocateDataNodeRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new HeartbeatRequest(input, extensionRegistry);
+      return new ReallocateDataNodeRequest(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<HeartbeatRequest> parser() {
+  public static com.google.protobuf.Parser<ReallocateDataNodeRequest> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<HeartbeatRequest> getParserForType() {
+  public com.google.protobuf.Parser<ReallocateDataNodeRequest> getParserForType() {
     return PARSER;
   }
 
   @Override
-  public HeartbeatRequest getDefaultInstanceForType() {
+  public ReallocateDataNodeRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

@@ -257,7 +257,7 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:com.hepo.dfs.namenode.rpc.UpdateCheckpointTxidRequest)
-      com.hepo.dfs.namenode.rpc.model.UpdateCheckpointTxidRequestOrBuilder {
+      UpdateCheckpointTxidRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return NameNodeRpcModel.internal_static_com_hepo_dfs_namenode_rpc_UpdateCheckpointTxidRequest_descriptor;
@@ -412,7 +412,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setTxid(long value) {
-
+      
       txid_ = value;
       onChanged();
       return this;
@@ -422,7 +422,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearTxid() {
-
+      
       txid_ = 0L;
       onChanged();
       return this;

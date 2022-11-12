@@ -50,6 +50,11 @@ public class NameNodeConfig {
     public final static int IMAGE_UPLOAD_DEFAULT_BUFFER_SIZE = 1024 * 1024;
 
     /**
+     * 重平衡删除任务的间隔
+     */
+    public final static long REBALANCE_REMOVE_TASK_INTERVAL = 24 * 60 * 60 * 1000;
+
+    /**
      * NameNode默认端口
      */
     public static final int NAMENODE_DEFAULT_PORT = 50070;

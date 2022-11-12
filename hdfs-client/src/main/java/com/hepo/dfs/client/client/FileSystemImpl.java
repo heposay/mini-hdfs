@@ -79,7 +79,7 @@ public class FileSystemImpl implements FileSystem {
      * @param fileSize 文件大小
      */
     @Override
-    public Boolean upload(byte[] file, String filename, long fileSize) {
+    public Boolean upload(byte[] file, String filename, long fileSize) throws Exception {
         //用filename发送一个RPC接口调用master节点
         //master节点会进行查重，如果已经有了，则不让创建
         if (!createFile(filename)) {
@@ -98,8 +98,18 @@ public class FileSystemImpl implements FileSystem {
         for (int i = 0; i < datanodes.size(); i++) {
             JSONObject datanode = datanodes.getJSONObject(i);
             String hostname = datanode.getString("hostname");
+            String ip = datanode.getString("ip");
             int uploadServerPort = datanode.getInteger("uplaodServerPort");
-            fileUploadClient.sendFile(hostname, uploadServerPort, file, filename, fileSize);
+            if (!fileUploadClient.sendFile(hostname, uploadServerPort, file, filename, fileSize)) {
+                datanode = JSONObject.parseObject(reallocateDataNodes(filename, fileSize, ip + "-" + hostname));
+                hostname = datanode.getString("hostname");
+                uploadServerPort = datanode.getInteger("uploadServerPort");
+                if (!fileUploadClient.sendFile(hostname, uploadServerPort, file, filename, fileSize)) {
+                    throw new Exception("file upload failed......");
+                }
+
+            }
+
         }
         return true;
     }
@@ -107,26 +117,75 @@ public class FileSystemImpl implements FileSystem {
     @Override
     public byte[] download(String filename) throws IOException {
         //1.调用Namenode的接口，获取该文件副本所在的DataNode
-        JSONObject datanode =getDataNodeForFile(filename);
+        JSONObject datanode = chooseDataNodeFromReplicas(filename, "");
         System.out.println("获取要下载的DataNode节点：" + datanode);
         //2.打开DataNode的网络连接，发送文件名过去
         //3.尝试从连接读取DataNode发送过来的文件流数据
         String hostname = datanode.getString("hostname");
+        String ip = datanode.getString("ip");
         Integer uploadServerPort = datanode.getInteger("uplaodServerPort");
-        return fileUploadClient.readFile(hostname, uploadServerPort, filename);
+        byte[] file = null;
+        try {
+            file = fileUploadClient.readFile(hostname, uploadServerPort, filename);
+        } catch (Exception e) {
+            datanode = chooseDataNodeFromReplicas(filename, ip + "-" + hostname);
+            hostname = datanode.getString("hostname");
+            uploadServerPort = datanode.getInteger("uploadServerPort");
+            try {
+                file = fileUploadClient.readFile(hostname, uploadServerPort, filename);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        return file;
     }
 
     /**
      * 获取文件的某个副本所在的机器
-     * @param filename 文件名
+     *
+     * @param filename           文件名
+     * @param excludedDataNodeId 要的排除的节点
      * @return DataNode所在的机器
      */
-    private JSONObject getDataNodeForFile(String filename) {
-        GetDataNodeForFileRequest request = GetDataNodeForFileRequest.newBuilder()
+    private JSONObject chooseDataNodeFromReplicas(String filename, String excludedDataNodeId) {
+        ChooseDataNodeFromReplicasRequest request = ChooseDataNodeFromReplicasRequest.newBuilder()
                 .setFilename(filename)
+                .setExcludedDataNodeId(excludedDataNodeId)
                 .build();
-        GetDataNodeForFileResponse response = namenode.getDataNodeForFile(request);
+        ChooseDataNodeFromReplicasResponse response = namenode.chooseDataNodeFromReplicas(request);
         return JSONObject.parseObject(response.getDataNodeInfo());
+    }
+
+
+    /**
+     * 获取分配好的datanode节点
+     *
+     * @param filename 文件名
+     * @param fileSize 文件大小
+     * @return datanode节点的JSON串
+     */
+    private String allocateDataNodes(String filename, long fileSize) {
+        AllocateDataNodesRequest request = AllocateDataNodesRequest.newBuilder().setFilename(filename).setFileSize(fileSize).build();
+        AllocateDataNodesResponse response = namenode.allocateDataNodes(request);
+        return response.getDatanodes();
+    }
+
+    /**
+     * 重新获取分配好的datanode节点
+     *
+     * @param filename           文件名
+     * @param fileSize           文件大小
+     * @param excludedDataNodeId 要排除的节点信息
+     * @return datanode节点的JSON串
+     */
+    private String reallocateDataNodes(String filename, long fileSize, String excludedDataNodeId) {
+        ReallocateDataNodeRequest request = ReallocateDataNodeRequest.newBuilder()
+                .setFilename(filename)
+                .setFileSize(fileSize)
+                .setExcludedDataNodeId(excludedDataNodeId)
+                .build();
+        ReallocateDataNodeResponse response = namenode.reallocateDataNode(request);
+        return response.getDatanode();
     }
 
 
@@ -146,16 +205,4 @@ public class FileSystemImpl implements FileSystem {
         return false;
     }
 
-    /**
-     * 获取分配好的datanode节点
-     *
-     * @param filename 文件名
-     * @param fileSize 文件大小
-     * @return datanode节点的JSON串
-     */
-    private String allocateDataNodes(String filename, long fileSize) {
-        AllocateDataNodesRequest request = AllocateDataNodesRequest.newBuilder().setFilename(filename).setFileSize(fileSize).build();
-        AllocateDataNodesResponse response = namenode.allocateDataNodes(request);
-        return response.getDatanodes();
-    }
 }

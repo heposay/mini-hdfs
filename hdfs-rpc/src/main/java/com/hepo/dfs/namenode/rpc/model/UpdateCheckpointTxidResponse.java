@@ -411,7 +411,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setStatus(int value) {
-
+      
       status_ = value;
       onChanged();
       return this;
@@ -421,7 +421,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearStatus() {
-
+      
       status_ = 0;
       onChanged();
       return this;

@@ -98,7 +98,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof String) {
       return (String) ref;
     } else {
-      com.google.protobuf.ByteString bs =
+      com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       String s = bs.toStringUtf8();
       editsLog_ = s;
@@ -113,7 +113,7 @@ private static final long serialVersionUID = 0L;
       getEditsLogBytes() {
     Object ref = editsLog_;
     if (ref instanceof String) {
-      com.google.protobuf.ByteString b =
+      com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (String) ref);
       editsLog_ = b;
@@ -450,7 +450,7 @@ private static final long serialVersionUID = 0L;
         getEditsLogBytes() {
       Object ref = editsLog_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         editsLog_ = b;
@@ -469,7 +469,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-
+  
       editsLog_ = value;
       onChanged();
       return this;
@@ -479,7 +479,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearEditsLog() {
-
+      
       editsLog_ = getDefaultInstance().getEditsLog();
       onChanged();
       return this;
@@ -495,7 +495,7 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-
+      
       editsLog_ = value;
       onChanged();
       return this;
