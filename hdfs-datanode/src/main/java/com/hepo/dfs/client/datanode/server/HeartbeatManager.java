@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hepo.dfs.namenode.rpc.model.HeartbeatResponse;
 
-import static com.hepo.dfs.client.datanode.server.DataNodeConfig.DATANAME_HONENAME;
+import java.io.File;
+
 import static com.hepo.dfs.client.datanode.server.DataNodeConfig.NAMENODE_HEARTBEAT_INTERVAL_TIME;
 
 /**
@@ -16,6 +17,14 @@ import static com.hepo.dfs.client.datanode.server.DataNodeConfig.NAMENODE_HEARTB
  */
 public class HeartbeatManager {
 
+
+    public static final Integer SUCCESS = 1;
+    public static final Integer FAILURE = 2;
+    public static final Integer COMMAND_REGISTER = 1;
+    public static final Integer COMMAND_REPORT_COMPLETE_STORAGE_INFO = 2;
+    public static final Integer COMMAND_REPLICATE = 3;
+    public static final Integer COMMAND_REMOVE_REPLICA = 4;
+
     /**
      * namenode的客户端
      */
@@ -26,9 +35,12 @@ public class HeartbeatManager {
      */
     private final StorageManager storageManager;
 
-    public HeartbeatManager(NameNodeRpcClient nameNodeRpcClient, StorageManager storageManager) {
+    private final ReplicateManager replicateManager;
+
+    public HeartbeatManager(NameNodeRpcClient nameNodeRpcClient, StorageManager storageManager, ReplicateManager replicateManager) {
         this.nameNodeRpcClient = nameNodeRpcClient;
         this.storageManager = storageManager;
+        this.replicateManager = replicateManager;
     }
 
     /**
@@ -49,17 +61,38 @@ public class HeartbeatManager {
                 try {
                     // 通过RPC接口发送到NameNode他的注册接口上去
                     HeartbeatResponse response = nameNodeRpcClient.heartbeat();
-                    if (response.getStatus() == 1) {
-                        System.out.println(DATANAME_HONENAME + ":发送心跳成功....");
-                    } else if (response.getStatus() == 2) {
+                    if (SUCCESS.equals(response.getStatus())) {
+                        JSONArray commands = JSONArray.parseArray(response.getCommands());
+                        if (commands.size() > 0) {
+                            for (int i = 0; i < commands.size(); i++) {
+                                JSONObject command = commands.getJSONObject(i);
+                                Integer type = command.getInteger("type");
+                                JSONObject task = command.getJSONObject("content");
+                                if (COMMAND_REPLICATE.equals(type)) {
+                                    replicateManager.addReplicateTask(task);
+                                    System.out.println("接收副本复制任务，" + command);
+                                } else if (COMMAND_REMOVE_REPLICA.equals(type)) {
+                                    System.out.println("接收副本删除任务，" + command);
+                                    // 删除副本
+                                    String filename = task.getString("filename");
+                                    String absoluteFilenamePath = FileUtils.getAbsoluteFilenamePath(filename);
+                                    File file = new File(absoluteFilenamePath);
+                                    if (file.exists()) {
+                                        file.delete();
+                                    }
+                                }
+                            }
+                        }
+                    } else if (FAILURE.equals(response.getStatus())) {
+                        //心跳失败
                         JSONArray commands = JSONArray.parseArray(response.getCommands());
                         for (int i = 0; i < commands.size(); i++) {
                             JSONObject command = commands.getJSONObject(i);
                             Integer type = command.getInteger("type");
-                            if (type.equals(1)) {
+                            if (COMMAND_REGISTER.equals(type)) {
                                 //重新注册，针对DataNode重启的情况
                                 nameNodeRpcClient.register();
-                            } else if (type.equals(2)) {
+                            } else if (COMMAND_REPORT_COMPLETE_STORAGE_INFO.equals(type)) {
                                 StorageInfo storageInfo = storageManager.getStorageInfo();
                                 if (storageInfo != null) {
                                     //全量上报，针对NameNode重启的情况

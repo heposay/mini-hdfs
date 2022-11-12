@@ -1,5 +1,7 @@
 package com.hepo.dfs.client.datanode.server;
 
+import static com.hepo.dfs.client.datanode.server.DataNodeConfig.DATA_DIR;
+
 /**
  * Description: DataNode启动类
  * Project:  mini-hdfs
@@ -30,6 +32,11 @@ public class DataNode {
     private final HeartbeatManager heartbeatManager;
 
     /**
+     * 复制任务管理组件
+     */
+    private final ReplicateManager replicateManager;
+
+    /**
      * DataNode初始化
      */
     public DataNode() {
@@ -47,7 +54,11 @@ public class DataNode {
             System.out.println("不需要全量上报存储信息......");
         }
 
-        heartbeatManager = new HeartbeatManager(nameNodeRpcClient, storageManager);
+        replicateManager = new ReplicateManager(nameNodeRpcClient);
+
+        System.out.println("DataDir:" + DATA_DIR);
+
+        heartbeatManager = new HeartbeatManager(nameNodeRpcClient, storageManager, replicateManager);
         heartbeatManager.start();
 
         FileUploadServer fileUploadServer = new FileUploadServer(nameNodeRpcClient);

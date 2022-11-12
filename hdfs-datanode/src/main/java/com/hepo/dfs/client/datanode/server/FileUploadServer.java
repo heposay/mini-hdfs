@@ -279,6 +279,14 @@ public class FileUploadServer extends Thread {
                             ex.printStackTrace();
                         }
                     }
+                }finally {
+                    if (channel != null) {
+                        try {
+                            channel.close();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 }
             }
 
@@ -418,8 +426,8 @@ public class FileUploadServer extends Thread {
                     System.out.println("文件读取完毕，返回响应给客户端。。。。");
 
                     //增量上报Master节点自己已经接收到一个副本
-                    nameNodeRpcClient.informReplicaReceived(filename.getRelativeFilenamePath());
-                    System.out.println("增量上报收到的文件副本给NameNode节点,path=【"+filename.getRelativeFilenamePath()+"】");
+                    nameNodeRpcClient.informReplicaReceived(filename.getRelativeFilenamePath() + "_" + fileLength);
+                    System.out.println("增量上报收到的文件副本给NameNode节点,path=【" + filename.getRelativeFilenamePath() + "】");
 
                     key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
                 } else {
