@@ -1,5 +1,7 @@
 package com.hepo.dfs.namenode.server;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 /**
  * Description: datanode的信息
  * Project:  mini-hdfs
@@ -31,6 +33,15 @@ public class DataNodeInfo implements Comparable<DataNodeInfo> {
      */
     private long storedDataSize;
 
+    /**
+     * 复制副本的任务
+     */
+    private final ConcurrentLinkedQueue<ReplicateTask> replicateTaskQueue = new ConcurrentLinkedQueue<>();
+    /**
+     * 删除副本的任务
+     */
+    private final ConcurrentLinkedQueue<RemoveReplicateTask> removeReplicateTaskQueue = new ConcurrentLinkedQueue<>();
+
     public Long getLatestHeartbeatTime() {
         return latestHeartbeatTime;
     }
@@ -39,12 +50,38 @@ public class DataNodeInfo implements Comparable<DataNodeInfo> {
         this.latestHeartbeatTime = latestHeartbeatTime;
     }
 
+    public String getId() {
+        return ip + StringPoolConstant.DASH + hostname;
+    }
+
     public DataNodeInfo(String ip, String hostname, Integer uplaodServerPort) {
         this.ip = ip;
         this.hostname = hostname;
         this.uplaodServerPort = uplaodServerPort;
         this.latestHeartbeatTime = System.currentTimeMillis();
         this.storedDataSize = 0L;
+    }
+
+    public void addReplicateTask(ReplicateTask task) {
+        replicateTaskQueue.offer(task);
+    }
+
+    public ReplicateTask getReplicateTask() {
+        if (!replicateTaskQueue.isEmpty()) {
+            return replicateTaskQueue.poll();
+        }
+        return null;
+    }
+
+    public void addRemoveReplicateTask(RemoveReplicateTask task) {
+        removeReplicateTaskQueue.offer(task);
+    }
+
+    public RemoveReplicateTask getRemoveReplicateTask() {
+        if (!removeReplicateTaskQueue.isEmpty()) {
+            return removeReplicateTaskQueue.poll();
+        }
+        return null;
     }
 
     public String getIp() {

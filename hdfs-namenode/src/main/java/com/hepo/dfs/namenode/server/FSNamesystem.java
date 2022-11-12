@@ -24,6 +24,11 @@ import static com.hepo.dfs.namenode.server.NameNodeConfig.NAMENODE_DIR;
 public class FSNamesystem {
 
     /**
+     * 副本数量
+     */
+    public static final Integer REPLICA_NUM = 2;
+
+    /**
      * 负责管理内存中文件目录树的组件
      */
     private final FSDirectory directory;
@@ -49,9 +54,14 @@ public class FSNamesystem {
     private final Map<String, List<DataNodeInfo>> replicasByFilename = new HashMap<>();
 
     /**
+     * 每个DataNode对应的所有的文件副本
+     */
+    private final Map<String, List<String>> filesByDataNode = new HashMap<>();
+
+    /**
      * 文件副本持有的读写锁
      */
-    private ReentrantReadWriteLock replicasByFilenameLock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock replicasByFilenameLock = new ReentrantReadWriteLock();
 
     /**
      * 初始化组件
@@ -336,17 +346,93 @@ public class FSNamesystem {
      * @param hostname 主机名
      * @param filename 文件名
      */
-    public void addReceivedReplica(String ip, String hostname, String filename) {
+    public void addReceivedReplica(String ip, String hostname, String filename, Long fileLength) {
         try {
             replicasByFilenameLock.writeLock().lock();
+            //维护每个副本所在的数据节点
             List<DataNodeInfo> replicas = replicasByFilename.computeIfAbsent(filename, k -> new ArrayList<>());
 
             DataNodeInfo datanode = dataNodeManager.getDataNodeInfo(ip, hostname);
             replicas.add(datanode);
-            System.out.println("收到增量上报，当前的副本信息为：" + replicasByFilename);
+
+            //检查当前文件的副本数量是否超标
+            if (replicas.size() == REPLICA_NUM) {
+                //减少这个节点的存储数据量
+                datanode.addStoredDataSize(-fileLength);
+
+                //生成副本复制任务
+                RemoveReplicateTask removeReplicateTask = new RemoveReplicateTask(filename, datanode);
+                datanode.addRemoveReplicateTask(removeReplicateTask);
+                return;
+            }
+            // 如果副本数量未超标，才会将副本放入数据结构中
+            replicas.add(datanode);
+
+            //维护每个数据节点的所有副本
+            List<String> files = filesByDataNode.computeIfAbsent(datanode.getId(), k -> new ArrayList<>());
+            files.add(filename + StringPoolConstant.UNDERLINE + fileLength);
+            System.out.println("收到增量上报，当前的副本信息为：" + replicasByFilename + "," + filesByDataNode);
         } finally {
             replicasByFilenameLock.writeLock().unlock();
         }
+    }
+
+    /**
+     * 删除数据节点的文件副本的数据结构
+     */
+    public void removeDeadDataNode(DataNodeInfo deadDataNode) {
+        try {
+            replicasByFilenameLock.writeLock().lock();
+            List<String> filenames = filesByDataNode.get(deadDataNode.getId());
+            for (String filename : filenames) {
+                List<DataNodeInfo> replicas = replicasByFilename.get(filename.split(StringPoolConstant.UNDERLINE)[0]);
+                replicas.remove(deadDataNode);
+            }
+            filesByDataNode.remove(deadDataNode.getId());
+            System.out.println("从内存数据结构中删除掉这个数据节点关联的数据，" + replicasByFilename + "，" + filesByDataNode);
+        } finally {
+            replicasByFilenameLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * 获取数据节点包含的文件
+     *
+     * @param ip       DataNode IP地址
+     * @param hostname Datanode 主机名
+     * @return 文件副本集合
+     */
+    public List<String> getFilesByDataNode(String ip, String hostname) {
+        try {
+            replicasByFilenameLock.readLock().lock();
+            System.out.println("当前filesByDatanode为" + filesByDataNode + "，将要以key=" + ip + "-" + hostname + "获取文件列表");
+            return filesByDataNode.get(ip + StringPoolConstant.DASH + hostname);
+        } finally {
+            replicasByFilenameLock.readLock().unlock();
+        }
+    }
+
+    /**
+     * 获取复制任务的源头数据节点
+     *
+     * @param filename     文件名
+     * @param deadDataNode 宕机的Datanode节点
+     * @return 源头数据节点
+     */
+    public DataNodeInfo getReplicateSource(String filename, DataNodeInfo deadDataNode) {
+        DataNodeInfo replicateSource = null;
+        try {
+            replicasByFilenameLock.readLock().lock();
+            List<DataNodeInfo> replicas = replicasByFilename.get(filename);
+            for (DataNodeInfo replica : replicas) {
+                if (!replica.equals(deadDataNode)) {
+                    replicateSource = replica;
+                }
+            }
+        } finally {
+            replicasByFilenameLock.readLock().unlock();
+        }
+        return replicateSource;
     }
 
     /**

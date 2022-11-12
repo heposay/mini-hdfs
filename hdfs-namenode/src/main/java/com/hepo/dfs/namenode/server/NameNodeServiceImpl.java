@@ -71,7 +71,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         if (result) {
             response = RegisterResponse.newBuilder()
                     .setStatus(STATUS_SUCCESS).build();
-        }else {
+        } else {
             response = RegisterResponse.newBuilder()
                     .setStatus(STATUS_FAILURE).build();
         }
@@ -85,12 +85,33 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
      */
     @Override
     public void heartbeat(HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {
-        System.out.println("收到客户端[" + request.getIp() + StringPoolConstant.COLON + request.getHostname() + "]的心跳信息");
         HeartbeatResponse response = null;
         if (isRunning) {
-            Boolean result = datanodeManager.heartbeat(request.getIp(), request.getHostname());
+            String ip = request.getIp();
+            String hostname = request.getHostname();
+            Boolean result = datanodeManager.heartbeat(ip, hostname);
             List<Command> commands = new ArrayList<Command>();
             if (result) {
+                // 如果心跳成功了，此时应该查看一下是否有复制副本的任务
+                // 如果有，则做成命令下发给这个数据节点
+                DataNodeInfo dataNode = datanodeManager.getDataNodeInfo(ip, hostname);
+                ReplicateTask replicateTask;
+                while ((replicateTask = dataNode.getReplicateTask() )!= null) {
+                    Command command = new Command(Command.REPLICATE);
+                    command.setContent(JSONObject.toJSONString(replicateTask));
+                    commands.add(command);
+                }
+
+                //检测一下是否有删除副本的任务
+                RemoveReplicateTask removeReplicateTask;
+                while ((removeReplicateTask = dataNode.getRemoveReplicateTask()) != null) {
+                    Command command = new Command(Command.REMOVE_REPLICATE);
+                    command.setContent(JSONObject.toJSONString(removeReplicateTask));
+                    commands.add(command);
+                }
+
+                System.out.println("接收到数据节点【" + dataNode + "】的心跳，他的命令列表为：" + commands);
+
                 response = HeartbeatResponse.newBuilder()
                         .setStatus(STATUS_SUCCESS)
                         .setCommands(JSONArray.toJSONString(commands))
@@ -452,7 +473,7 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         String hostname = request.getHostname();
         String filename = request.getFilename();
 
-        namesystem.addReceivedReplica(ip, hostname, filename);
+        namesystem.addReceivedReplica(ip, hostname, filename.split(StringPoolConstant.UNDERLINE)[0], Long.valueOf(filename.split(StringPoolConstant.UNDERLINE)[1]));
 
         InformReplicaReceivedResponse response = InformReplicaReceivedResponse.newBuilder()
                 .setStatus(STATUS_SUCCESS)
@@ -475,8 +496,8 @@ public class NameNodeServiceImpl extends NameNodeServiceGrpc.NameNodeServiceImpl
         datanodeManager.setStorageSize(ip, hostname, storageDataSize);
         JSONArray filenames = JSONArray.parseArray(filenamesJson);
         for (int i = 0; i < filenames.size(); i++) {
-            String filename =filenames.getString(i);
-            namesystem.addReceivedReplica(ip, hostname, filename);
+            String filename = filenames.getString(i);
+            namesystem.addReceivedReplica(ip, hostname, filename.split(StringPoolConstant.UNDERLINE)[0], Long.valueOf(filename.split(StringPoolConstant.UNDERLINE)[1]));
         }
 
         ReportCompleteStorageInfoResponse response = ReportCompleteStorageInfoResponse.newBuilder()

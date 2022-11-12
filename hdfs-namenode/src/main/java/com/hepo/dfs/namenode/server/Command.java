@@ -12,6 +12,10 @@ public class Command {
     public static final Integer REGISTER = 1;
     public static final Integer REPORT_COMPLETE_STORAGE_INFO = 2;
 
+    public static final Integer REPLICATE = 3;
+
+    public static final Integer REMOVE_REPLICATE = 4;
+
     private Integer type;
 
     private String content;
