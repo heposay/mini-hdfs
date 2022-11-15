@@ -5,7 +5,9 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -25,7 +27,12 @@ public class FileUploadProcessor extends Thread {
     /**
      * 等待注册的网络连接的队列
      */
-    private ConcurrentLinkedQueue<SocketChannel> queue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<SocketChannel> queue = new ConcurrentLinkedQueue<>();
+
+    /**
+     * 缓存没读取完的请求
+     */
+    private final Map<String, NetworkRequest> cachedRequests = new HashMap<>();
 
     /**
      * 每个Processor私有的Selector多路复用器
@@ -77,12 +84,21 @@ public class FileUploadProcessor extends Thread {
 
                     if (key.isReadable()) {
                         SocketChannel channel = (SocketChannel) key.channel();
+                        String clientAddr = channel.getRemoteAddress().toString();
 
-                        NetworkRequest networkRequest = new NetworkRequest(key, channel);
+                        NetworkRequest networkRequest = cachedRequests.get(clientAddr);
+                        if (networkRequest == null) {
+                            networkRequest = new NetworkRequest(key, channel);
+                        }
+                        //开始处理请求
                         networkRequest.read();
                         if (networkRequest.hasCompletedRead()) {
                             // 此时就可以将一个请求分发到全局的请求队列里去了
-
+                            NetworkRequestQueue.getInstance().offer(networkRequest);
+                            key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
+                        }else {
+                            //如果请求还没处理完毕，直接缓存起来。等下次再处理
+                            cachedRequests.put(clientAddr, networkRequest);
                         }
                     }
                 }
