@@ -19,7 +19,12 @@ public class FileUploadClient {
 
     private final static Integer SEND_FILE = 1;
     private final static Integer READ_FILE = 2;
-    private final static Integer FILE_BUFFER_SIZE = 10 * 1024;
+
+    private NetworkManager networkManager;
+
+    public FileUploadClient() {
+        this.networkManager = new NetworkManager();
+    }
 
     /**
      * 向服务端发送文件流
@@ -29,7 +34,12 @@ public class FileUploadClient {
      * @param file             文件字节流
      * @param fileSize         文件大小
      */
-    public Boolean sendFile(String hostname, int uploadServerPort, byte[] file, String filename, long fileSize) {
+    public Boolean sendFile(String hostname, int uploadServerPort, byte[] file, String filename, long fileSize) throws Exception {
+        //根据hostname来检查一下，跟对方机器的连接是否建立好了
+        //如果还没有建立好，那么就直接在这里建立连接
+        //建立好连接之后，就应该把连接给缓存起来，以备下次来进行使用
+        networkManager.maybeConnect(hostname, uploadServerPort);
+
         SocketChannel channel = null;
         Selector selector = null;
         try {
