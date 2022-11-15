@@ -1,10 +1,8 @@
 package com.hepo.dfs.client.datanode.server;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
@@ -22,6 +20,11 @@ public class NetworkRequest {
     private final static Integer REQUEST_READ_FILE = 2;
 
     /**
+     * processor标识
+     */
+    private Integer processorId;
+
+    /**
      * 客户端的地址
      */
     private String clientAddr;
@@ -37,7 +40,7 @@ public class NetworkRequest {
     /**
      * 缓存没读取完的文件数据
      */
-    private CachedRequest cachedRequest = new CachedRequest();
+    private final CachedRequest cachedRequest = new CachedRequest();
 
     /**
      * 缓存没读取完的请求类型
@@ -61,13 +64,33 @@ public class NetworkRequest {
     private ByteBuffer cachedFileBuffer;
 
     public NetworkRequest(SelectionKey key, SocketChannel channel) {
+        System.out.println("NetworkRequest请求初始化：" + DATA_DIR);
         this.key = key;
         this.channel = channel;
-        try {
-            this.clientAddr = channel.getRemoteAddress().toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    }
+
+    public Integer getProcessorId() {
+        return processorId;
+    }
+
+    public void setProcessorId(Integer processorId) {
+        this.processorId = processorId;
+    }
+
+    public String getClientAddr() {
+        return clientAddr;
+    }
+
+    public void setClientAddr(String clientAddr) {
+        this.clientAddr = clientAddr;
+    }
+
+    public SelectionKey getKey() {
+        return key;
+    }
+
+    public SocketChannel getChannel() {
+        return channel;
     }
 
     /**
@@ -87,9 +110,9 @@ public class NetworkRequest {
             System.out.println("从请求中解析出来请求类型：" + requestType);
 
             if (REQUEST_SEND_FILE.equals(requestType)) {
-                handleSendFileRequest(channel, key);
+                handleSendFileRequest(channel);
             } else if (REQUEST_READ_FILE.equals(requestType)) {
-                handleReadFileRequest(channel, key);
+                handleReadFileRequest(channel);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -137,14 +160,13 @@ public class NetworkRequest {
      * 处理发送文件的请求
      *
      * @param channel 客户端的channel
-     * @param key     多路复用的key
-     * @throws IOException
+     * @throws IOException 当channel为空的时候，就会报错
      */
-    private void handleSendFileRequest(SocketChannel channel, SelectionKey key) throws IOException {
+    private void handleSendFileRequest(SocketChannel channel) throws IOException {
         //从请求中解析文件名
-        FilenamePath filename = getFileNamePath(channel);
-        System.out.println("从网络请求解析出来文件名：" + filename);
-        if (filename == null) {
+        FilenamePath filenamePath = getFileNamePath(channel);
+        System.out.println("从网络请求解析出来文件名：" + filenamePath);
+        if (filenamePath == null) {
             return;
         }
 
@@ -179,41 +201,15 @@ public class NetworkRequest {
      * 读取DataNode磁盘上的文件
      *
      * @param channel 客户端的channel
-     * @param key     路由key
      */
-    private void handleReadFileRequest(SocketChannel channel, SelectionKey key) throws IOException {
-        String clientAddr = channel.getRemoteAddress().toString();
-
+    private void handleReadFileRequest(SocketChannel channel) throws IOException {
         //从请求中解析出文件的路径
         FilenamePath filenamePath = getFileNamePath(channel);
         System.out.println("从客户端请求中解析出文件目录名：" + filenamePath);
         if (filenamePath == null) {
             return;
         }
-
-        File file = new File(filenamePath.absoluteFilenamePath);
-        long fileLength = file.length();
-
-        FileInputStream fis = new FileInputStream(file);
-        FileChannel fileChannel = fis.getChannel();
-
-        ByteBuffer buffer = ByteBuffer.allocate(8 + (int) fileLength);
-        //将文件长度也写到缓冲区中，方便后面客户端处理拆包问题
-        buffer.putLong(fileLength);
-        int hasReadFileLength = fileChannel.read(buffer);
-        buffer.rewind();
-        channel.write(buffer);
-        buffer.clear();
-
-        fis.close();
-        fileChannel.close();
-
-        // 判断一下，如果已经读取完毕，就返回一个成功给客户端
-        if (hasReadFileLength == fileLength) {
-            System.out.println("文件发送完毕，给客户端: " + clientAddr);
-            key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
-
-        }
+        cachedRequest.hasCompletedRead = true;
     }
 
 
@@ -225,7 +221,6 @@ public class NetworkRequest {
      * @throws IOException 如果客户端连接发生断开，会抛出该异常。
      */
     private FilenamePath getFileNamePath(SocketChannel channel) throws IOException {
-
         //尝试从缓存中获取，如果没有，则从channel里面获取
         if (cachedRequest.filenamePath != null) {
             return cachedRequest.filenamePath;
@@ -272,19 +267,19 @@ public class NetworkRequest {
                 cachedFilenameLengthBuffer = filenameLengthBuffer;
                 return null;
             }
-        }else {
+        } else {
             //读取文件名
             ByteBuffer filenameBuffer;
             if (cachedFilenameBuffer != null) {
                 filenameBuffer = cachedFilenameBuffer;
-            }else {
+            } else {
                 filenameBuffer = ByteBuffer.allocate(cachedRequest.filenameLength);
             }
             channel.read(filenameBuffer);
             if (!filenameBuffer.hasRemaining()) {
                 filenameBuffer.rewind();
                 filename = new String(filenameBuffer.array());
-            }else {
+            } else {
                 cachedFilenameBuffer = filenameBuffer;
             }
         }
@@ -295,7 +290,7 @@ public class NetworkRequest {
      * 获取文件在本地磁盘的绝对路径
      *
      * @param relativeFilenamePath 文件相对路径
-     * @return
+     * @return 文件绝对路径
      */
     private String getAbsoluteFilenamePath(String relativeFilenamePath) {
         //解析文件名，然后创建目录
@@ -327,7 +322,7 @@ public class NetworkRequest {
             ByteBuffer fileLengthBuffer = null;
             if (cachedFileLengthBuffer != null) {
                 fileLengthBuffer = cachedFileLengthBuffer;
-            }else {
+            } else {
                 fileLengthBuffer = ByteBuffer.allocate(8);
             }
             channel.read(fileLengthBuffer);
@@ -335,7 +330,7 @@ public class NetworkRequest {
                 fileLengthBuffer.rewind();
                 fileLength = fileLengthBuffer.getLong();
                 cachedRequest.fileLength = fileLength;
-            }else {
+            } else {
                 cachedFileLengthBuffer = fileLengthBuffer;
             }
         }
@@ -353,7 +348,22 @@ public class NetworkRequest {
         Long fileLength;
         ByteBuffer file;
         Boolean hasCompletedRead = false;
+    }
 
+    public Integer getRequestType() {
+        return cachedRequest.requestType;
+    }
+
+    public FilenamePath getFileNamePath() {
+        return cachedRequest.filenamePath;
+    }
+
+    public Long getFileLength() {
+        return cachedRequest.fileLength;
+    }
+
+    public ByteBuffer getFile() {
+        return cachedRequest.file;
     }
 
     /**
@@ -369,6 +379,13 @@ public class NetworkRequest {
         public String toString() {
             return "FilenamePath{" + "relativeFilenamePath='" + relativeFilenamePath + '\'' + ", absoluteFilenamePath='" + absoluteFilenamePath + '\'' + '}';
         }
+    }
+
+    public String getRelativeFilenamePath() {
+        return cachedRequest.filenamePath.relativeFilenamePath;
+    }
+    public String getAbsoluteFilenamePath() {
+        return cachedRequest.filenamePath.absoluteFilenamePath;
     }
 
 }

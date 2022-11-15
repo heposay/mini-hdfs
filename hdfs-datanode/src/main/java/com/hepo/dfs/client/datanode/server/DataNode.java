@@ -62,6 +62,7 @@ public class DataNode {
         heartbeatManager.start();
 
         FileUploadServer fileUploadServer = new FileUploadServer(nameNodeRpcClient);
+        fileUploadServer.init();
         fileUploadServer.start();
     }
 
