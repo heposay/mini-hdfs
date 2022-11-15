@@ -118,9 +118,26 @@ FSEditLog不停的往一块缓冲区里去写数据，一旦写满了之后，�
 
 
 
-7.采用分布式方式管理dataNode节点，每台dataNode都存储部分数据，每个文件都两个副本冗余，dataNode节点自动上报存储信息到master节点
+7.采用分布式方式管理DataNode节点，每台dataNode都存储部分数据，每个文件都两个副本冗余，dataNode节点自动上报存储信息到master节点
 
 多个机器之间的负载均衡：master节点必须知道每台机器放了多少数据量的文件，然后把这些机器的数据量的大小进行排序，选择数据量最小的两台机器就可以了。
+
+
+
+8.客户端有两种方式将文件数据上传到DataNode上面
+
+- 管道数据流的方式
+- 客户端多副本依次上传的方式
+
+第一种方式，就是Hadoop HDFS采取的方式，这样有两种优点，第一，避免客户端的网络连接资源过多，负载过重；第二，机器之间互的性能更高，比客户端到服务器之间的性能要高
+
+
+
+第二种方式，虽然性能比不上第一种方式，但实现起来更为简单，所以该项目采取第二种方式，而且该项目定位和使用场景，上传图片次数不是特别频繁，网络连接负载也不会过高。
+
+
+
+9.NameNode
 
 
 
@@ -132,13 +149,25 @@ FSEditLog不停的往一块缓冲区里去写数据，一旦写满了之后，�
 
 创建文件夹
 
-![image-20221103120434575](/Users/linhaibo/Documents/code/personal/mini-hdfs/README.assets/image-20221103120434575.png)
+
+
+![mini-dfs系统，客户端发起创建目录的流程图](/Users/linhaibo/Documents/code/personal/mini-hdfs/README.assets/mini-dfs系统，客户端发起创建目录的流程图.png)
+
+
 
 
 
 文件上传
 
-![image-20221103200919358](/Users/linhaibo/Documents/code/personal/mini-hdfs/README.assets/image-20221103200919358.png)
+![mini-dfs系统多datanode处理文件上传架构](/Users/linhaibo/Documents/code/personal/mini-hdfs/README.assets/mini-dfs系统多datanode处理文件上传架构.png)
+
+
+
+DataNode宕机后，副本自动转移
+
+![mini-dfs系统DataNode宕机后，副本自动转移流程](/Users/linhaibo/Desktop/mini-dfs系统DataNode宕机后，副本自动转移流程.png)
+
+
 
 ## 重要阶段测试流程
 
@@ -158,6 +187,31 @@ FSEditLog不停的往一块缓冲区里去写数据，一旦写满了之后，�
 
 
 
-**阶段二：测试文件上传的功能**
+**阶段二：测试文件上传的功能，DataNode写入双副本数据，并增量上报副本存储信息给NameNode，DataNode重启后，会全量上报副本存储信息给NamaNode。NameNode检测到某个DataNode宕机了，下发一个复制副本转移任务给DataNode，会把宕机DataNode的副本信息复制到空闲的DataNode节点上，如果宕机的DataNode重启后，会自动删除以前的副本信息**
 
-1.
+1.先准备好3个DataNode的本机映射，分别是 dfs-data-01,dfs-data-02,dfs-data-03映射到本地127.0.0.1地址，然后修改DataNodeConfig配置文件
+
+DataNode01：{"hostname":"dfs-data-01", "ip":"192.168.1.101", "data_dir":"D:/Documents/tmp/datanode1", "file_upload_server_port": 9301}
+
+DataNode02：{"hostname":"dfs-data-02", "ip":"192.168.1.102", "data_dir":"D:/Documents/tmp/datanode2", "file_upload_server_port": 9302}
+
+DataNode03：{"hostname":"dfs-data-03", "ip":"192.168.1.103", "data_dir":"D:/Documents/tmp/datanode3", "file_upload_server_port": 9303}
+
+2.先启动NameNode，然后依次启动DataNode01，DataNode02，DataNode03
+
+3.客户端向NameNode发送上传文件的请求，NameNode返回两个DataNode的节点信息
+
+4.客户端根据DataNode节点信息，建立NIO连接，然后把文件数据写过去
+
+5.DataNode收到文件数据，将数据写到本地磁盘，然后增量上报文件副本存储信息给NameNode
+
+6.NameNode收到DataNode上传的副本存储信息，将信息更新到自己本地内存
+
+7.此时NameNode检测到DataNode01宕机，NameNode将下发文件副本转移任务给DataNode，DataNode收到任务后，开始执行
+
+8.宕机的DataNode重启，此时检测到有3个副本，然后自己开始删除本地的文件副本。
+
+9.最终实现一个文件，只有两个副本
+
+
+
