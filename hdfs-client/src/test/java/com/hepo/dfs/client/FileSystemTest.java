@@ -1,7 +1,9 @@
 package com.hepo.dfs.client;
 
+import com.hepo.dfs.client.client.FileInfo;
 import com.hepo.dfs.client.client.FileSystem;
 import com.hepo.dfs.client.client.FileSystemImpl;
+import com.hepo.dfs.client.client.Host;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,24 +52,41 @@ public class FileSystemTest {
     }
 
     //上传文件
-    public static void testUpload(String filename) {
-        try {
-            File file = new File(filename);
-            long fileLength = file.length();
+    public static void testUpload(String filename) throws Exception{
+        File file = new File(filename);
+        long fileLength = file.length();
 
-            ByteBuffer buffer = ByteBuffer.allocate((int) fileLength);
+        ByteBuffer buffer = ByteBuffer.allocate((int) fileLength);
 
-            FileInputStream fis = new FileInputStream(file);
-            FileChannel channel = fis.getChannel();
-            channel.read(buffer);
-            buffer.flip();
-            byte[] fileBytes = buffer.array();
+        FileInputStream fis = new FileInputStream(file);
+        FileChannel channel = fis.getChannel();
+        channel.read(buffer);
+        buffer.flip();
+        byte[] fileBytes = buffer.array();
 
-
-            fileSystem.upload(fileBytes, "/image/product/pig2.jpg", fileLength);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setFile(fileBytes);
+        fileInfo.setFileLength(fileLength);
+        fileInfo.setFileName(filename);
+        fileSystem.upload(fileInfo, response -> {
+            if (response.isError()) {
+                Host excludedHost = new Host();
+                excludedHost.setHostname(response.getHostname());
+                excludedHost.setIp(response.getIp());
+                try {
+                    fileSystem.retryUpload(fileInfo, excludedHost);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }else {
+                ByteBuffer buffer1 = response.getBuffer();
+                String responseContent = new String(buffer1.array(), 0, buffer1.remaining());
+                System.out.println("文件上传完毕，响应结果为：" + responseContent);
+            }
+        });
+        System.out.println("已异步上传文件，等待结果");
+        fis.close();
+        channel.close();
     }
 
     public static void testDownload(String filename) {
