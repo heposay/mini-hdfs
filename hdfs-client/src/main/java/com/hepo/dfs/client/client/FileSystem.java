@@ -1,7 +1,5 @@
 package com.hepo.dfs.client.client;
 
-import java.io.IOException;
-
 /**
  * 客户端文件系统的接口
  *
@@ -18,8 +16,6 @@ public interface FileSystem {
 
     /**
      * 优雅关闭
-     *
-     * @throws Exception
      */
     void shutdown();
 
@@ -27,9 +23,10 @@ public interface FileSystem {
      * 上传文件
      *
      * @param fileInfo 文件信息
-     * @return boolean
+     * @param callback 回调函数
+     * @return 是否上传成功
      */
-    Boolean upload(FileInfo fileInfo, ResponseCallback callback) throws Exception;
+    Boolean upload(FileInfo fileInfo, ResponseCallback callback);
 
 
     /**
@@ -37,9 +34,8 @@ public interface FileSystem {
      *
      * @param filename 文件名
      * @return 文件的字节流
-     * @throws IOException
      */
-    byte[] download(String filename) throws IOException;
+    byte[] download(String filename);
 
     /**
      * 重新上传文件
@@ -48,6 +44,6 @@ public interface FileSystem {
      * @param excludedHost 要排除的数据节点
      * @return 是否上传成功
      */
-    Boolean retryUpload(FileInfo fileInfo, Host excludedHost) throws Exception;
+    Boolean retryUpload(FileInfo fileInfo, Host excludedHost);
 
 }

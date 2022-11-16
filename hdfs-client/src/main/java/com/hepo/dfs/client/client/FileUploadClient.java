@@ -1,13 +1,9 @@
 package com.hepo.dfs.client.client;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
-import java.util.Iterator;
 import java.util.UUID;
+
+import static com.hepo.dfs.client.client.NetworkRequest.*;
 
 /**
  * Description: 文件上传客户端
@@ -17,12 +13,6 @@ import java.util.UUID;
  * @author linhaibo
  */
 public class FileUploadClient {
-
-    public static final Integer REQUEST_TYPE = 4;
-    public static final Integer FILENAME_LENGTH = 4;
-    public static final Integer FILE_LENGTH = 8;
-    public static final Integer SEND_FILE = 1;
-    public static final Integer READ_FILE = 2;
 
     private NetworkManager networkManager;
 
@@ -46,27 +36,28 @@ public class FileUploadClient {
         //创建网络请求
         NetworkRequest request = createSendFileRequest(fileInfo, host, callback);
         //异步发送请求
-        networkManager.sendRequest(request);
+        networkManager.sendRequestToWaitingRequests(request);
         return true;
     }
 
     /**
-     * 创建网络请求
+     * 创建sendFileRequest网络请求
      *
      * @param fileInfo 文件信息
      * @param host     DataNode主机信息
+     * @return 网络请求对象
      */
     private NetworkRequest createSendFileRequest(FileInfo fileInfo, Host host, ResponseCallback callback) {
         NetworkRequest networkRequest = new NetworkRequest();
 
         ByteBuffer buffer = ByteBuffer.allocate(
                 REQUEST_TYPE +
-                        FILENAME_LENGTH +
-                        fileInfo.getFileName().getBytes().length +
-                        FILE_LENGTH +
-                        Math.toIntExact(fileInfo.getFileLength()));
+                FILENAME_LENGTH +
+                fileInfo.getFileName().getBytes().length +
+                FILE_LENGTH +
+                Math.toIntExact(fileInfo.getFileLength()));
 
-        buffer.putInt(SEND_FILE);
+        buffer.putInt(REQUEST_SEND_FILE);
         buffer.putInt(fileInfo.getFileName().getBytes().length);
         buffer.put(fileInfo.getFileName().getBytes());
         buffer.putLong(fileInfo.getFileLength());
@@ -79,7 +70,6 @@ public class FileUploadClient {
         networkRequest.setUploadServerPort(host.getUploadServerPort());
         networkRequest.setBuffer(buffer);
         networkRequest.setNeedResponse(false);
-        networkRequest.setSendTime(System.currentTimeMillis());
         networkRequest.setCallback(callback);
         return networkRequest;
     }
@@ -87,108 +77,57 @@ public class FileUploadClient {
     /**
      * 向服务端获取文件
      *
-     * @param hostname         服务端ip地址
-     * @param uploadServerPort 服务端端口号
-     * @param filename         文件名
+     * @param host     DataNode机器信息
+     * @param filename 文件名
+     * @return 网络请求对象
      */
-    public byte[] readFile(String hostname, int uploadServerPort, String filename) {
-        byte[] file = null;
-        SocketChannel channel = null;
-        Selector selector = null;
-
-        ByteBuffer fileLengthBuffer = null;
-        ByteBuffer fileBuffer = null;
-        Long fileLength = null;
-
-        try {
-            //与服务端DataNode建立短连接，发送完一个文件立刻释放网络连接
-            channel = SocketChannel.open();
-            channel.configureBlocking(false);
-            channel.connect(new InetSocketAddress(hostname, uploadServerPort));
-            selector = Selector.open();
-            channel.register(selector, SelectionKey.OP_CONNECT);
-
-            boolean reading = true;
-            while (reading) {
-                //轮询selector
-                selector.select();
-
-                Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
-                while (keyIterator.hasNext()) {
-                    SelectionKey key = keyIterator.next();
-                    keyIterator.remove();
-                    //判断key的类型
-                    if (key.isConnectable()) {
-                        channel = (SocketChannel) key.channel();
-                        if (channel.isConnectionPending()) {
-                            channel.finishConnect(); //把三次握手做完，建立好TCP连接
-
-                            //封装文件的请求数据
-                            byte[] filenameBytes = filename.getBytes();
-
-                            ByteBuffer readFileRequest = ByteBuffer.allocate(8 + filenameBytes.length);
-                            readFileRequest.putInt(READ_FILE);
-                            //Int对应了4个字节，放到缓冲区里去
-                            readFileRequest.putInt(filenameBytes.length);
-                            //把真正的文件名给放入进去
-                            readFileRequest.put(filenameBytes);
-
-                            //每次write buffer之前，一定要flip。
-                            readFileRequest.flip();
-                            //将缓冲区数据写到channel
-                            channel.write(readFileRequest);
-
-                            //重新监听读事件
-                            channel.register(selector, SelectionKey.OP_READ);
-                        }
-                    } else if (key.isReadable()) {
-                        //读取服务端发回来的响应
-                        channel = (SocketChannel) key.channel();
-                        if (fileLength == null) {
-                            if (fileLengthBuffer == null) {
-                                fileLengthBuffer = ByteBuffer.allocate(8);
-                            }
-                            channel.read(fileLengthBuffer);
-
-                            if (!fileLengthBuffer.hasRemaining()) {
-                                fileLengthBuffer.rewind();
-                                fileLength = fileLengthBuffer.getLong();
-                            }
-                        } else {
-                            if (fileBuffer == null) {
-                                fileBuffer = ByteBuffer.allocate(Math.toIntExact(fileLength));
-                            }
-                            channel.read(fileBuffer);
-                            if (!fileBuffer.hasRemaining()) {
-                                fileBuffer.rewind();
-                                file = fileBuffer.array();
-                                reading = false;
-                            }
-                        }
-
-                    }
-                }
+    public byte[] readFile(Host host, String filename, Boolean retry) throws Exception {
+        //与DataNode尝试建立连接
+        if (!networkManager.maybeConnect(host.getHostname(), host.getUploadServerPort())) {
+            if (retry) {
+                throw new Exception();
             }
-            return file;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (channel != null) {
-                try {
-                    channel.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if (selector != null) {
-                try {
-                    selector.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
         }
+
+        //创建readFileRequest请求对象
+        NetworkRequest request = crewateReadFileRequest(host, filename, null);
+        networkManager.sendRequestToWaitingRequests(request);
+        NetworkResponse response = networkManager.waitResponse(request.getId());
+        if (response.isError()) {
+            if (retry) {
+                throw new Exception();
+            }
+        }
+        return response.getBuffer().array();
+    }
+
+    /**
+     * 创建ReadFileRequest网络请求
+     *
+     * @param host     DataNode机器信息
+     * @param filename 文件名
+     * @param callback 回调函数
+     */
+    private NetworkRequest crewateReadFileRequest(Host host, String filename, ResponseCallback callback) {
+        NetworkRequest request = new NetworkRequest();
+
+        byte[] filenameBytes = filename.getBytes();
+        ByteBuffer buffer = ByteBuffer.allocate(REQUEST_TYPE + FILENAME_LENGTH + filenameBytes.length);
+        buffer.putInt(REQUEST_TYPE);
+        buffer.putInt(filenameBytes.length);
+        buffer.put(filenameBytes);
+        buffer.rewind();
+
+        request.setId(UUID.randomUUID().toString());
+        request.setHostname(host.getHostname());
+        request.setIp(host.getIp());
+        request.setUploadServerPort(host.getUploadServerPort());
+        request.setBuffer(buffer);
+        request.setNeedResponse(true);
+        request.setCallback(callback);
+        request.setRequestType(NetworkRequest.REQUEST_READ_FILE);
+
+        return request;
     }
 
 }

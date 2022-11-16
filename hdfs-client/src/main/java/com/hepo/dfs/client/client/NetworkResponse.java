@@ -10,13 +10,14 @@ import java.nio.ByteBuffer;
  * @author linhaibo
  */
 public class NetworkResponse {
-    public static final String RESPONSE_SUCCESS = "SUCCESS";
-
     private String requestId;
     private String hostname;
     private String ip;
+    private Long fileLength;
+    private ByteBuffer lengthBuffer;
     private ByteBuffer buffer;
     private Boolean isError;
+    private Boolean isFinished;
 
     public String getRequestId() {
         return requestId;
@@ -32,6 +33,30 @@ public class NetworkResponse {
 
     public void setHostname(String hostname) {
         this.hostname = hostname;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public Long getFileLength() {
+        return fileLength;
+    }
+
+    public void setFileLength(Long fileLength) {
+        this.fileLength = fileLength;
+    }
+
+    public ByteBuffer getLengthBuffer() {
+        return lengthBuffer;
+    }
+
+    public void setLengthBuffer(ByteBuffer lengthBuffer) {
+        this.lengthBuffer = lengthBuffer;
     }
 
     public ByteBuffer getBuffer() {
@@ -50,11 +75,11 @@ public class NetworkResponse {
         isError = error;
     }
 
-    public String getIp() {
-        return ip;
+    public Boolean isFinished() {
+        return isFinished;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setFinished(Boolean finished) {
+        isFinished = finished;
     }
 }

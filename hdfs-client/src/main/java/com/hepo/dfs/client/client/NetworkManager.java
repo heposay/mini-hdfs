@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Description:网络连接管理组件
+ * Description:网络请求处理管理组件
  * Project:  mini-hdfs
  * CreateDate: Created in 2022/11/15 18:29
  *
@@ -50,10 +50,14 @@ public class NetworkManager {
     private Selector selector;
     /**
      * 每个数据节点的连接状态
+     * key:hostname
+     * value:连接状态（CONNECTING-1, CONNECTED-2, DISCONNECTED-3）
      */
     private Map<String, Integer> connectState;
     /**
      * 存放已经建立好的连接
+     * key:hostname
+     * value:兴趣事件的key
      */
     private Map<String, SelectionKey> connects;
     /**
@@ -62,18 +66,38 @@ public class NetworkManager {
     private ConcurrentLinkedQueue<Host> waitingConnectHosts;
     /**
      * 等待发送网络请求的队列
+     * key:hostname
+     * value:网络请求队列
      */
     private Map<String, ConcurrentLinkedQueue<NetworkRequest>> waitingRequests;
     /**
      * 马上准备要发送的网络请求队列
+     * key:hostname
+     * value:网络请求
      */
     private Map<String, NetworkRequest> toSendRequests;
     /**
      * 已完成的请求响应的队列
+     * key:requestId
+     * value:网络响应
      */
     private Map<String, NetworkResponse> finishedResponses;
 
+    /**
+     * 未完成的请求响应的队列
+     * key:requestId
+     * value:网络响应
+     */
+    private Map<String, NetworkResponse> unFinishedResponses;
 
+
+    /**
+     * 组件初始化
+     * 1.将多路复用组件selector打开
+     * 2.初始化connectState、connects、waitingConnectHosts、waitingRequests、toSendRequests、finishedResponses组件
+     * 3.启动处理网络连接的核心线程
+     * 4.启动请求超时检测线程
+     */
     public NetworkManager() {
         try {
             this.selector = Selector.open();
@@ -98,6 +122,7 @@ public class NetworkManager {
      *
      * @param hostname         DataNode的主机名
      * @param uploadServerPort DataNode的上传端口
+     * @return 是否连接成功
      */
     public Boolean maybeConnect(String hostname, Integer uploadServerPort) {
         synchronized (this) {
@@ -122,11 +147,11 @@ public class NetworkManager {
     }
 
     /**
-     * 发送网络请求
+     * 发送网络请求到请求队列中，等待NetworkPollThread线程来处理
      *
      * @param request 网络请求
      */
-    public void sendRequest(NetworkRequest request) {
+    public void sendRequestToWaitingRequests(NetworkRequest request) {
         ConcurrentLinkedQueue<NetworkRequest> requestQueue = waitingRequests.get(request.getHostname());
         requestQueue.offer(request);
     }
@@ -154,9 +179,11 @@ public class NetworkManager {
     class NetworkPollThread extends Thread {
         @Override
         public void run() {
-            tryConnect();
-            prepareRequests();
-            poll();
+            while (true) {
+                tryConnect();
+                prepareRequests();
+                poll();
+            }
         }
 
         /**
@@ -242,7 +269,6 @@ public class NetworkManager {
          */
         private void finishedConnect(SelectionKey key, SocketChannel channel) {
             InetSocketAddress remoteAddress = null;
-
             try {
                 if (channel.isConnectionPending()) {
                     while (!channel.finishConnect()) {
@@ -250,7 +276,6 @@ public class NetworkManager {
                     }
                 }
                 System.out.println("NetworkManager完成与服务端的连接的建立......");
-
                 remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
                 String hostName = remoteAddress.getHostName();
                 //初始化发送网络请求的队列
@@ -288,35 +313,48 @@ public class NetworkManager {
                     //如果数据没写完，继续写
                     channel.write(buffer);
                 }
-
                 System.out.println("本次请求发送完毕......");
+                //设置发送时间，后面用于超时判断
+                networkRequest.setSendTime(System.currentTimeMillis());
                 key.interestOps(SelectionKey.OP_READ);
             } catch (Exception e) {
                 e.printStackTrace();
-                //1.不再关注写事件
-                key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
-                if (remoteAddress != null) {
-                    String hostName = remoteAddress.getHostName();
-                    NetworkRequest request = toSendRequests.get(hostName);
-                    NetworkResponse response = new NetworkResponse();
-                    response.setHostname(hostName);
-                    response.setIp(request.getIp());
-                    response.setRequestId(request.getId());
-                    response.setError(true);
-                    //2.是否需要读取响应结果
-                    if (request.isNeedResponse()) {
-                        finishedResponses.put(request.getId(), response);
-                    } else {
-                        //3.回调自定义方法
-                        if (request.getCallback() != null) {
-                            request.getCallback().process(response);
-                        }
-                        //4.删除相关的缓存
-                        toSendRequests.remove(hostName);
-                    }
-                }
+                //处理异常请求
+                handleErrorRequest(remoteAddress, key);
             }
 
+        }
+
+        /**
+         * 处理异常请求
+         *
+         * @param remoteAddress 客户端远程地址
+         * @param key           关注事件的key
+         */
+        private void handleErrorRequest(InetSocketAddress remoteAddress, SelectionKey key) {
+            //1.不再关注写事件
+            key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
+            if (remoteAddress != null) {
+                String hostName = remoteAddress.getHostName();
+                NetworkRequest request = toSendRequests.get(hostName);
+                NetworkResponse response = new NetworkResponse();
+                response.setHostname(hostName);
+                response.setIp(request.getIp());
+                response.setRequestId(request.getId());
+                response.setError(true);
+                response.setFinished(true);
+                //2.是否需要读取响应结果
+                if (request.isNeedResponse()) {
+                    finishedResponses.put(request.getId(), response);
+                } else {
+                    //3.回调自定义方法
+                    if (request.getCallback() != null) {
+                        request.getCallback().process(response);
+                    }
+                    //4.删除相关的缓存
+                    toSendRequests.remove(hostName);
+                }
+            }
         }
 
         /**
@@ -325,13 +363,19 @@ public class NetworkManager {
          * @param key     关注事件的key
          * @param channel 客户端的channel
          */
-        private void readResponse(SelectionKey key, SocketChannel channel) throws IOException {
+        private void readResponse(SelectionKey key, SocketChannel channel) throws Exception {
             InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
             String hostName = remoteAddress.getHostName();
             NetworkRequest request = toSendRequests.get(hostName);
             NetworkResponse response = null;
             if (NetworkRequest.REQUEST_SEND_FILE.equals(request.getRequestType())) {
-                response = readSendFileResponse(request.getId(), hostName, request.getIp(), channel);
+                response = getSendFileResponse(request.getId(), hostName, channel);
+            } else if (NetworkRequest.REQUEST_READ_FILE.equals(request.getRequestType())) {
+                response = getReadFileResponse(request.getId(), hostName, channel);
+            }
+
+            if (response != null && !response.isFinished()) {
+                return;
             }
 
             key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
@@ -352,21 +396,79 @@ public class NetworkManager {
          * @param requestId 请求id
          * @param hostName  DataNode的主机名
          * @param channel   DataNode客户端连接
-         * @return
+         * @return 网络响应
          */
-        private NetworkResponse readSendFileResponse(String requestId, String hostName, String ip, SocketChannel channel) throws IOException {
+        private NetworkResponse getSendFileResponse(String requestId, String hostName, SocketChannel channel) throws IOException {
             ByteBuffer buffer = ByteBuffer.allocate(1024);
             channel.read(buffer);
-
             buffer.flip();
 
             NetworkResponse response = new NetworkResponse();
-            response.setHostname(hostName);
-            response.setIp(ip);
             response.setRequestId(requestId);
+            response.setHostname(hostName);
             response.setBuffer(buffer);
             response.setError(false);
+            response.setFinished(true);
             return response;
+        }
+
+
+        /**
+         * 读取下载文件的响应
+         *
+         * @param requestId 请求id
+         * @param hostName  DataNode的主机名
+         * @param channel   DataNode客户端连接
+         * @return 网络响应
+         */
+        private NetworkResponse getReadFileResponse(String requestId, String hostName, SocketChannel channel) throws Exception {
+            NetworkResponse response = null;
+            //1.先从缓存里面取，如果没有，则创建一个NetworkResponse对象
+            if (unFinishedResponses.containsKey(hostName)) {
+                response = unFinishedResponses.get(hostName);
+            } else {
+                response = new NetworkResponse();
+                response.setRequestId(requestId);
+                response.setHostname(hostName);
+                response.setError(false);
+                response.setFinished(false);
+            }
+
+            //2.处理文件的拆包问题
+            Long fileLength = null;
+            ByteBuffer buffer = null;
+            if (response.getBuffer() == null) {
+                ByteBuffer fileLengthBuffer = ByteBuffer.allocate(NetworkRequest.FILE_LENGTH);
+                channel.read(fileLengthBuffer);
+                if (!fileLengthBuffer.hasRemaining()) {
+                    fileLengthBuffer.rewind();
+                    fileLength = fileLengthBuffer.getLong();
+                    response.setFileLength(fileLength);
+                    buffer = ByteBuffer.allocate(Math.toIntExact(fileLength));
+                    //缓存buffer到NetworkResponse对象，方便拆包做处理
+                    response.setBuffer(buffer);
+                } else {
+                    //如果出现拆包，则缓存起来，下次再继续处理
+                    unFinishedResponses.put(hostName, response);
+                    return response;
+                }
+            } else {
+                //直接从NetworkResponse对象获取buffer
+                buffer = response.getBuffer();
+            }
+            //读取channel数据到buffer
+            channel.read(buffer);
+            if (!buffer.hasRemaining()) {
+                buffer.rewind();
+                response.setFinished(true);
+                //处理完毕，删除缓存对应的数据
+                unFinishedResponses.remove(hostName);
+            } else {
+                //如果出现拆包，则缓存起来，下次再继续处理
+                unFinishedResponses.put(hostName, response);
+            }
+            return response;
+
         }
     }
 
@@ -405,6 +507,4 @@ public class NetworkManager {
             }
         }
     }
-
-
 }
